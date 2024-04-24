@@ -24,7 +24,7 @@ public class inputScenario extends JPanel {
         initLocale();
         initTable();
         spinner1.setValue(1);
-    }
+    } // ez
 
     private void initTable() {
         table1.setModel(new DefaultTableModel(new Object[][] {
