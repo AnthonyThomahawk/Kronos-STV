@@ -1,0 +1,47 @@
+JFDML JFormDesigner: "8.2.2.0.382" Java: "17.0.10" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq {space :p:93:p, par l {comp label1:::p::p, seq {space :6:6:p, comp button1:::p:114:p}}}, seq l {space :p:99:p, comp button2:::p:114:p}, seq l {space :::p, comp label5:::p:295:p}, seq l {space :::p, comp label4:::p:295:p}}, space ::24:x}}"
+			"$verticalGroup": "par l {seq {space :p:11:p, comp label1:::p::p, space u:::p, comp button1:::p:100:p, space :::x, comp label4:::p:40:p, space :::p, comp button2:::p:100:p, space :::p, comp label5:::p:40:p, space :p:12:p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Kronos STV"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, false )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"text": "+"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 50, false )
+				"verticalAlignment": 1
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "create scenario"
+				"horizontalAlignment": 0
+				"verticalAlignment": 1
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Load scenario"
+				"horizontalAlignment": 0
+				"verticalAlignment": 1
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button2"
+				"text": "\ud83d\udcc1"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 50, false )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 325, 365 )
+		} )
+	}
+}

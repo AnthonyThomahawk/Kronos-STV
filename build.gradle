@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.kronos'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.formdev:flatlaf:3.4.1'
+    // https://mvnrepository.com/artifact/com.formdev/flatlaf-extras
+    implementation 'com.formdev:flatlaf-extras:3.4.1'
+}
+
+test {
+    useJUnitPlatform()
+}
