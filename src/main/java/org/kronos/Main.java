@@ -16,5 +16,6 @@ public class Main {
         mainFrame.setTitle("Kronos Beta");
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setResizable(false);
     }
 }
