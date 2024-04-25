@@ -6,6 +6,7 @@ package org.kronos;
 
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * @author Enterprise
@@ -13,6 +14,26 @@ import javax.swing.GroupLayout;
 public class createBallots extends JPanel {
     public createBallots() {
         initComponents();
+        initTable();
+    }
+
+    private void initTable() {
+        table1.setModel(new DefaultTableModel(new Object[][] {
+                {1}
+        }, new String[] {
+                "Ballot number #"
+        })
+        {
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return columnIndex != 0;
+            }
+        });
+
+        DefaultTableModel model = (DefaultTableModel) table1.getModel();
+        for (int i = 2; i <= inputCandidates.candidates; i++) {
+            model.addRow(new Object[]{i});
+        }
     }
 
     private void initComponents() {
@@ -21,7 +42,6 @@ public class createBallots extends JPanel {
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button1 = new JButton();
-        button2 = new JButton();
 
         //======== this ========
 
@@ -33,33 +53,27 @@ public class createBallots extends JPanel {
         //---- button1 ----
         button1.setText("Get results");
 
-        //---- button2 ----
-        button2.setText("Export ballots");
-
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 650, GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGap(0, 524, Short.MAX_VALUE)
+                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
+                    .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 408, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(button2, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(button1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(13, Short.MAX_VALUE))
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -69,6 +83,5 @@ public class createBallots extends JPanel {
     private JScrollPane scrollPane1;
     private JTable table1;
     private JButton button1;
-    private JButton button2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

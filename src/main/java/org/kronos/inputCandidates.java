@@ -4,7 +4,6 @@
 
 package org.kronos;
 
-import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -17,13 +16,15 @@ import java.util.ResourceBundle;
 /**
  * @author Enterprise
  */
-public class inputScenario extends JPanel {
-    private int candidates = 1;
-    public inputScenario() {
+public class inputCandidates extends JPanel {
+    public static int candidates = 1;
+    public static boolean success = false;
+    public inputCandidates() {
         initComponents();
         initLocale();
         initTable();
         spinner1.setValue(1);
+        success = false;
     }
 
     private void initTable() {
@@ -59,9 +60,36 @@ public class inputScenario extends JPanel {
         button1.setText(messages.getString("create"));
     }
 
+    private boolean checkData() {
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        int rows = dtm.getRowCount();
+        for (int i = 0; i < rows; i++) {
+            if (dtm.getValueAt(i, 1).equals("")) {
+                JOptionPane.showMessageDialog(null, "All candidates must have names.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        if ((Integer) spinner1.getValue() <= 1) {
+            JOptionPane.showMessageDialog(null, "Voters must be more than 1.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (rows <= 1) {
+            JOptionPane.showMessageDialog(null, "Candidates must be more than 1.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     private void button1(ActionEvent e) {
+        if (!checkData())
+            return;
+
         try {
-            mainForm.inputDlg.dispose();
+            success = true;
+            mainForm.inputCandidatesDlg.dispose();
         } catch (Exception ignored) {
         }
 

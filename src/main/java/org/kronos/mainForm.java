@@ -10,13 +10,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import com.formdev.flatlaf.extras.*;
 
 /**
  * @author Enterprise
  */
 public class mainForm extends JPanel {
-    public static JDialog inputDlg;
+    public static JDialog inputCandidatesDlg;
+    public static JDialog createBallotsDlg;
     public mainForm() {
         initComponents();
         initLocale();
@@ -34,17 +34,30 @@ public class mainForm extends JPanel {
         label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
     }
 
-    private void button1(ActionEvent e) {
-        inputDlg = new JDialog(Main.mainFrame, "", true);
+    private void centerChildDialog(JDialog childDlg) {
         int c1 = this.getWidth()/2;
         int c2 = this.getHeight()/2;
         int x = (Toolkit.getDefaultToolkit().getScreenSize().width/2)-c1;
         int y = (Toolkit.getDefaultToolkit().getScreenSize().height/2)-c2;
-        inputDlg.setLocation(x, y);
-        inputScenario f = new inputScenario();
-        inputDlg.setContentPane(f);
-        inputDlg.pack();
-        inputDlg.setVisible(true);
+        childDlg.setLocation(x,y);
+    }
+
+    private void button1(ActionEvent e) {
+        inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
+        centerChildDialog(inputCandidatesDlg);
+        inputCandidates f = new inputCandidates();
+        inputCandidatesDlg.setContentPane(f);
+        inputCandidatesDlg.pack();
+        inputCandidatesDlg.setVisible(true);
+
+        if (inputCandidates.success) {
+            createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
+            centerChildDialog(createBallotsDlg);
+            createBallots c = new createBallots();
+            createBallotsDlg.setContentPane(c);
+            createBallotsDlg.pack();
+            createBallotsDlg.setVisible(true);
+        }
     }
 
     private void button2(ActionEvent e) {
