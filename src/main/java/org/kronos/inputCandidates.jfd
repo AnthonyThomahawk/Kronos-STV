@@ -4,18 +4,14 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {seq l {space :0:110:x, comp label3:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button2:::p::p, space :::p, comp button1:::p::p}, seq {comp label1:::p::p, space :0:218:x}, comp scrollPane1::l::433:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1::::467:x, space :p::p, par t {par b {comp button1::b:p::p, comp button2::b:p::p}, par b {comp spinner1::b:p::p, comp label3::b:p:16:p}}, space :p::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, par l {seq l {space :0:0:x, comp button2:::p::p, space :::p, comp button1:::p::p}, seq {comp label1:::p::p, space :0:218:x}, comp scrollPane1::l::433:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1::::467:x, space :p::p, par b {comp button1::b:p::p, comp button2::b:p::p}, space :p::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": "Create new scenario"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, false )
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label3"
-				"text": "Voter count"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"
@@ -32,10 +28,6 @@ new FormModel {
 				name: "button2"
 				"text": "Add candidate"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
-			} )
-			add( new FormComponent( "javax.swing.JSpinner" ) {
-				name: "spinner1"
-				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "spinner1StateChanged", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

@@ -31,7 +31,7 @@ public class createBallots extends JPanel {
         });
 
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
-        for (int i = 2; i <= inputCandidates.candidates; i++) {
+        for (int i = 2; i <= inputCandidates.candidateCount; i++) {
             model.addRow(new Object[]{i});
         }
     }

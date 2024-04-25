@@ -4,27 +4,43 @@
 
 package org.kronos;
 
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-/**
- * @author Enterprise
- */
 public class inputCandidates extends JPanel {
-    public static int candidates = 1;
+    public static int candidateCount = 1;
+    public static String[] candidates = {};
     public static boolean success = false;
     public inputCandidates() {
         initComponents();
         initLocale();
         initTable();
-        spinner1.setValue(1);
         success = false;
+    }
+
+    public static void setCellColorEmpty(JTable t, Color color, String columnName) {
+        t.getColumn(columnName).setCellRenderer(
+                new DefaultTableCellRenderer() {
+                    @Override
+                    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                        setText(value.toString());
+
+                        if (value.toString().equals("")) {
+                            setBackground(color);
+                        } else {
+                            setBackground(table.getBackground());
+                        }
+                        return this;
+                    }
+                }
+        );
     }
 
     private void initTable() {
@@ -34,16 +50,25 @@ public class inputCandidates extends JPanel {
                 "Candidate number #", "Candidate name"
         })
         {
+
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex != 0;
             }
+
         });
 
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+//        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+//        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+//        table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+//        table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+
+        table1.setShowHorizontalLines(true);
+        table1.setShowVerticalLines(true);
+        table1.setColumnSelectionAllowed(false);
+        table1.setRowSelectionAllowed(false);
+
+        //setCellColor(table1, Color.RED, "Candidate name", 0, 1);
     }
 
     private void initLocale() {
@@ -56,7 +81,6 @@ public class inputCandidates extends JPanel {
         ResourceBundle messages = ResourceBundle.getBundle("messages", currentLocale, new UTF8Control());
 
         label1.setText(messages.getString("createscenariobtn"));
-        label3.setText(messages.getString("votercount"));
         button1.setText(messages.getString("create"));
     }
 
@@ -65,14 +89,11 @@ public class inputCandidates extends JPanel {
         int rows = dtm.getRowCount();
         for (int i = 0; i < rows; i++) {
             if (dtm.getValueAt(i, 1).equals("")) {
+                setCellColorEmpty(table1, Color.RED, "Candidate name");
+                table1.repaint();
                 JOptionPane.showMessageDialog(null, "All candidates must have names.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-        }
-
-        if ((Integer) spinner1.getValue() <= 1) {
-            JOptionPane.showMessageDialog(null, "Voters must be more than 1.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
         }
 
         if (rows <= 1) {
@@ -83,9 +104,23 @@ public class inputCandidates extends JPanel {
         return true;
     }
 
+    private String[] extractDataToString() {
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        int rows = dtm.getRowCount();
+
+        String[] data = new String[rows];
+        for (int i = 0; i < rows; i++) {
+            data[i] = (String)dtm.getValueAt(i, 1);
+        }
+
+        return data;
+    }
+
     private void button1(ActionEvent e) {
         if (!checkData())
             return;
+
+        candidates = extractDataToString();
 
         try {
             success = true;
@@ -97,35 +132,24 @@ public class inputCandidates extends JPanel {
 
     private void button2(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
-        candidates++;
-        model.addRow(new Object[]{candidates, ""});
-    }
-
-    private void spinner1StateChanged(ChangeEvent e) {
-        if ((Integer)spinner1.getValue() == 0) {
-            spinner1.setValue(1);
-        }
+        candidateCount++;
+        model.addRow(new Object[]{candidateCount, ""});
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
-        label3 = new JLabel();
         button1 = new JButton();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button2 = new JButton();
-        spinner1 = new JSpinner();
 
         //======== this ========
 
         //---- label1 ----
         label1.setText("Create new scenario");
         label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 12f));
-
-        //---- label3 ----
-        label3.setText("Voter count");
 
         //---- button1 ----
         button1.setText("Create");
@@ -140,9 +164,6 @@ public class inputCandidates extends JPanel {
         button2.setText("Add candidate");
         button2.addActionListener(e -> button2(e));
 
-        //---- spinner1 ----
-        spinner1.addChangeListener(e -> spinner1StateChanged(e));
-
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -151,11 +172,7 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(0, 110, Short.MAX_VALUE)
-                            .addComponent(label3)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addGap(0, 0, Short.MAX_VALUE)
                             .addComponent(button2)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button1))
@@ -173,13 +190,9 @@ public class inputCandidates extends JPanel {
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(button1)
-                            .addComponent(button2))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(button1)
+                        .addComponent(button2))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -188,11 +201,9 @@ public class inputCandidates extends JPanel {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
     private JLabel label1;
-    private JLabel label3;
     private JButton button1;
     private JScrollPane scrollPane1;
     private JTable table1;
     private JButton button2;
-    private JSpinner spinner1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
