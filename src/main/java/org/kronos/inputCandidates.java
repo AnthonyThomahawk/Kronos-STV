@@ -31,6 +31,7 @@ public class inputCandidates extends JPanel {
                     @Override
                     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                         setText(value.toString());
+                        setHorizontalAlignment(CENTER);
 
                         if (value.toString().equals("")) {
                             setBackground(color);
@@ -58,10 +59,10 @@ public class inputCandidates extends JPanel {
 
         });
 
-//        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-//        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-//        table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-//        table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
         table1.setShowHorizontalLines(true);
         table1.setShowVerticalLines(true);
