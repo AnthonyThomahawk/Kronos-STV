@@ -106,13 +106,6 @@ public class createScenario extends JPanel {
             }
         });
 
-        JComboBox[] cbg = createCBGroup();
-
-        TableColumnModel cm = table1.getColumnModel();
-        for (int i = 0; i < cbg.length; i++) {
-            cm.getColumn(0).setCellEditor(new DefaultCellEditor(cbg[i]));
-        }
-
         table1.setShowVerticalLines(true);
         table1.setShowHorizontalLines(true);
         table1.setColumnSelectionAllowed(false);
