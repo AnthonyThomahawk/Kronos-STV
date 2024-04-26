@@ -133,6 +133,10 @@ public class createScenario extends JPanel {
         model.addRow(row);
     }
 
+    private void button1(ActionEvent e) {
+        // TODO add your code here
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -150,6 +154,7 @@ public class createScenario extends JPanel {
 
         //---- button1 ----
         button1.setText("Get results");
+        button1.addActionListener(e -> button1(e));
 
         //---- button2 ----
         button2.setText("Add +");

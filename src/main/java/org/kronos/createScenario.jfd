@@ -17,6 +17,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"
 				"text": "Get results"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button2"
