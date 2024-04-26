@@ -5,10 +5,12 @@
 package org.kronos;
 
 import java.awt.event.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -16,48 +18,14 @@ import javax.swing.table.TableColumnModel;
  */
 public class createScenario extends JPanel {
     public static int ballotCount = 1;
+    ArrayList<JComboBox[]> cbGroups;
 
     public createScenario() {
         initComponents();
         initTable();
     }
 
-    private void initTable() {
-        Class<?>[] columnTypes = new Class[inputCandidates.candidateCount+2];
-        columnTypes[0] = Integer.class;
-        for (int i = 1; i < columnTypes.length-1; i++) {
-            columnTypes[i] = Object.class;
-        }
-        columnTypes[columnTypes.length-1] = Integer.class;
-
-        String[] cols = new String[inputCandidates.candidateCount+2];
-        cols[0] = "Permutation #";
-        for (int i = 1; i < cols.length - 1; i++) {
-            cols[i] = "Option " + i;
-        }
-        cols[cols.length-1] = "Combo Multiplier";
-
-        Object[] row = new Object[inputCandidates.candidateCount+2];
-        row[0] = ballotCount;
-        for (int i = 1; i < row.length - 1; i++) {
-            row[i] = null;
-        }
-        row[row.length-1] = 1;
-
-        table1.setModel(new DefaultTableModel(new Object[][] {
-                row
-        }, cols)
-        {
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                return columnTypes[columnIndex];
-            }
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return columnIndex != 0;
-            }
-        });
-
+    private JComboBox[] createCBGroup() {
         JComboBox[] cbGroup = new JComboBox[inputCandidates.candidateCount];
         for (int i = 0; i < cbGroup.length; i++) {
             cbGroup[i] = new JComboBox(inputCandidates.candidates);
@@ -84,11 +52,65 @@ public class createScenario extends JPanel {
             });
         }
 
+        return cbGroup;
+    }
+
+    private void initTable() {
+        Class<?>[] columnTypes = new Class[inputCandidates.candidateCount+2];
+        columnTypes[0] = Integer.class;
+        for (int i = 1; i < columnTypes.length-1; i++) {
+            columnTypes[i] = Object.class;
+        }
+        columnTypes[columnTypes.length-1] = Integer.class;
+
+        String[] tcol = new String[inputCandidates.candidateCount+2];
+        tcol[0] = "Permutation #";
+        for (int i = 1; i < tcol.length - 1; i++) {
+            tcol[i] = "Option " + i;
+        }
+        tcol[tcol.length-1] = "Combo Multiplier";
+
+        Object[] trow = new Object[inputCandidates.candidateCount+2];
+        trow[0] = ballotCount;
+        for (int i = 1; i < trow.length - 1; i++) {
+            trow[i] = null;
+        }
+        trow[trow.length-1] = 1;
+
+        cbGroups = new ArrayList<>();
+        cbGroups.add(createCBGroup());
+
+        // this was added directly below in the form gen code
+        // keeping this because if any changes are made to form, the editor removes the override
+//        table1 = new JTable() {
+//            @Override
+//            public TableCellEditor getCellEditor(int row, int column) {
+//                if (column != 0 && column != inputCandidates.candidateCount+2){
+//                    return new DefaultCellEditor(cbGroups.get(row)[column-1]);
+//                }
+//                return super.getCellEditor(row, column);
+//            }
+//        };
+
+        table1.setModel(new DefaultTableModel(new Object[][] {
+                trow
+        }, tcol)
+        {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnTypes[columnIndex];
+            }
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return columnIndex != 0;
+            }
+        });
+
+        JComboBox[] cbg = createCBGroup();
+
         TableColumnModel cm = table1.getColumnModel();
-        int j = 0;
-        for (int i = 1; i < table1.getColumnCount()-1; i++) {
-            cm.getColumn(i).setCellEditor(new DefaultCellEditor(cbGroup[j]));
-            j++;
+        for (int i = 0; i < cbg.length; i++) {
+            cm.getColumn(0).setCellEditor(new DefaultCellEditor(cbg[i]));
         }
 
         table1.setShowVerticalLines(true);
@@ -114,6 +136,7 @@ public class createScenario extends JPanel {
             row[i] = null;
         }
         row[row.length-1] = 1;
+        cbGroups.add(createCBGroup());
         model.addRow(row);
     }
 
@@ -121,7 +144,15 @@ public class createScenario extends JPanel {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         scrollPane1 = new JScrollPane();
-        table1 = new JTable();
+        table1 = new JTable() {
+            @Override
+            public TableCellEditor getCellEditor(int row, int column) {
+                if (column != 0 && column != inputCandidates.candidateCount+1){
+                    return new DefaultCellEditor(cbGroups.get(row)[column-1]);
+                }
+                return super.getCellEditor(row, column);
+            }
+        };
         button1 = new JButton();
         button2 = new JButton();
 
