@@ -68,6 +68,7 @@ public class inputCandidates extends JPanel {
         table1.setShowVerticalLines(true);
         table1.setColumnSelectionAllowed(false);
         table1.setRowSelectionAllowed(false);
+        table1.getTableHeader().setReorderingAllowed(false);
 
         //setCellColor(table1, Color.RED, "Candidate name", 0, 1);
     }

@@ -7,6 +7,7 @@ package org.kronos;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -22,8 +23,15 @@ public class createScenario extends JPanel {
     }
 
     private void initTable() {
+        Class<?>[] columnTypes = new Class[inputCandidates.candidateCount+2];
+        columnTypes[0] = Integer.class;
+        for (int i = 1; i < columnTypes.length-1; i++) {
+            columnTypes[i] = Object.class;
+        }
+        columnTypes[columnTypes.length-1] = Integer.class;
+
         String[] cols = new String[inputCandidates.candidateCount+2];
-        cols[0] = "Combination #";
+        cols[0] = "Permutation #";
         for (int i = 1; i < cols.length - 1; i++) {
             cols[i] = "Option " + i;
         }
@@ -41,6 +49,10 @@ public class createScenario extends JPanel {
         }, cols)
         {
             @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return columnTypes[columnIndex];
+            }
+            @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex != 0;
             }
@@ -55,6 +67,14 @@ public class createScenario extends JPanel {
         table1.setShowHorizontalLines(true);
         table1.setColumnSelectionAllowed(false);
         table1.setRowSelectionAllowed(false);
+        table1.getTableHeader().setReorderingAllowed(false);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+
+        for (int i = 0; i < table1.getColumnCount(); i++) {
+            table1.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
     }
 
     private void button2(ActionEvent e) {
