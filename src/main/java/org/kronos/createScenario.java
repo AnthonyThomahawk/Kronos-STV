@@ -5,6 +5,8 @@
 package org.kronos;
 
 import java.awt.event.*;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -133,8 +135,47 @@ public class createScenario extends JPanel {
         model.addRow(row);
     }
 
+    private void generateBallotFile(String filename) {
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        int multipliers[] = new int[dtm.getRowCount()];
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            multipliers[i] = (Integer)dtm.getValueAt(i, inputCandidates.candidateCount+1);
+        }
+
+        try {
+            PrintWriter out = new PrintWriter(filename);
+            for (int i = 0; i < cbGroups.size(); i++) {
+                JComboBox[] cbg = cbGroups.get(i);
+                StringBuilder permutation = new StringBuilder();
+                ArrayList<String> selections = new ArrayList<>();
+
+                for (int j = 0; j < cbg.length; j++) {
+                    if (cbg[j].getSelectedItem() != null) {
+                        selections.add((String)cbg[j].getSelectedItem());
+                    }
+                }
+
+                for (int z = 0; z < selections.size(); z++) {
+                    permutation.append(selections.get(z));
+                    if (z != selections.size() - 1) {
+                        permutation.append(", ");
+                    }
+                }
+
+                for (int k = 0; k < multipliers[i]; k++) {
+                    out.println(permutation);
+                }
+            }
+
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        }
+    }
+
     private void button1(ActionEvent e) {
-        // TODO add your code here
+        generateBallotFile("b1.csv");
     }
 
     private void initComponents() {
