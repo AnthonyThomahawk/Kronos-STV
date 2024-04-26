@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumnModel;
+import java.io.File;
 
 /**
  * @author Enterprise
@@ -176,6 +177,19 @@ public class createScenario extends JPanel {
 
     private void button1(ActionEvent e) {
         generateBallotFile("b1.csv");
+        STVpy stv = new STVpy();
+
+        try {
+            String result = stv.callSTV("b1.csv");
+            File ballotsFile = new File("b1.csv");
+            ballotsFile.delete();
+            PrintWriter out = new PrintWriter("result.txt");
+            out.print(result);
+            out.flush();
+            out.close();
+        } catch (Exception x) {
+            System.out.println(x);
+        }
     }
 
     private void initComponents() {
