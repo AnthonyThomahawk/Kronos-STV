@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq t {space :0:383:x, comp button2:::p:135:p, space :::p, comp button1:::p:134:p}, comp scrollPane1::l::658:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::421:x, space :::p, par l:::p {comp button1::::36:x, comp button2::::36:x}, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::::658:x, seq {comp button2:::p:90:p, space ::434:x, comp button1:::p:134:p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1:::p::p, space :::x, par l {comp button1:::p::p, comp button2::l:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -20,12 +20,12 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button2"
-				"text": "Add ballot"
+				"text": "Add +"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 670, 475 )
+			"size": new java.awt.Dimension( 670, 465 )
 		} )
 	}
 }

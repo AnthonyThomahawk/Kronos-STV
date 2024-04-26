@@ -58,9 +58,37 @@ public class createScenario extends JPanel {
             }
         });
 
+        JComboBox[] cbGroup = new JComboBox[inputCandidates.candidateCount];
+        for (int i = 0; i < cbGroup.length; i++) {
+            cbGroup[i] = new JComboBox(inputCandidates.candidates);
+
+            cbGroup[i].setSelectedIndex(-1); // for some reason not all comboboxes had 0 as index and they need to be init with blank (-1)
+            final int currentBox = i;
+            cbGroup[currentBox].addItemListener(e -> { // CAUTION! use ITEM LISTENER instead of ACTION LISTENER to track combobox changes!
+                if (cbGroup[currentBox].getSelectedIndex() == -1)
+                    return;
+
+                for (int j = 0; j < cbGroup.length; j++) {
+                    if (j == currentBox)
+                        continue;
+
+                    if (cbGroup[j].getSelectedIndex() == -1)
+                        continue;
+
+                    if (cbGroup[currentBox].getSelectedIndex() == cbGroup[j].getSelectedIndex()) {
+                        cbGroup[currentBox].setSelectedIndex(-1); // clear selection (! only works with item listener !)
+                        JOptionPane.showMessageDialog(null, "Candidate cannot be repeated within a permutation.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+            });
+        }
+
         TableColumnModel cm = table1.getColumnModel();
+        int j = 0;
         for (int i = 1; i < table1.getColumnCount()-1; i++) {
-            cm.getColumn(i).setCellEditor(new DefaultCellEditor(new JComboBox(inputCandidates.candidates)));
+            cm.getColumn(i).setCellEditor(new DefaultCellEditor(cbGroup[j]));
+            j++;
         }
 
         table1.setShowVerticalLines(true);
@@ -108,34 +136,33 @@ public class createScenario extends JPanel {
         button1.setText("Get results");
 
         //---- button2 ----
-        button2.setText("Add ballot");
+        button2.setText("Add +");
         button2.addActionListener(e -> button2(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 383, Short.MAX_VALUE)
-                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
+                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(button1, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                        .addComponent(button2, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
-                    .addContainerGap())
+                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(button1)
+                        .addComponent(button2))
+                    .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

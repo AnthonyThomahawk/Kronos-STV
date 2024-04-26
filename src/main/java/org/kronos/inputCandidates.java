@@ -163,7 +163,7 @@ public class inputCandidates extends JPanel {
         }
 
         //---- button2 ----
-        button2.setText("Add candidate");
+        button2.setText("Add +");
         button2.addActionListener(e -> button2(e));
 
         GroupLayout layout = new GroupLayout(this);
@@ -175,12 +175,11 @@ public class inputCandidates extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(button2)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button1))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addGap(0, 218, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                            .addComponent(button2))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
                     .addContainerGap())
         );
@@ -188,13 +187,13 @@ public class inputCandidates extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label1)
+                        .addComponent(button2))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(button1)
-                        .addComponent(button2))
+                    .addComponent(button1)
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on

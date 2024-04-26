@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {seq l {space :0:0:x, comp button2:::p::p, space :::p, comp button1:::p::p}, seq {comp label1:::p::p, space :0:218:x}, comp scrollPane1::l::433:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1::::467:x, space :p::p, par b {comp button1::b:p::p, comp button2::b:p::p}, space :p::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, par l {seq l {space :0:0:x, comp button1:::p::p}, seq {comp label1:::p::p, space ::111:x, comp button2:::p::p}, comp scrollPane1::l::433:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp button2::b:p::p}, space :p::p, comp scrollPane1::::467:x, space :p::p, comp button1:::p::p, space :p::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -26,7 +26,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button2"
-				"text": "Add candidate"
+				"text": "Add +"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
