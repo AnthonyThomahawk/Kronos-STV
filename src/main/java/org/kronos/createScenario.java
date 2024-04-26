@@ -4,25 +4,41 @@
 
 package org.kronos;
 
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  * @author Enterprise
  */
-public class createBallots extends JPanel {
-    public createBallots() {
+public class createScenario extends JPanel {
+    public static int ballotCount = 1;
+
+    public createScenario() {
         initComponents();
         initTable();
     }
 
     private void initTable() {
+        String[] cols = new String[inputCandidates.candidateCount+2];
+        cols[0] = "Combination #";
+        for (int i = 1; i < cols.length - 1; i++) {
+            cols[i] = "Option " + i;
+        }
+        cols[cols.length-1] = "Combo Multiplier";
+
+        Object[] row = new Object[inputCandidates.candidateCount+2];
+        row[0] = ballotCount;
+        for (int i = 1; i < row.length - 1; i++) {
+            row[i] = null;
+        }
+        row[row.length-1] = 1;
+
         table1.setModel(new DefaultTableModel(new Object[][] {
-                {1}
-        }, new String[] {
-                "Ballot number #"
-        })
+                row
+        }, cols)
         {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -30,10 +46,27 @@ public class createBallots extends JPanel {
             }
         });
 
-        DefaultTableModel model = (DefaultTableModel) table1.getModel();
-        for (int i = 2; i <= inputCandidates.candidateCount; i++) {
-            model.addRow(new Object[]{i});
+        TableColumnModel cm = table1.getColumnModel();
+        for (int i = 1; i < table1.getColumnCount()-1; i++) {
+            cm.getColumn(i).setCellEditor(new DefaultCellEditor(new JComboBox(inputCandidates.candidates)));
         }
+
+        table1.setShowVerticalLines(true);
+        table1.setShowHorizontalLines(true);
+        table1.setColumnSelectionAllowed(false);
+        table1.setRowSelectionAllowed(false);
+    }
+
+    private void button2(ActionEvent e) {
+        DefaultTableModel model = (DefaultTableModel) table1.getModel();
+        ballotCount++;
+        Object[] row = new Object[inputCandidates.candidateCount+2];
+        row[0] = ballotCount;
+        for (int i = 1; i < row.length - 1; i++) {
+            row[i] = null;
+        }
+        row[row.length-1] = 1;
+        model.addRow(row);
     }
 
     private void initComponents() {
@@ -42,6 +75,7 @@ public class createBallots extends JPanel {
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button1 = new JButton();
+        button2 = new JButton();
 
         //======== this ========
 
@@ -53,6 +87,10 @@ public class createBallots extends JPanel {
         //---- button1 ----
         button1.setText("Get results");
 
+        //---- button2 ----
+        button2.setText("Add ballot");
+        button2.addActionListener(e -> button2(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -61,7 +99,9 @@ public class createBallots extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 524, Short.MAX_VALUE)
+                            .addGap(0, 383, Short.MAX_VALUE)
+                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
                     .addContainerGap())
@@ -72,7 +112,9 @@ public class createBallots extends JPanel {
                     .addContainerGap()
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(button1, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                        .addComponent(button2, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -83,5 +125,6 @@ public class createBallots extends JPanel {
     private JScrollPane scrollPane1;
     private JTable table1;
     private JButton button1;
+    private JButton button2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

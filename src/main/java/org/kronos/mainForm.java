@@ -53,7 +53,7 @@ public class mainForm extends JPanel {
         if (inputCandidates.success) {
             createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
             centerChildDialog(createBallotsDlg);
-            createBallots c = new createBallots();
+            createScenario c = new createScenario();
             createBallotsDlg.setContentPane(c);
             createBallotsDlg.pack();
             createBallotsDlg.setVisible(true);
