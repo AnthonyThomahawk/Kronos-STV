@@ -5,8 +5,7 @@
 package org.kronos;
 
 import java.awt.event.*;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -14,7 +13,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumnModel;
-import java.io.File;
 
 /**
  * @author Enterprise
@@ -144,7 +142,8 @@ public class createScenario extends JPanel {
         }
 
         try {
-            PrintWriter out = new PrintWriter(filename);
+            OutputStream outputStream = new FileOutputStream(filename);
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"));
             for (int i = 0; i < cbGroups.size(); i++) {
                 JComboBox[] cbg = cbGroups.get(i);
                 StringBuilder permutation = new StringBuilder();
@@ -170,7 +169,7 @@ public class createScenario extends JPanel {
 
             out.flush();
             out.close();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -183,7 +182,8 @@ public class createScenario extends JPanel {
             String result = stv.callSTV("b1.csv");
             File ballotsFile = new File("b1.csv");
             ballotsFile.delete();
-            PrintWriter out = new PrintWriter("result.txt");
+            OutputStream outputStream = new FileOutputStream("result.txt");
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"));
             out.print(result);
             out.flush();
             out.close();
