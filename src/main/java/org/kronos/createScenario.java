@@ -80,17 +80,17 @@ public class createScenario extends JPanel {
         cbGroups = new ArrayList<>();
         cbGroups.add(createCBGroup());
 
-        // this was added directly below in the form gen code
-        // keeping this because if any changes are made to form, the editor removes the override
-//        table1 = new JTable() {
-//            @Override
-//            public TableCellEditor getCellEditor(int row, int column) {
-//                if (column != 0 && column != inputCandidates.candidateCount+2){
-//                    return new DefaultCellEditor(cbGroups.get(row)[column-1]);
-//                }
-//                return super.getCellEditor(row, column);
-//            }
-//        };
+        table1 = new JTable() {
+            @Override
+            public TableCellEditor getCellEditor(int row, int column) {
+                if (column != 0 && column != inputCandidates.candidateCount+1){
+                    return new DefaultCellEditor(cbGroups.get(row)[column-1]);
+                }
+                return super.getCellEditor(row, column);
+            }
+        };
+
+        scrollPane1.setViewportView(table1);
 
         table1.setModel(new DefaultTableModel(new Object[][] {
                 trow
@@ -144,15 +144,7 @@ public class createScenario extends JPanel {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         scrollPane1 = new JScrollPane();
-        table1 = new JTable() {
-            @Override
-            public TableCellEditor getCellEditor(int row, int column) {
-                if (column != 0 && column != inputCandidates.candidateCount+1){
-                    return new DefaultCellEditor(cbGroups.get(row)[column-1]);
-                }
-                return super.getCellEditor(row, column);
-            }
-        };
+        table1 = new JTable();
         button1 = new JButton();
         button2 = new JButton();
 
@@ -190,7 +182,7 @@ public class createScenario extends JPanel {
                     .addContainerGap()
                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(button1)
                         .addComponent(button2))
                     .addGap(8, 8, 8))
