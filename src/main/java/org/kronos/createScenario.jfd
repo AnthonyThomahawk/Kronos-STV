@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::t::658:x, seq t {comp button2:::p:90:p, space ::434:x, comp button1:::p:134:p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1:::p::p, space :::x, par b {comp button1::b:p::p, comp button2::b:p::p}, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::t::658:x, seq t {comp button2:::p:90:p, space ::205:x, comp checkBox1:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button1:::p:134:p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp scrollPane1::::423:x, space :p::p, par b {comp button1::b:p::p, comp button2::b:p::p, comp spinner1::b:p::p, comp checkBox1::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -23,6 +23,15 @@ new FormModel {
 				name: "button2"
 				"text": "Add +"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "checkBox1"
+				"text": "Custom seats to be filled"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBox1", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "spinner1"
+				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "spinner1StateChanged", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

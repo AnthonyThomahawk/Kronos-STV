@@ -9,6 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -23,6 +24,8 @@ public class createScenario extends JPanel {
 
     public createScenario() {
         initComponents();
+        spinner1.setEnabled(false);
+        spinner1.setValue(1);
         initTable();
     }
 
@@ -179,7 +182,12 @@ public class createScenario extends JPanel {
         STVpy stv = new STVpy();
 
         try {
-            String result = stv.callSTV("b1.csv");
+            String result;
+            if (checkBox1.isSelected()) {
+                result = stv.callSTV("b1.csv", (Integer)spinner1.getValue());
+            } else {
+                result = stv.callSTV("b1.csv");
+            }
             File ballotsFile = new File("b1.csv");
             ballotsFile.delete();
             OutputStream outputStream = new FileOutputStream("result.txt");
@@ -192,6 +200,16 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void checkBox1(ActionEvent e) {
+        spinner1.setEnabled(checkBox1.isSelected());
+    }
+
+    private void spinner1StateChanged(ChangeEvent e) {
+        if ((Integer)spinner1.getValue() < 1) {
+            spinner1.setValue(1);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -199,6 +217,8 @@ public class createScenario extends JPanel {
         table1 = new JTable();
         button1 = new JButton();
         button2 = new JButton();
+        checkBox1 = new JCheckBox();
+        spinner1 = new JSpinner();
 
         //======== this ========
 
@@ -215,6 +235,13 @@ public class createScenario extends JPanel {
         button2.setText("Add +");
         button2.addActionListener(e -> button2(e));
 
+        //---- checkBox1 ----
+        checkBox1.setText("Custom seats to be filled");
+        checkBox1.addActionListener(e -> checkBox1(e));
+
+        //---- spinner1 ----
+        spinner1.addChangeListener(e -> spinner1StateChanged(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -225,7 +252,11 @@ public class createScenario extends JPanel {
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(button2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
+                            .addComponent(checkBox1)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap())
         );
@@ -233,11 +264,13 @@ public class createScenario extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(button1)
-                        .addComponent(button2))
+                        .addComponent(button2)
+                        .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(checkBox1))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -249,5 +282,7 @@ public class createScenario extends JPanel {
     private JTable table1;
     private JButton button1;
     private JButton button2;
+    private JCheckBox checkBox1;
+    private JSpinner spinner1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
