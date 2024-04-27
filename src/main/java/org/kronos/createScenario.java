@@ -190,6 +190,7 @@ public class createScenario extends JPanel {
             }
             File ballotsFile = new File("b1.csv");
             ballotsFile.delete();
+            STVResults res = new STVResults(result, ballotCount);
             OutputStream outputStream = new FileOutputStream("result.txt");
             PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"));
             out.print(result);
