@@ -1,10 +1,9 @@
 package org.kronos;
 
-import org.omg.CORBA.Environment;
-
 public class STVResults {
     String[] elected;
     Float[] votes;
+    public int lowestRank;
     int ballotCount;
 
     private void parseResultString(String input) {
@@ -20,11 +19,13 @@ public class STVResults {
             String p3 = p2.replace(")", "");
             votes[i] = Float.parseFloat(p3);
         }
+        lowestRank = lines.length;
     }
 
     public STVResults(String[] e, Float[] v, int bc) {
         elected = e;
         votes = v;
+        lowestRank = v.length;
         ballotCount = bc;
     }
 

@@ -19,7 +19,8 @@ import javax.swing.table.TableColumnModel;
  * @author Enterprise
  */
 public class createScenario extends JPanel {
-    public static int ballotCount = 1;
+    private int ballotCount = 1;
+    public static STVResults electionResults;
     ArrayList<JComboBox[]> cbGroups;
 
     public createScenario() {
@@ -180,24 +181,23 @@ public class createScenario extends JPanel {
     private void button1(ActionEvent e) {
         generateBallotFile("b1.csv");
         STVpy stv = new STVpy();
+        String stvOutput;
 
         try {
-            String result;
             if (checkBox1.isSelected()) {
-                result = stv.callSTV("b1.csv", (Integer)spinner1.getValue());
+                stvOutput = stv.callSTV("b1.csv", (Integer)spinner1.getValue());
             } else {
-                result = stv.callSTV("b1.csv");
+                stvOutput = stv.callSTV("b1.csv");
             }
-            File ballotsFile = new File("b1.csv");
-            ballotsFile.delete();
-            STVResults res = new STVResults(result, ballotCount);
-            OutputStream outputStream = new FileOutputStream("result.txt");
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            out.print(result);
-            out.flush();
-            out.close();
         } catch (Exception x) {
-            System.out.println(x);
+            return;
+        }
+
+        File ballotsFile = new File("b1.csv");
+        ballotsFile.delete();
+        electionResults = new STVResults(stvOutput, ballotCount);
+        for (int rank = 1; rank <= electionResults.lowestRank; rank++) {
+            System.out.println("Rank : " + rank + " Name : " + electionResults.getElected(rank) + " Votes : " + electionResults.getVotes(rank));
         }
     }
 
