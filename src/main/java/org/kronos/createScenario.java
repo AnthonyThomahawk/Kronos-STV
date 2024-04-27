@@ -72,7 +72,7 @@ public class createScenario extends JPanel {
         for (int i = 1; i < tcol.length - 1; i++) {
             tcol[i] = "Option " + i;
         }
-        tcol[tcol.length-1] = "Combo Multiplier";
+        tcol[tcol.length-1] = "Multiplier";
 
         Object[] trow = new Object[inputCandidates.candidateCount+2];
         trow[0] = ballotCount;

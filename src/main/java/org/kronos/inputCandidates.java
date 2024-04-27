@@ -81,7 +81,6 @@ public class inputCandidates extends JPanel {
 
         ResourceBundle messages = ResourceBundle.getBundle("messages", currentLocale, new UTF8Control());
 
-        label1.setText(messages.getString("createscenariobtn"));
         button1.setText(messages.getString("create"));
     }
 
@@ -149,7 +148,7 @@ public class inputCandidates extends JPanel {
         //======== this ========
 
         //---- label1 ----
-        label1.setText("Create new scenario");
+        label1.setText("Enter candidates");
         label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 12f));
 
         //---- button1 ----
@@ -177,7 +176,7 @@ public class inputCandidates extends JPanel {
                             .addComponent(button1))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                             .addComponent(button2))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
                     .addContainerGap())
