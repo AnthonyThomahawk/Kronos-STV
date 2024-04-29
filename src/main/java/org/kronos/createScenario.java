@@ -180,14 +180,6 @@ public class createScenario extends JPanel {
         }
     }
 
-    void centerChildDialog(JDialog childDlg) {
-        int c1 = this.getWidth()/2;
-        int c2 = this.getHeight()/2;
-        int x = (Toolkit.getDefaultToolkit().getScreenSize().width/2)-c1;
-        int y = (Toolkit.getDefaultToolkit().getScreenSize().height/2)-c2;
-        childDlg.setLocation(x,y);
-    }
-
     private void button1(ActionEvent e) {
         generateBallotFile("b1.csv");
         STVpy stv = new STVpy();
@@ -208,15 +200,11 @@ public class createScenario extends JPanel {
         electionResults = new STVResults(stvOutput, ballotCount);
 
         JDialog j = new JDialog(Main.mainFrame, "", true);
-        centerChildDialog(j);
         resultForm x = new resultForm();
         j.setContentPane(x);
         j.pack();
+        j.setLocationRelativeTo(null);
         j.setVisible(true);
-
-//        for (int rank = 1; rank <= electionResults.lastRank; rank++) {
-//            System.out.println("Rank : " + rank + " Name : " + electionResults.getElected(rank) + " Votes : " + electionResults.getVotes(rank));
-//        }
     }
 
     private void checkBox1(ActionEvent e) {

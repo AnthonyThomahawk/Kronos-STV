@@ -34,28 +34,20 @@ public class mainForm extends JPanel {
         label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
     }
 
-     void centerChildDialog(JDialog childDlg) {
-        int c1 = this.getWidth()/2;
-        int c2 = this.getHeight()/2;
-        int x = (Toolkit.getDefaultToolkit().getScreenSize().width/2)-c1;
-        int y = (Toolkit.getDefaultToolkit().getScreenSize().height/2)-c2;
-        childDlg.setLocation(x,y);
-    }
-
     private void button1(ActionEvent e) {
         inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
-        centerChildDialog(inputCandidatesDlg);
         inputCandidates f = new inputCandidates();
         inputCandidatesDlg.setContentPane(f);
         inputCandidatesDlg.pack();
+        inputCandidatesDlg.setLocationRelativeTo(null);
         inputCandidatesDlg.setVisible(true);
 
         if (inputCandidates.success) {
             createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
-            centerChildDialog(createBallotsDlg);
             createScenario c = new createScenario();
             createBallotsDlg.setContentPane(c);
             createBallotsDlg.pack();
+            createBallotsDlg.setLocationRelativeTo(null);
             createBallotsDlg.setVisible(true);
         }
     }
