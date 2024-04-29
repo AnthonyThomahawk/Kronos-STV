@@ -34,7 +34,7 @@ public class mainForm extends JPanel {
         label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
     }
 
-    private void centerChildDialog(JDialog childDlg) {
+     void centerChildDialog(JDialog childDlg) {
         int c1 = this.getWidth()/2;
         int c2 = this.getHeight()/2;
         int x = (Toolkit.getDefaultToolkit().getScreenSize().width/2)-c1;

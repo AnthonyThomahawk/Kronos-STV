@@ -3,6 +3,7 @@ package org.kronos;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static JFrame mainFrame;
@@ -17,5 +18,7 @@ public class Main {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
+
+
     }
 }

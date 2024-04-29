@@ -3,7 +3,7 @@ package org.kronos;
 public class STVResults {
     String[] elected;
     Float[] votes;
-    public int lowestRank;
+    public int lastRank;
     int ballotCount;
 
     private void parseResultString(String input) {
@@ -19,13 +19,13 @@ public class STVResults {
             String p3 = p2.replace(")", "");
             votes[i] = Float.parseFloat(p3);
         }
-        lowestRank = lines.length;
+        lastRank = lines.length;
     }
 
     public STVResults(String[] e, Float[] v, int bc) {
         elected = e;
         votes = v;
-        lowestRank = v.length;
+        lastRank = v.length;
         ballotCount = bc;
     }
 

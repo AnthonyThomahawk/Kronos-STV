@@ -4,6 +4,9 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JD;
+
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -13,7 +16,6 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumnModel;
 
 /**
  * @author Enterprise
@@ -68,19 +70,19 @@ public class createScenario extends JPanel {
         }
         columnTypes[columnTypes.length-1] = Integer.class;
 
-        String[] tcol = new String[inputCandidates.candidateCount+2];
-        tcol[0] = "Permutation #";
-        for (int i = 1; i < tcol.length - 1; i++) {
-            tcol[i] = "Option " + i;
+        String[] tCol = new String[inputCandidates.candidateCount+2];
+        tCol[0] = "Permutation #";
+        for (int i = 1; i < tCol.length - 1; i++) {
+            tCol[i] = "Option " + i;
         }
-        tcol[tcol.length-1] = "Multiplier";
+        tCol[tCol.length-1] = "Multiplier";
 
-        Object[] trow = new Object[inputCandidates.candidateCount+2];
-        trow[0] = ballotCount;
-        for (int i = 1; i < trow.length - 1; i++) {
-            trow[i] = null;
+        Object[] tRow = new Object[inputCandidates.candidateCount+2];
+        tRow[0] = ballotCount;
+        for (int i = 1; i < tRow.length - 1; i++) {
+            tRow[i] = null;
         }
-        trow[trow.length-1] = 1;
+        tRow[tRow.length-1] = 1;
 
         cbGroups = new ArrayList<>();
         cbGroups.add(createCBGroup());
@@ -98,8 +100,8 @@ public class createScenario extends JPanel {
         scrollPane1.setViewportView(table1);
 
         table1.setModel(new DefaultTableModel(new Object[][] {
-                trow
-        }, tcol)
+                tRow
+        }, tCol)
         {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -178,6 +180,14 @@ public class createScenario extends JPanel {
         }
     }
 
+    void centerChildDialog(JDialog childDlg) {
+        int c1 = this.getWidth()/2;
+        int c2 = this.getHeight()/2;
+        int x = (Toolkit.getDefaultToolkit().getScreenSize().width/2)-c1;
+        int y = (Toolkit.getDefaultToolkit().getScreenSize().height/2)-c2;
+        childDlg.setLocation(x,y);
+    }
+
     private void button1(ActionEvent e) {
         generateBallotFile("b1.csv");
         STVpy stv = new STVpy();
@@ -196,9 +206,17 @@ public class createScenario extends JPanel {
         File ballotsFile = new File("b1.csv");
         ballotsFile.delete();
         electionResults = new STVResults(stvOutput, ballotCount);
-        for (int rank = 1; rank <= electionResults.lowestRank; rank++) {
-            System.out.println("Rank : " + rank + " Name : " + electionResults.getElected(rank) + " Votes : " + electionResults.getVotes(rank));
-        }
+
+        JDialog j = new JDialog(Main.mainFrame, "", true);
+        centerChildDialog(j);
+        resultForm x = new resultForm();
+        j.setContentPane(x);
+        j.pack();
+        j.setVisible(true);
+
+//        for (int rank = 1; rank <= electionResults.lastRank; rank++) {
+//            System.out.println("Rank : " + rank + " Name : " + electionResults.getElected(rank) + " Votes : " + electionResults.getVotes(rank));
+//        }
     }
 
     private void checkBox1(ActionEvent e) {
