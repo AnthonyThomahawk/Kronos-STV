@@ -19,7 +19,9 @@ public class mainForm extends JPanel {
     public static JDialog createBallotsDlg;
     public mainForm() {
         initComponents();
-        initLocale();
+        //initLocale();
+
+        //label3.setText("<html>" + "Create a voting scenario with Kronos by entering all the available candidates, and then add the ballots of the voters. You will then be able to adjust all the ballot permutations and find out which candidate gets elected." + "</html>");
     }
 
     private void initLocale() {
@@ -27,11 +29,11 @@ public class mainForm extends JPanel {
 
         currentLocale = Locale.ENGLISH;
 
-        //currentLocale = new Locale("gr", "GR");
+        currentLocale = new Locale("gr", "GR");
 
         ResourceBundle messages = ResourceBundle.getBundle("messages", currentLocale, new UTF8Control());
-        label4.setText("<html>" + messages.getString("createscenariobtn") + "</html>");
-        label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
+        //label4.setText("<html>" + messages.getString("createscenariobtn") + "</html>");
+        //label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
     }
 
     private void button1(ActionEvent e) {
@@ -61,9 +63,9 @@ public class mainForm extends JPanel {
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
         button1 = new JButton();
-        label4 = new JLabel();
-        label5 = new JLabel();
         button2 = new JButton();
+        label2 = new JLabel();
+        label3 = new JLabel();
 
         //======== this ========
 
@@ -74,63 +76,55 @@ public class mainForm extends JPanel {
         //---- button1 ----
         button1.setIcon(null);
         button1.setText("+");
-        button1.setFont(button1.getFont().deriveFont(button1.getFont().getStyle() | Font.BOLD, button1.getFont().getSize() + 50f));
-        button1.setVerticalAlignment(SwingConstants.TOP);
+        button1.setFont(button1.getFont().deriveFont(button1.getFont().getStyle() | Font.BOLD, button1.getFont().getSize() + 9f));
         button1.addActionListener(e -> button1(e));
-
-        //---- label4 ----
-        label4.setText("create scenario");
-        label4.setHorizontalAlignment(SwingConstants.CENTER);
-        label4.setVerticalAlignment(SwingConstants.TOP);
-
-        //---- label5 ----
-        label5.setText("Load scenario");
-        label5.setHorizontalAlignment(SwingConstants.CENTER);
-        label5.setVerticalAlignment(SwingConstants.TOP);
 
         //---- button2 ----
         button2.setText("\ud83d\udcc1");
-        button2.setFont(button2.getFont().deriveFont(button2.getFont().getSize() + 50f));
+        button2.setFont(button2.getFont().deriveFont(button2.getFont().getSize() + 9f));
         button2.addActionListener(e -> button2(e));
+
+        //---- label2 ----
+        label2.setText("Create a voting scenario");
+
+        //---- label3 ----
+        label3.setText("Load scenario");
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(93, 93, 93)
+                            .addComponent(button1)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(label2, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup()
                                 .addComponent(label1)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE))))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(99, 99, 99)
-                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(label5, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(24, Short.MAX_VALUE))
+                                    .addComponent(button2)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE)))
+                            .addGap(0, 5, Short.MAX_VALUE)))
+                    .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(11, 11, 11)
+                    .addContainerGap()
                     .addComponent(label1)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(button2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(button1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(label2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-                    .addGap(12, 12, 12))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(button2)
+                        .addComponent(label3, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -139,8 +133,8 @@ public class mainForm extends JPanel {
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
     private JLabel label1;
     private JButton button1;
-    private JLabel label4;
-    private JLabel label5;
     private JButton button2;
+    private JLabel label2;
+    private JLabel label3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

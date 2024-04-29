@@ -20,7 +20,7 @@ public class inputCandidates extends JPanel {
     public inputCandidates() {
         candidateCount = 1;
         initComponents();
-        initLocale();
+        //initLocale();
         initTable();
         success = false;
     }

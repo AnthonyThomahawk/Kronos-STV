@@ -13,10 +13,11 @@ public class STVResults {
         votes = new Float[lines.length];
         for (int i = 0; i < lines.length; i++) {
             elected[i] = lines[i].split("'")[1].split("'")[0];
-            String delim = (i+1) + ",";
-            String p1 = lines[i].split(delim)[1];
+
+            String p1 = lines[i].split(",")[2];
             String p2 = p1.replace(" ", "");
             String p3 = p2.replace(")", "");
+
             votes[i] = Float.parseFloat(p3);
         }
         lastRank = lines.length;
