@@ -81,8 +81,6 @@ public class inputCandidates extends JPanel {
                 updateStatus();
             }
         });
-
-        //setCellColor(table1, Color.RED, "Candidate name", 0, 1);
     }
 
     private void initLocale() {
@@ -101,19 +99,36 @@ public class inputCandidates extends JPanel {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
 
+        // candidate >= 1 count check
         if (rows <= 1) {
             label2.setText("<html>" + "<b> Alert : </b>" +
-                    "<br> <b style=\"color:RED;\">There must be more than 1 candidates.</b>" +"</html>");
+                    "<br> <b style=\"color:RED;\">There must be more than 1 candidate.</b>" +"</html>");
             button1.setEnabled(false);
             return;
         }
 
+        // candidate name not empty check
         for (int i = 0; i < rows; i++) {
             if (dtm.getValueAt(i, 1).equals("")) {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " does not have a name.</b>" +"</html>");
                 button1.setEnabled(false);
                 return;
+            }
+        }
+
+        // duplicate name check
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < rows; j++) {
+                if (j == i)
+                    continue;
+
+                if (dtm.getValueAt(i,1).equals(dtm.getValueAt(j,1))) {
+                    label2.setText("<html>" + "<b> Alert : </b>" +
+                            "<br> <b style=\"color:RED;\">Candidates " + (i+1) + " and " + (j+1) + " cannot have the same name.</b>" +"</html>");
+                    button1.setEnabled(false);
+                    return;
+                }
             }
         }
 
