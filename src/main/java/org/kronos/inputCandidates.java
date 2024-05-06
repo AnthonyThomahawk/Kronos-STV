@@ -4,7 +4,6 @@
 
 package org.kronos;
 
-import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import javax.swing.*;
@@ -26,25 +25,6 @@ public class inputCandidates extends JPanel {
         //initLocale();
         initTable();
         success = false;
-    }
-
-    public static void setCellColorEmpty(JTable t, Color color, String columnName) {
-        t.getColumn(columnName).setCellRenderer(
-                new DefaultTableCellRenderer() {
-                    @Override
-                    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                        setText(value.toString());
-                        setHorizontalAlignment(CENTER);
-
-                        if (value.toString().equals("")) {
-                            setBackground(color);
-                        } else {
-                            setBackground(table.getBackground());
-                        }
-                        return this;
-                    }
-                }
-        );
     }
 
     private void initTable() {
