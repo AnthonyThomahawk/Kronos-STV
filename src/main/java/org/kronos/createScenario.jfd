@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq {comp button2:::p:90:p, space ::205:x, comp checkBox1:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button1:::p:134:p}, comp scrollPane1::l::658:x, comp label1::l::658:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1::::31:x, space :p::p, comp scrollPane1::::421:x, space :p::p, par b {comp button1::b:p::p, comp button2::b:p::p, comp spinner1::b:p::p, comp checkBox1::b:p::p}, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq {comp button2:::p:90:p, space ::103:x, comp checkBox1:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button1:::p:115:p, space :::p, comp button3:::p:115:p}, comp scrollPane1::l::658:x, comp label1::l::658:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp label1::::31:x, space :p::p, comp scrollPane1::::421:x, space :p::p, par b {comp button2::b:p::p, comp button3::b:p::p, comp spinner1::b:p::p, comp checkBox1::b:p::p, comp button1::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -37,6 +37,11 @@ new FormModel {
 				name: "label1"
 				"text": "tooltip"
 				"verticalAlignment": 1
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button3"
+				"text": "Export As CSV"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
