@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {seq l {space :0:0:x, comp button1:::p::p}, seq {comp label1:::p::p, space ::146:x, comp button2:::p::p}, comp scrollPane1::l::433:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp button2::b:p::p}, space :p::p, comp scrollPane1::::467:x, space :p::p, comp button1:::p::p, space :p::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :0:2:x, comp label2:::p:363:p, space :::p, comp button1:::p::p}, comp scrollPane1::::0:x, seq {comp label1:::p::p, space :::x, comp button2:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp button2::b:p::p}, space :::p, comp scrollPane1::::484:x, space :::p, par l {comp button1::t:p::p, comp label2::t:p:30:p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -22,6 +22,7 @@ new FormModel {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "table1"
+					addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "table1PropertyChange", true, "table1" ) )
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -29,9 +30,14 @@ new FormModel {
 				"text": "Add +"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "tooltip"
+				"verticalAlignment": 1
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 445, 545 )
+			"size": new java.awt.Dimension( 455, 570 )
 		} )
 	}
 }

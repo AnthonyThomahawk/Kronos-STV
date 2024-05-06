@@ -6,8 +6,11 @@ package org.kronos;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.util.Locale;
@@ -70,6 +73,15 @@ public class inputCandidates extends JPanel {
         table1.setRowSelectionAllowed(false);
         table1.getTableHeader().setReorderingAllowed(false);
 
+        updateStatus();
+
+        table1.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                updateStatus();
+            }
+        });
+
         //setCellColor(table1, Color.RED, "Candidate name", 0, 1);
     }
 
@@ -85,24 +97,29 @@ public class inputCandidates extends JPanel {
         button1.setText(messages.getString("create"));
     }
 
-    private boolean checkData() {
+    private void updateStatus() {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
+
+        if (rows <= 1) {
+            label2.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">There must be more than 1 candidates.</b>" +"</html>");
+            button1.setEnabled(false);
+            return;
+        }
+
         for (int i = 0; i < rows; i++) {
             if (dtm.getValueAt(i, 1).equals("")) {
-                setCellColorEmpty(table1, Color.RED, "Candidate name");
-                table1.repaint();
-                JOptionPane.showMessageDialog(null, "All candidates must have names.", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
+                label2.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " does not have a name.</b>" +"</html>");
+                button1.setEnabled(false);
+                return;
             }
         }
 
-        if (rows <= 1) {
-            JOptionPane.showMessageDialog(null, "Candidates must be more than 1.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
+        label2.setText("<html>" + "<b> Status : </b>" +
+                "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
+        button1.setEnabled(true);
     }
 
     private String[] extractDataToString() {
@@ -118,9 +135,6 @@ public class inputCandidates extends JPanel {
     }
 
     private void button1(ActionEvent e) {
-        if (!checkData())
-            return;
-
         candidates = extractDataToString();
 
         try {
@@ -137,6 +151,10 @@ public class inputCandidates extends JPanel {
         model.addRow(new Object[]{candidateCount, ""});
     }
 
+    private void table1PropertyChange(PropertyChangeEvent e) {
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -145,6 +163,7 @@ public class inputCandidates extends JPanel {
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         button2 = new JButton();
+        label2 = new JLabel();
 
         //======== this ========
 
@@ -158,12 +177,19 @@ public class inputCandidates extends JPanel {
 
         //======== scrollPane1 ========
         {
+
+            //---- table1 ----
+            table1.addPropertyChangeListener("table1", e -> table1PropertyChange(e));
             scrollPane1.setViewportView(table1);
         }
 
         //---- button2 ----
         button2.setText("Add +");
         button2.addActionListener(e -> button2(e));
+
+        //---- label2 ----
+        label2.setText("tooltip");
+        label2.setVerticalAlignment(SwingConstants.TOP);
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -173,13 +199,15 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
+                            .addGap(0, 2, Short.MAX_VALUE)
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button1))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
-                            .addComponent(button2))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(button2)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -190,9 +218,11 @@ public class inputCandidates extends JPanel {
                         .addComponent(label1)
                         .addComponent(button2))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 467, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(button1)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(button1, GroupLayout.Alignment.TRAILING)
+                        .addComponent(label2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -205,5 +235,6 @@ public class inputCandidates extends JPanel {
     private JScrollPane scrollPane1;
     private JTable table1;
     private JButton button2;
+    private JLabel label2;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
