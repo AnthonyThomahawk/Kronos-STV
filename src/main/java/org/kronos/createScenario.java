@@ -125,6 +125,15 @@ public class createScenario extends JPanel {
         for (int i = 0; i < table1.getColumnCount(); i++) {
             table1.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
+
+        updateStatus();
+
+        table1.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                updateStatus();
+            }
+        });
     }
 
     private void button2(ActionEvent e) {
@@ -217,6 +226,42 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void updateStatus() {
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        int rows = dtm.getRowCount();
+        int cols = dtm.getColumnCount();
+
+        for (int i = 0; i < rows; i++) {
+            boolean endOnNull = false;
+            for (int j = 1; j < cols - 1; j++) {
+                // check first option
+                if (j == 1) {
+                    if (dtm.getValueAt(i,j) == null) {
+                        label1.setText("<html>" + "<b> Alert : </b>" +
+                                "<br> <b style=\"color:RED;\">Permutation " + (i+1) + " does not have a first choice.</b>" +"</html>");
+                        button1.setEnabled(false);
+                        return;
+                    }
+                }
+
+                // check the rest for skips
+                if (dtm.getValueAt(i,j) != null && endOnNull) {
+                    label1.setText("<html>" + "<b> Alert : </b>" +
+                            "<br> <b style=\"color:RED;\">Permutation " + (i+1) + " skips choices.</b>" +"</html>");
+                    button1.setEnabled(false);
+                    return;
+                }
+
+                if (dtm.getValueAt(i,j) == null)
+                    endOnNull = true;
+            }
+        }
+
+        label1.setText("<html>" + "<b> Status : </b>" +
+                "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
+        button1.setEnabled(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -226,6 +271,7 @@ public class createScenario extends JPanel {
         button2 = new JButton();
         checkBox1 = new JCheckBox();
         spinner1 = new JSpinner();
+        label1 = new JLabel();
 
         //======== this ========
 
@@ -249,14 +295,17 @@ public class createScenario extends JPanel {
         //---- spinner1 ----
         spinner1.addChangeListener(e -> spinner1StateChanged(e));
 
+        //---- label1 ----
+        label1.setText("tooltip");
+        label1.setVerticalAlignment(SwingConstants.TOP);
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
-                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(button2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 205, Short.MAX_VALUE)
@@ -264,14 +313,18 @@ public class createScenario extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
+                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
+                    .addComponent(label1, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(button1)
@@ -291,5 +344,6 @@ public class createScenario extends JPanel {
     private JButton button2;
     private JCheckBox checkBox1;
     private JSpinner spinner1;
+    private JLabel label1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
