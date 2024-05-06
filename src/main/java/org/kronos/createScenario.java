@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
@@ -35,13 +36,21 @@ public class createScenario extends JPanel {
     private JComboBox[] createCBGroup() {
         JComboBox[] cbGroup = new JComboBox[inputCandidates.candidateCount];
         for (int i = 0; i < cbGroup.length; i++) {
-            cbGroup[i] = new JComboBox(inputCandidates.candidates);
+            String[] opts = Arrays.copyOf(inputCandidates.candidates, inputCandidates.candidateCount+1);
+            opts[inputCandidates.candidateCount] = "Clear option [x]";
+
+            cbGroup[i] = new JComboBox(opts);
 
             cbGroup[i].setSelectedIndex(-1); // for some reason not all comboboxes had 0 as index and they need to be init with blank (-1)
             final int currentBox = i;
             cbGroup[currentBox].addItemListener(e -> { // CAUTION! use ITEM LISTENER instead of ACTION LISTENER to track combobox changes!
                 if (cbGroup[currentBox].getSelectedIndex() == -1)
                     return;
+
+                if (cbGroup[currentBox].getSelectedIndex() == inputCandidates.candidateCount) {
+                    cbGroup[currentBox].setSelectedIndex(-1);
+                    return;
+                }
 
                 for (int j = 0; j < cbGroup.length; j++) {
                     if (j == currentBox)
