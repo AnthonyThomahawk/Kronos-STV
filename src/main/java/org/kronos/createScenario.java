@@ -58,14 +58,14 @@ public class createScenario extends JPanel {
             // parse candidates
             String contentC = content.replace("\r\n", ", ");
             String[] tokens = contentC.split(", ");
-            String[] unique = new HashSet<String>(Arrays.asList(tokens)).toArray(new String[0]);
+            String[] unique = new HashSet<>(Arrays.asList(tokens)).toArray(new String[0]);
             inputCandidates.candidates = unique;
             inputCandidates.candidateCount = unique.length;
 
             // parse permutations
             String[] lines = content.split("\r\n");
 
-            String[] p = new HashSet<String>(Arrays.asList(lines)).toArray(new String[0]);
+            String[] p = new HashSet<>(Arrays.asList(lines)).toArray(new String[0]);
             List<String> permutations = Arrays.asList(p);
             List<String> allPermutations = Arrays.asList(lines);
 
