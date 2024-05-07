@@ -82,8 +82,7 @@ public class inputCandidates extends JPanel {
 
         // candidate >= 1 count check
         if (rows <= 1) {
-            label2.setText("<html>" + "<b> Alert : </b>" +
-                    "<br> <b style=\"color:RED;\">There must be more than 1 candidate.</b>" +"</html>");
+            label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">There must be more than 1 candidate.</b></html>");
             button1.setEnabled(false);
             return;
         }
@@ -113,8 +112,7 @@ public class inputCandidates extends JPanel {
             }
         }
 
-        label2.setText("<html>" + "<b> Status : </b>" +
-                "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
+        label2.setText("<html><b> Status : </b><br> <b style=\"color:GREEN;\">OK</b></html>");
         button1.setEnabled(true);
     }
 
