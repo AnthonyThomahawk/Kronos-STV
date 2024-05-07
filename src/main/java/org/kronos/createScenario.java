@@ -66,13 +66,12 @@ public class createScenario extends JPanel {
             String[] lines = content.split("\r\n");
 
             String[] p = new HashSet<>(Arrays.asList(lines)).toArray(new String[0]);
-            List<String> permutations = Arrays.asList(p);
             List<String> allPermutations = Arrays.asList(lines);
 
             loadedPermutations = new ArrayList<>();
             loadedPermutationsMult = new ArrayList<>();
 
-            for (String permutation : permutations) {
+            for (String permutation : p) {
                 loadedPermutations.add(permutation.split(", "));
                 loadedPermutationsMult.add(Collections.frequency(allPermutations, permutation));
             }
