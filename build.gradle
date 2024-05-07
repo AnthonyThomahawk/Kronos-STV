@@ -1,4 +1,5 @@
 plugins {
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'java'
 }
 
@@ -7,6 +8,7 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
@@ -19,4 +21,18 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.kronos.Main'
+        )
+    }
+}
+
+shadowJar {
+    archiveBaseName.set('Kronos')
+    archiveClassifier.set('')
+    archiveVersion.set('')
 }
