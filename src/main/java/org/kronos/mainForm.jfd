@@ -4,40 +4,54 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp button1:::p::p, space :::p, comp label2::::137:x}, seq {par l {comp label1:::p::p, seq l {comp button2:::p::p, space :::p, comp label3:::p:132:p}}, space :0:5:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :p::p, par l:::p {comp button1:::::x, comp label2:::::x}, space :::p, par b {comp button2::b:p::p, comp label3::b:p:35:p}, space :::x}}"
+			"$horizontalGroup": "par l {seq {par l {seq {space :::p, par t:::p {comp label5::::378:x, comp label4::t::378:x, seq l {comp button2:::p:46:p, space u:::p, comp label3:::p:132:p}, seq l {comp button1:::p:46:p, space u:::p, comp label2:::p:259:p}}}, seq l {space :p:140:p, comp label1:::p::p}}, space ::11:x}}"
+			"$verticalGroup": "par l {seq l {space :p:12:p, comp label1:::p::p, space :::p, par b {comp button1::b:p:46:p, comp label2::b:p:35:p}, space :::p, comp label4:::p::p, space :::p, par b {comp button2::b:p:46:p, comp label3::b:p:35:p}, space :::p, comp label5:::p:59:p, space ::33:x}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": "Kronos STV"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, false )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 10, false )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
 				"text": "+"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 9, false )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
+				"verticalAlignment": 1
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button2"
 				"text": "\ud83d\udcc1"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 9, false )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
 				"text": "Create a voting scenario"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 5, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
 				"text": "Load scenario"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 5, false )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "<html> <p align=\"justify\"> Create a voting scenario with kronos by entering your desired candidates, and then create virtual ballots to determine the winner. </p></html>"
+				"horizontalAlignment": 2
+				"verticalAlignment": 1
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "<html> <p align=\"justify\"> Load a pre-made scenario that contains candidates and their virtual ballots. Scenarios have .CSV and .XLSX formats. </p> </html>"
+				"verticalAlignment": 1
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 190, 130 )
+			"size": new java.awt.Dimension( 395, 285 )
 		} )
 	}
 }
