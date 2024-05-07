@@ -25,6 +25,7 @@ new FormModel {
 				"text": "\ud83d\udcc1"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 9, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"

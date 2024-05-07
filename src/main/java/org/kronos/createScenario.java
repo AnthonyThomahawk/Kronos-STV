@@ -4,9 +4,6 @@
 
 package org.kronos;
 
-import jdk.nashorn.internal.scripts.JD;
-
-import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -14,9 +11,16 @@ import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author Enterprise
@@ -24,13 +28,59 @@ import javax.swing.table.TableCellEditor;
 public class createScenario extends JPanel {
     private int ballotCount = 1;
     public static STVResults electionResults;
-    ArrayList<JComboBox[]> cbGroups;
+    private ArrayList<String[]> loadedPermutations;
+    private ArrayList<Integer> loadedPermutationsMult;
+    private ArrayList<JComboBox[]> cbGroups;
 
     public createScenario() {
         initComponents();
+        loadedPermutationsMult = null;
+        loadedPermutations = null;
         spinner1.setEnabled(false);
         spinner1.setValue(1);
         initTable();
+    }
+
+    public createScenario(String ballotFile) {
+        initComponents();
+        spinner1.setEnabled(false);
+        spinner1.setValue(1);
+        parseBallotFile(ballotFile);
+        initTable();
+    }
+
+    private void parseBallotFile(String file) {
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(file));
+            String content = new String(bytes, StandardCharsets.UTF_8);
+
+
+            // parse candidates
+            String contentC = content.replace("\r\n", ", ");
+            String[] tokens = contentC.split(", ");
+            String[] unique = new HashSet<String>(Arrays.asList(tokens)).toArray(new String[0]);
+            inputCandidates.candidates = unique;
+            inputCandidates.candidateCount = unique.length;
+
+            // parse permutations
+            String[] lines = content.split("\r\n");
+
+            String[] p = new HashSet<String>(Arrays.asList(lines)).toArray(new String[0]);
+            List<String> permutations = Arrays.asList(p);
+            List<String> allPermutations = Arrays.asList(lines);
+
+            loadedPermutations = new ArrayList<>();
+            loadedPermutationsMult = new ArrayList<>();
+
+            for (String permutation : permutations) {
+                loadedPermutations.add(permutation.split(", "));
+                loadedPermutationsMult.add(Collections.frequency(allPermutations, permutation));
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
 
     private JComboBox[] createCBGroup() {
@@ -135,6 +185,10 @@ public class createScenario extends JPanel {
             table1.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
+        if (loadedPermutations != null) {
+            populateTableFromFile();
+        }
+
         updateStatus();
 
         table1.getModel().addTableModelListener(new TableModelListener() {
@@ -143,6 +197,32 @@ public class createScenario extends JPanel {
                 updateStatus();
             }
         });
+    }
+
+    private void populateTableFromFile() {
+        DefaultTableModel model = (DefaultTableModel) table1.getModel();
+        model.removeRow(0);
+        ballotCount = 0;
+        cbGroups = new ArrayList<>();
+        for (int i = 0; i < loadedPermutations.size(); i++) {
+            ballotCount++;
+            Object[] row = new Object[inputCandidates.candidateCount+2];
+            row[0] = ballotCount;
+            String[] sel = loadedPermutations.get(i);
+            for (int j = 1; j < row.length - 1; j++) {
+                try {
+                    row[j] = sel[j-1];
+                } catch(Exception e) {
+                    row[j] = null;
+                }
+            }
+            row[row.length-1] = loadedPermutationsMult.get(i);
+            cbGroups.add(createCBGroup());
+            for (int x = 0; x < sel.length; x++) {
+                cbGroups.get(i)[x].setSelectedItem(sel[x]);
+            }
+            model.addRow(row);
+        }
     }
 
     private void button2(ActionEvent e) {

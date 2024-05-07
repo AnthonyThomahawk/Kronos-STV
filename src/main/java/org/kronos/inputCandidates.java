@@ -21,6 +21,7 @@ public class inputCandidates extends JPanel {
     public static boolean success = false;
     public inputCandidates() {
         candidateCount = 1;
+        candidates = new String[]{};
         initComponents();
         //initLocale();
         initTable();

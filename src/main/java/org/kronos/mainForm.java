@@ -6,6 +6,7 @@ package org.kronos;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.*;
@@ -55,7 +56,18 @@ public class mainForm extends JPanel {
     }
 
     private void button2(ActionEvent e) {
-        // TODO add your code here
+        JFileChooser fileChooser = new JFileChooser();
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            String fileAbsolutePath = file.getAbsolutePath();
+
+            createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
+            createScenario c = new createScenario(fileAbsolutePath);
+            createBallotsDlg.setContentPane(c);
+            createBallotsDlg.pack();
+            createBallotsDlg.setLocationRelativeTo(null);
+            createBallotsDlg.setVisible(true);
+        }
     }
 
     private void initComponents() {
@@ -82,7 +94,10 @@ public class mainForm extends JPanel {
         //---- button2 ----
         button2.setText("\ud83d\udcc1");
         button2.setFont(button2.getFont().deriveFont(button2.getFont().getSize() + 9f));
-        button2.addActionListener(e -> button2(e));
+        button2.addActionListener(e -> {
+			button2(e);
+			button2(e);
+		});
 
         //---- label2 ----
         label2.setText("Create a voting scenario");
