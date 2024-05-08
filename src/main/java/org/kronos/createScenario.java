@@ -157,7 +157,7 @@ public class createScenario extends JPanel {
                 boolean result = super.editCellAt(row, column, e);
                 final Component editor = getEditorComponent();
 
-                if (editor != null && editor instanceof JTextField) {
+                if (editor instanceof JTextField) {
                     ((JTextField) editor).setText("");
                 }
 
