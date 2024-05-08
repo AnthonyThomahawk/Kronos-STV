@@ -11,7 +11,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
 				"text": "Enter candidates"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 12, false )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 9, false )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "button1"

@@ -129,7 +129,7 @@ public class createScenario extends JPanel {
         columnTypes[columnTypes.length-1] = Integer.class;
 
         String[] tCol = new String[inputCandidates.candidateCount+2];
-        tCol[0] = "Permutation #";
+        tCol[0] = "Ballot #";
         for (int i = 1; i < tCol.length - 1; i++) {
             tCol[i] = "Option " + i;
         }
@@ -326,7 +326,7 @@ public class createScenario extends JPanel {
                 if (j == 1) {
                     if (dtm.getValueAt(i,j) == null) {
                         label1.setText("<html>" + "<b> Alert : </b>" +
-                                "<br> <b style=\"color:RED;\">Permutation " + (i+1) + " does not have a first choice.</b>" +"</html>");
+                                "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " does not have a first choice.</b>" +"</html>");
                         button1.setEnabled(false);
                         button3.setEnabled(false);
                         return;
@@ -336,7 +336,7 @@ public class createScenario extends JPanel {
                 // check the rest for skips
                 if (dtm.getValueAt(i,j) != null && endOnNull) {
                     label1.setText("<html>" + "<b> Alert : </b>" +
-                            "<br> <b style=\"color:RED;\">Permutation " + (i+1) + " skips choices.</b>" +"</html>");
+                            "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " skips choices.</b>" +"</html>");
                     button1.setEnabled(false);
                     button3.setEnabled(false);
                     return;

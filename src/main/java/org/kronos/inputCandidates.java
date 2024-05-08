@@ -163,7 +163,7 @@ public class inputCandidates extends JPanel {
 
         //---- label1 ----
         label1.setText("Enter candidates");
-        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 12f));
+        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 9f));
 
         //---- button1 ----
         button1.setText("Create");
