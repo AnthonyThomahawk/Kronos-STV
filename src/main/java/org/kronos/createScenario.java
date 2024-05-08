@@ -4,21 +4,20 @@
 
 package org.kronos;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import javax.swing.text.JTextComponent;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -151,6 +150,18 @@ public class createScenario extends JPanel {
                     return new DefaultCellEditor(cbGroups.get(row)[column-1]);
                 }
                 return super.getCellEditor(row, column);
+            }
+            @Override
+            public boolean editCellAt(int row, int column, EventObject e)
+            {
+                boolean result = super.editCellAt(row, column, e);
+                final Component editor = getEditorComponent();
+
+                if (editor != null && editor instanceof JTextField) {
+                    ((JTextField) editor).setText("");
+                }
+
+                return result;
             }
         };
 
