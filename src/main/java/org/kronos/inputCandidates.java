@@ -143,6 +143,8 @@ public class inputCandidates extends JPanel {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         candidateCount++;
         model.addRow(new Object[]{candidateCount, ""});
+        table1.requestFocus();
+        table1.editCellAt(candidateCount-1, 1);
     }
 
     private void table1PropertyChange(PropertyChangeEvent e) {
