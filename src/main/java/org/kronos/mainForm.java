@@ -73,7 +73,6 @@ public class mainForm extends JPanel {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-        label1 = new JLabel();
         button1 = new JButton();
         button2 = new JButton();
         label2 = new JLabel();
@@ -82,10 +81,6 @@ public class mainForm extends JPanel {
         label5 = new JLabel();
 
         //======== this ========
-
-        //---- label1 ----
-        label1.setText("Kronos STV");
-        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 10f));
 
         //---- button1 ----
         button1.setIcon(null);
@@ -104,70 +99,65 @@ public class mainForm extends JPanel {
 
         //---- label2 ----
         label2.setText("Create a voting scenario");
-        label2.setFont(label2.getFont().deriveFont(label2.getFont().getSize() + 5f));
+        label2.setFont(label2.getFont().deriveFont(label2.getFont().getSize() + 13f));
 
         //---- label3 ----
         label3.setText("Load scenario");
-        label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 5f));
+        label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 13f));
 
         //---- label4 ----
         label4.setText("<html> <p align=\"justify\"> Create a voting scenario with kronos by entering your desired candidates, and then create virtual ballots to determine the winner. </p></html>");
         label4.setHorizontalAlignment(SwingConstants.LEFT);
         label4.setVerticalAlignment(SwingConstants.TOP);
+        label4.setFont(label4.getFont().deriveFont(label4.getFont().getSize() + 3f));
 
         //---- label5 ----
         label5.setText("<html> <p align=\"justify\"> Load a pre-made scenario that contains candidates and their virtual ballots. Scenarios have .CSV and .XLSX formats. </p> </html>");
         label5.setVerticalAlignment(SwingConstants.TOP);
+        label5.setFont(label5.getFont().deriveFont(label5.getFont().getSize() + 3f));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
                     .addGroup(layout.createParallelGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(label5, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                                .addComponent(label4, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-                                .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(button2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE))
-                                .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE))))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(140, 140, 140)
-                            .addComponent(label1)))
-                    .addContainerGap(11, Short.MAX_VALUE))
+                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(12, 12, 12)
-                    .addComponent(label1)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup()
                         .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(button2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label3, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(button2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(label3, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(33, Short.MAX_VALUE))
+                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(27, Short.MAX_VALUE))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-    private JLabel label1;
     private JButton button1;
     private JButton button2;
     private JLabel label2;
