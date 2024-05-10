@@ -352,6 +352,8 @@ public class createScenario extends JPanel {
                 }
 
                 // check the rest for skips
+
+                // null found AND current element not null, so the ballot skips choices
                 if (dtm.getValueAt(i,j) != null && endOnNull) {
                     label1.setText("<html>" + "<b> Alert : </b>" +
                             "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " skips choices.</b>" +"</html>");
@@ -360,6 +362,7 @@ public class createScenario extends JPanel {
                     return;
                 }
 
+                // null found
                 if (dtm.getValueAt(i,j) == null)
                     endOnNull = true;
             }
