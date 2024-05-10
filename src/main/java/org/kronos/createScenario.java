@@ -184,7 +184,7 @@ public class createScenario extends JPanel {
         table1.setShowVerticalLines(true);
         table1.setShowHorizontalLines(true);
         table1.setColumnSelectionAllowed(false);
-        table1.setRowSelectionAllowed(false);
+        table1.setRowSelectionAllowed(true);
         table1.getTableHeader().setReorderingAllowed(false);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -329,6 +329,14 @@ public class createScenario extends JPanel {
         int rows = dtm.getRowCount();
         int cols = dtm.getColumnCount();
 
+        if (rows < 1) {
+            label1.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">There must be at least 1 ballot.</b>" +"</html>");
+            button1.setEnabled(false);
+            button3.setEnabled(false);
+            return;
+        }
+
         for (int i = 0; i < rows; i++) {
             boolean endOnNull = false;
             for (int j = 1; j < cols - 1; j++) {
@@ -373,6 +381,17 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void button4(ActionEvent e) {
+        int rowToRemove = table1.getSelectedRow();
+        if (rowToRemove != -1) {
+            DefaultTableModel m = (DefaultTableModel) table1.getModel();
+            m.removeRow(rowToRemove);
+            for (int i = 0; i < m.getRowCount(); i++) {
+                m.setValueAt(i+1, i, 0);
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -384,6 +403,7 @@ public class createScenario extends JPanel {
         spinner1 = new JSpinner();
         label1 = new JLabel();
         button3 = new JButton();
+        button4 = new JButton();
 
         //======== this ========
 
@@ -415,6 +435,10 @@ public class createScenario extends JPanel {
         button3.setText("Export As CSV");
         button3.addActionListener(e -> button3(e));
 
+        //---- button4 ----
+        button4.setText("Remove -");
+        button4.addActionListener(e -> button4(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -423,8 +447,10 @@ public class createScenario extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                            .addComponent(button2)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(button4)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
                             .addComponent(checkBox1)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -445,11 +471,12 @@ public class createScenario extends JPanel {
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(button2)
                         .addComponent(button3)
                         .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(checkBox1)
-                        .addComponent(button1))
+                        .addComponent(button1)
+                        .addComponent(button2)
+                        .addComponent(button4))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -465,5 +492,6 @@ public class createScenario extends JPanel {
     private JSpinner spinner1;
     private JLabel label1;
     private JButton button3;
+    private JButton button4;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
