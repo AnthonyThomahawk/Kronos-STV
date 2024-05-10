@@ -12,6 +12,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.TableView;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -51,7 +52,7 @@ public class inputCandidates extends JPanel {
         table1.setShowHorizontalLines(true);
         table1.setShowVerticalLines(true);
         table1.setColumnSelectionAllowed(false);
-        table1.setRowSelectionAllowed(false);
+        table1.setRowSelectionAllowed(true);
         table1.getTableHeader().setReorderingAllowed(false);
 
         updateStatus();
@@ -151,6 +152,18 @@ public class inputCandidates extends JPanel {
 
     }
 
+    private void button3(ActionEvent e) {
+        int rowToRemove = table1.getSelectedRow();
+        if (rowToRemove != -1) {
+            candidateCount--;
+            DefaultTableModel m = (DefaultTableModel) table1.getModel();
+            m.removeRow(rowToRemove);
+            for (int i = 0; i < m.getRowCount(); i++) {
+                m.setValueAt(i+1, i, 0);
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -160,6 +173,7 @@ public class inputCandidates extends JPanel {
         table1 = new JTable();
         button2 = new JButton();
         label2 = new JLabel();
+        button3 = new JButton();
 
         //======== this ========
 
@@ -187,6 +201,10 @@ public class inputCandidates extends JPanel {
         label2.setText("tooltip");
         label2.setVerticalAlignment(SwingConstants.TOP);
 
+        //---- button3 ----
+        button3.setText("Remove -");
+        button3.addActionListener(e -> button3(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -202,7 +220,9 @@ public class inputCandidates extends JPanel {
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                            .addComponent(button3)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button2)))
                     .addContainerGap())
         );
@@ -212,9 +232,10 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label1)
-                        .addComponent(button2))
+                        .addComponent(button2)
+                        .addComponent(button3))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
                         .addComponent(button1, GroupLayout.Alignment.TRAILING)
@@ -232,5 +253,6 @@ public class inputCandidates extends JPanel {
     private JTable table1;
     private JButton button2;
     private JLabel label2;
+    private JButton button3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
