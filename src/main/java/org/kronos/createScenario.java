@@ -390,6 +390,7 @@ public class createScenario extends JPanel {
             ballotCount -= numRows;
             DefaultTableModel m = (DefaultTableModel) table1.getModel();
             for (int i = 0; i < numRows; i++) {
+                cbGroups.remove(table1.getSelectedRow());
                 m.removeRow(table1.getSelectedRow());
             }
             for (int i = 0; i < m.getRowCount(); i++) {

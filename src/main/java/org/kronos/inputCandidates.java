@@ -202,6 +202,7 @@ public class inputCandidates extends JPanel {
         //---- label2 ----
         label2.setText("tooltip");
         label2.setVerticalAlignment(SwingConstants.TOP);
+        label2.setHorizontalAlignment(SwingConstants.LEFT);
 
         //---- button3 ----
         button3.setText("Remove -");
@@ -222,7 +223,7 @@ public class inputCandidates extends JPanel {
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
                             .addComponent(button3)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button2)))
