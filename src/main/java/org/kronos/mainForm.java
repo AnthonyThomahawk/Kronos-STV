@@ -63,6 +63,11 @@ public class mainForm extends JPanel {
         fileChooser.setFileFilter(filter);
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
+            if (!file.exists()) {
+                JOptionPane.showMessageDialog(null, "File does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             String fileAbsolutePath = file.getAbsolutePath();
 
             createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
