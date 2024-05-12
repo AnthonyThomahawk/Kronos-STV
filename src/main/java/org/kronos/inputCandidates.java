@@ -155,7 +155,7 @@ public class inputCandidates extends JPanel {
     private void button3(ActionEvent e) {
         int numRows = table1.getSelectedRows().length;
         if (numRows != 0) {
-            candidateCount-= numRows;
+            candidateCount -= numRows;
             DefaultTableModel m = (DefaultTableModel) table1.getModel();
             for (int i = 0; i < numRows; i++) {
                 m.removeRow(table1.getSelectedRow());
