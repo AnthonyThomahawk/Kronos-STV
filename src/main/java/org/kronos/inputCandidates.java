@@ -30,6 +30,7 @@ public class inputCandidates extends JPanel {
     }
 
     private void initTable() {
+        button3.setEnabled(false);
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {"1", ""}
         }, new String[] {
@@ -42,6 +43,16 @@ public class inputCandidates extends JPanel {
                 return columnIndex != 0;
             }
 
+        });
+
+        table1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.getSelectedRows().length != 0) {
+                    button3.setEnabled(true);
+                }
+            }
         });
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -163,6 +174,7 @@ public class inputCandidates extends JPanel {
             for (int i = 0; i < m.getRowCount(); i++) {
                 m.setValueAt(i+1, i, 0);
             }
+            button3.setEnabled(false);
         }
     }
 
