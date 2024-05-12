@@ -108,7 +108,7 @@ public class createScenario extends JPanel {
 
                     if (cbGroup[currentBox].getSelectedIndex() == cbGroup[j].getSelectedIndex()) {
                         cbGroup[currentBox].setSelectedIndex(-1); // clear selection (! only works with item listener !)
-                        JOptionPane.showMessageDialog(null, "Candidate cannot be repeated within a permutation.", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Candidate cannot be repeated within a ballot.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }
