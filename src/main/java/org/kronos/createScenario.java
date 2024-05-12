@@ -119,6 +119,7 @@ public class createScenario extends JPanel {
     }
 
     private void initTable() {
+        button4.setEnabled(false);
         Class<?>[] columnTypes = new Class[inputCandidates.candidateCount+2];
         columnTypes[0] = Integer.class;
         for (int i = 1; i < columnTypes.length-1; i++) {
@@ -178,6 +179,16 @@ public class createScenario extends JPanel {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex != 0;
+            }
+        });
+
+        table1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.getSelectedRows().length != 0) {
+                    button4.setEnabled(true);
+                }
             }
         });
 
@@ -396,7 +407,11 @@ public class createScenario extends JPanel {
             for (int i = 0; i < m.getRowCount(); i++) {
                 m.setValueAt(i+1, i, 0);
             }
+            button4.setEnabled(false);
         }
+    }
+
+    private void table1MouseClicked(MouseEvent e) {
     }
 
     private void initComponents() {
@@ -416,6 +431,14 @@ public class createScenario extends JPanel {
 
         //======== scrollPane1 ========
         {
+
+            //---- table1 ----
+            table1.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    table1MouseClicked(e);
+                }
+            });
             scrollPane1.setViewportView(table1);
         }
 
@@ -457,7 +480,7 @@ public class createScenario extends JPanel {
                             .addComponent(button2)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(button4)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                             .addComponent(checkBox1)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)

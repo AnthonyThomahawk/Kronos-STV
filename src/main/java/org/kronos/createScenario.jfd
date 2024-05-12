@@ -4,7 +4,7 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp button2:::p::p, space :::p, comp button4:::p::p, space ::43:x, comp checkBox1:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button1:::p:115:p, space :::p, comp button3:::p:115:p}, comp scrollPane1::l::658:x, comp label1::l::658:x}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp button2:::p::p, space :::p, comp button4:::p::p, space ::34:x, comp checkBox1:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button1:::p:115:p, space :::p, comp button3:::p:115:p}, comp scrollPane1::l::658:x, comp label1::l::658:x}, space :::p}}"
 			"$verticalGroup": "par l {seq l {space :p::p, comp label1::::31:x, space :p::p, comp scrollPane1::::421:x, space :p::p, par b {comp button3::b:p::p, comp spinner1::b:p::p, comp checkBox1::b:p::p, comp button1::b:p::p, comp button2::b:p::p, comp button4::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
@@ -12,6 +12,7 @@ new FormModel {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTable" ) {
 					name: "table1"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "table1MouseClicked", true ) )
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
