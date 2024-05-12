@@ -153,11 +153,13 @@ public class inputCandidates extends JPanel {
     }
 
     private void button3(ActionEvent e) {
-        int rowToRemove = table1.getSelectedRow();
-        if (rowToRemove != -1) {
-            candidateCount--;
+        int numRows = table1.getSelectedRows().length;
+        if (numRows != 0) {
+            candidateCount-= numRows;
             DefaultTableModel m = (DefaultTableModel) table1.getModel();
-            m.removeRow(rowToRemove);
+            for (int i = 0; i < numRows; i++) {
+                m.removeRow(table1.getSelectedRow());
+            }
             for (int i = 0; i < m.getRowCount(); i++) {
                 m.setValueAt(i+1, i, 0);
             }
