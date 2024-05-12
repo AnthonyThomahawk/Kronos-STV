@@ -224,9 +224,9 @@ public class inputCandidates extends JPanel {
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-                            .addComponent(button3)
+                            .addComponent(button2)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button2)))
+                            .addComponent(button3)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -235,8 +235,8 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label1)
-                        .addComponent(button2)
-                        .addComponent(button3))
+                        .addComponent(button3)
+                        .addComponent(button2))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
