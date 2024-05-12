@@ -11,6 +11,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * @author Enterprise
@@ -57,6 +59,8 @@ public class mainForm extends JPanel {
 
     private void button2() {
         JFileChooser fileChooser = new JFileChooser();
+        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
+        fileChooser.setFileFilter(filter);
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             String fileAbsolutePath = file.getAbsolutePath();
