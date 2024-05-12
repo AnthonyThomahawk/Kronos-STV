@@ -55,7 +55,7 @@ public class mainForm extends JPanel {
         }
     }
 
-    private void button2(ActionEvent e) {
+    private void button2() {
         JFileChooser fileChooser = new JFileChooser();
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
@@ -93,8 +93,7 @@ public class mainForm extends JPanel {
         button2.setText("\ud83d\udcc1");
         button2.setFont(button2.getFont().deriveFont(button2.getFont().getStyle() | Font.BOLD, button2.getFont().getSize() + 15f));
         button2.addActionListener(e -> {
-			button2(e);
-			button2(e);
+			button2();
 		});
 
         //---- label2 ----
