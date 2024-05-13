@@ -11,6 +11,8 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -387,6 +389,8 @@ public class createScenario extends JPanel {
 
     private void button3(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
+        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
+        fileChooser.setFileFilter(filter);
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             String fileAbsolutePath = file.getAbsolutePath() + ".csv";
