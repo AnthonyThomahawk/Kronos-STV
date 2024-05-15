@@ -4,8 +4,14 @@
 
 package org.kronos;
 
+import java.awt.event.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -58,12 +64,51 @@ public class resultForm extends JPanel {
 
     }
 
+    private void exportResultsCSV(File f) throws IOException {
+        FileWriter out = new FileWriter(f.getAbsolutePath() + ".csv");
+
+        DefaultTableModel m = (DefaultTableModel) table1.getModel();
+
+        for (int i = 0; i < m.getRowCount(); i++) {
+            String []r = new String[3];
+
+            r[0] = Integer.toString((Integer) m.getValueAt(i, 0));
+            r[1] = (String) m.getValueAt(i, 1);
+            r[2] = Float.toString((Float) m.getValueAt(i, 2));
+
+            String line = r[0] + "," + r[1] + "," + r[2];
+            out.write(line);
+            out.write("\r\n");
+        }
+
+        out.flush();
+        out.close();
+
+        JOptionPane.showMessageDialog(null, "Results exported to : " + f.getAbsolutePath() + ".csv", "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void button1(ActionEvent e) {
+        JFileChooser fileChooser = new JFileChooser();
+        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
+        fileChooser.setFileFilter(filter);
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+
+            try {
+                exportResultsCSV(file);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(null, "Cannot write to file.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
+        button1 = new JButton();
 
         //======== this ========
 
@@ -76,6 +121,10 @@ public class resultForm extends JPanel {
             scrollPane1.setViewportView(table1);
         }
 
+        //---- button1 ----
+        button1.setText("Export as CSV");
+        button1.addActionListener(e -> button1(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,7 +132,10 @@ public class resultForm extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(label1)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label1)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                            .addComponent(button1))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
                     .addContainerGap())
         );
@@ -91,7 +143,9 @@ public class resultForm extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label1)
+                        .addComponent(button1))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                     .addContainerGap())
@@ -104,5 +158,6 @@ public class resultForm extends JPanel {
     private JLabel label1;
     private JScrollPane scrollPane1;
     private JTable table1;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
