@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -53,7 +52,7 @@ public class Main {
         }
 
         String verStr = output.split("Python ")[1];
-        verStr = verStr.replace("\r\n", "");
+        verStr = verStr.replace(System.lineSeparator(), "");
 
         String[] pythonVer = verStr.split("\\.");
 
