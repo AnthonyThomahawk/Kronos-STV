@@ -395,6 +395,7 @@ public class createScenario extends JPanel {
             String fileAbsolutePath = file.getAbsolutePath() + ".csv";
 
             generateBallotFile(fileAbsolutePath);
+            JOptionPane.showMessageDialog(null, "Ballots exported to : " + fileAbsolutePath, "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
