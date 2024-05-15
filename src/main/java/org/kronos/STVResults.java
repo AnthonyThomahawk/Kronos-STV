@@ -7,8 +7,8 @@ public class STVResults {
     int ballotCount;
 
     private void parseResultString(String input) {
-        String results = input.split("Results:\r\n")[1];
-        String[] lines = results.split("\r\n");
+        String results = input.split("Results:"+System.lineSeparator())[1];
+        String[] lines = results.split(System.lineSeparator());
         elected = new String[lines.length];
         votes = new Float[lines.length];
         for (int i = 0; i < lines.length; i++) {
