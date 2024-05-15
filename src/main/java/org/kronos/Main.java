@@ -57,9 +57,9 @@ public class Main {
 
         String[] pythonVer = verStr.split("\\.");
 
-        if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) > 6))
+        if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) >= 6))
         {
-            JOptionPane.showMessageDialog(null, "A python version was found, but python 3.6 or newer is required.\r\n Version found : " + verStr + "\r\n Needed : 3.6.0 or newer", "Incorrect python version", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Python 3.6 or newer is required.\r\n Version found : " + verStr + "\r\n Needed : 3.6.0 or newer", "Incorrect python version", JOptionPane.ERROR_MESSAGE);
             System.exit(3);
         }
     }
