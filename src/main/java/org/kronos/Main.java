@@ -60,7 +60,7 @@ public class Main {
 
         if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) >= 6))
         {
-            JOptionPane.showMessageDialog(null, "Python 3.6 or newer is required." + System.lineSeparator() + " Version found : " + verStr + System.lineSeparator() + "Needed : 3.6.0 or newer", "Incorrect python version", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Python 3.6 or newer is required." + System.lineSeparator() + "Version found : " + verStr + System.lineSeparator() + "Required : 3.6.0 or newer", "Incorrect python version", JOptionPane.ERROR_MESSAGE);
             System.exit(3);
         }
     }
