@@ -3,8 +3,6 @@ package org.kronos;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +67,7 @@ public class Main {
         FlatDarkLaf.setup();
         try{
             checkPython();
-        } catch (Exception e){}
+        } catch (Exception ignored){}
 
         checkSTV();
         mainFrame = new JFrame();
