@@ -45,7 +45,21 @@ public class mainForm extends JPanel {
         inputCandidatesDlg.setContentPane(f);
         inputCandidatesDlg.pack();
         inputCandidatesDlg.setLocationRelativeTo(null);
-        inputCandidatesDlg.setVisible(true);
+        inputCandidatesDlg.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    inputCandidatesDlg.dispose();
+                }
+            }
+        });
+        inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+
+        inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
+
 
         if (inputCandidates.success) {
             createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
@@ -53,7 +67,20 @@ public class mainForm extends JPanel {
             createBallotsDlg.setContentPane(c);
             createBallotsDlg.pack();
             createBallotsDlg.setLocationRelativeTo(null);
-            createBallotsDlg.setVisible(true);
+
+            createBallotsDlg.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    super.windowClosing(e);
+                    int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                        createBallotsDlg.dispose();
+                    }
+                }
+            });
+            createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
         }
     }
 
@@ -75,7 +102,20 @@ public class mainForm extends JPanel {
             createBallotsDlg.setContentPane(c);
             createBallotsDlg.pack();
             createBallotsDlg.setLocationRelativeTo(null);
-            createBallotsDlg.setVisible(true);
+
+            createBallotsDlg.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    super.windowClosing(e);
+                    int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                        createBallotsDlg.dispose();
+                    }
+                }
+            });
+            createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+            createBallotsDlg.setVisible(true); // BLOCKING CALL
         }
     }
 

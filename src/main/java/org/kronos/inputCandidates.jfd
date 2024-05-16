@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :0:2:x, comp label2:::p:363:p, space :::p, comp button1:::p::p}, comp scrollPane1::::0:x, seq {comp label1:::p::p, space ::130:x, comp button2:::p::p, space :::p, comp button3:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp button3::b:p::p, comp button2::b:p::p}, space :::p, comp scrollPane1::::487:x, space :::p, par l {comp button1::t:p::p, comp label2::t:p:30:p}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp button3::b:p::p, comp button2::b:p::p}, space :::p, comp scrollPane1::::502:x, space :::p, par t {seq {comp button1:::p::p, space :::p}, comp label2:::p:36:p}}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -43,7 +43,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 455, 570 )
+			"size": new java.awt.Dimension( 455, 585 )
 		} )
 	}
 }
