@@ -38,9 +38,6 @@ import sys
 import csv
 import argparse
 
-sys.stdout.reconfigure(encoding='utf-8') # Change STDIN and STDOUT encoding to UTF-8, required for Kronos
-sys.stdin.reconfigure(encoding='utf-8') # So it works for all platforms
-
 SVT_LOGGER = 'SVT'
 LOGGER_FORMAT = '%(message)s'
 LOG_MESSAGE = "{action} {desc}"
@@ -544,7 +541,7 @@ if __name__ == "__main__":
     ballots = []
     ballots_file = sys.stdin
     if args.ballots_file != 'sys.stdin':
-        ballots_file = open(args.ballots_file, "r", encoding="utf-8") # modified to open UTF8 files
+        ballots_file = open(args.ballots_file)
     ballots_reader = csv.reader(ballots_file, delimiter=',',
                                 quotechar='"',
                                 skipinitialspace=True)

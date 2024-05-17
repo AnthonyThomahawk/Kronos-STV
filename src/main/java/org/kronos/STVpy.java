@@ -1,7 +1,7 @@
 package org.kronos;
 
 public class STVpy {
-    public String coreScript = "stv.py";
+    public String coreScript = "loader.py";
 
     public String callSTV(String ballotFile, int seats) throws Exception {
         CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG", "-s", Integer.toString(seats));
