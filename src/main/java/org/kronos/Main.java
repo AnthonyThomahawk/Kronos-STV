@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -33,7 +32,6 @@ public class Main {
             InputStream stvCore = Main.class.getClassLoader().getResourceAsStream("stv.py");
             try {
                 Files.copy(stvCore, Paths.get("stv.py"));
-                JOptionPane.showMessageDialog(null, "stv.py backend not found, using built-in backend.", "Info", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception e) {
                 System.out.println(e);
                 JOptionPane.showMessageDialog(null, "Cannot write stv.py, terminating.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -71,7 +69,7 @@ public class Main {
 
         if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) >= 6))
         {
-            JOptionPane.showMessageDialog(null, "Python 3.6 or newer is required." + System.lineSeparator() + "Version found : " + verStr + System.lineSeparator() + "Required : 3.6.0 or newer", "Incorrect python version", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Python 3.6 or newer is required." + System.lineSeparator() + "Version found : " + verStr + System.lineSeparator() + "Required : 3.6.0 or newer", "Outdated python version", JOptionPane.ERROR_MESSAGE);
             System.exit(3);
         }
     }
