@@ -20,6 +20,7 @@ public class inputCandidates extends JPanel {
     public static int candidateCount = 1;
     public static String[] candidates = {};
     public static boolean success = false;
+    public static boolean unsaved = false;
     public inputCandidates() {
         candidateCount = 1;
         candidates = new String[]{};
@@ -71,9 +72,12 @@ public class inputCandidates extends JPanel {
         table1.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
+                unsaved = true;
                 updateStatus();
             }
         });
+
+        unsaved = false;
     }
 
     private void initLocale() {

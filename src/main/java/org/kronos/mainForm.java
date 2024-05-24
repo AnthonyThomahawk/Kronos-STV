@@ -49,6 +49,12 @@ public class mainForm extends JPanel {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
+
+                if (!inputCandidates.unsaved) {
+                    inputCandidatesDlg.dispose();
+                    return;
+                }
+
                 int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
                     inputCandidatesDlg.dispose();
@@ -72,6 +78,12 @@ public class mainForm extends JPanel {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     super.windowClosing(e);
+
+                    if (!createScenario.unsaved) {
+                        createBallotsDlg.dispose();
+                        return;
+                    }
+
                     int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
                     if (res == JOptionPane.YES_OPTION) {
                         createBallotsDlg.dispose();
@@ -107,6 +119,12 @@ public class mainForm extends JPanel {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     super.windowClosing(e);
+
+                    if (!createScenario.unsaved) {
+                        createBallotsDlg.dispose();
+                        return;
+                    }
+
                     int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
                     if (res == JOptionPane.YES_OPTION) {
                         createBallotsDlg.dispose();

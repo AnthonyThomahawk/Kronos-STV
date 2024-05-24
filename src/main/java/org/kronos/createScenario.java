@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class createScenario extends JPanel {
     private int ballotCount = 1;
+    public static boolean unsaved;
     public static STVResults electionResults;
     private ArrayList<String[]> loadedPermutations;
     private ArrayList<Integer> loadedPermutationsMult;
@@ -215,9 +216,12 @@ public class createScenario extends JPanel {
         table1.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent e) {
+                unsaved = true;
                 updateStatus();
             }
         });
+
+        unsaved = true;
     }
 
     private void populateTableFromFile() {
@@ -244,6 +248,7 @@ public class createScenario extends JPanel {
             }
             model.addRow(row);
         }
+        unsaved = false;
     }
 
     private void button2(ActionEvent e) {
@@ -392,9 +397,21 @@ public class createScenario extends JPanel {
         fileChooser.setFileFilter(filter);
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            String fileAbsolutePath = file.getAbsolutePath() + ".csv";
+
+            if (file.exists()) {
+                int res = JOptionPane.showConfirmDialog(null, "The file you are trying to save already exists. Are you sure you want to overwrite it?", "Existing file", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.NO_OPTION) {
+                    return;
+                }
+            }
+
+            String fileAbsolutePath = file.getAbsolutePath();
+            if (!fileAbsolutePath.endsWith(".csv")) {
+                fileAbsolutePath += ".csv";
+            }
 
             generateBallotFile(fileAbsolutePath);
+            unsaved = false;
             JOptionPane.showMessageDialog(null, "Ballots exported to : " + fileAbsolutePath, "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }
