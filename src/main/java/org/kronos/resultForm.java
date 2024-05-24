@@ -65,7 +65,21 @@ public class resultForm extends JPanel {
     }
 
     private void exportResultsCSV(File f) throws IOException {
-        FileWriter out = new FileWriter(f.getAbsolutePath() + ".csv");
+        String path = f.getAbsolutePath();
+
+        if (!path.endsWith(".csv"))
+            path += ".csv";
+
+        File x = new File(path);
+
+        if (x.exists()) {
+            int res = JOptionPane.showConfirmDialog(null, "The file you are trying to save already exists. Are you sure you want to overwrite it?", "Existing file", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+
+        FileWriter out = new FileWriter(path);
 
         DefaultTableModel m = (DefaultTableModel) table1.getModel();
 

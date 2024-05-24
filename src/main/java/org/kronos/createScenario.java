@@ -398,16 +398,18 @@ public class createScenario extends JPanel {
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
 
-            if (file.exists()) {
+            String fileAbsolutePath = file.getAbsolutePath();
+            if (!fileAbsolutePath.endsWith(".csv")) {
+                fileAbsolutePath += ".csv";
+            }
+
+            File f = new File(fileAbsolutePath);
+
+            if (f.exists()) {
                 int res = JOptionPane.showConfirmDialog(null, "The file you are trying to save already exists. Are you sure you want to overwrite it?", "Existing file", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.NO_OPTION) {
                     return;
                 }
-            }
-
-            String fileAbsolutePath = file.getAbsolutePath();
-            if (!fileAbsolutePath.endsWith(".csv")) {
-                fileAbsolutePath += ".csv";
             }
 
             generateBallotFile(fileAbsolutePath);
