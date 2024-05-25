@@ -64,56 +64,71 @@ public class resultForm extends JPanel {
 
     }
 
-    private void exportResultsCSV(File f) throws IOException {
-        String path = f.getAbsolutePath();
-
-        if (!path.endsWith(".csv"))
-            path += ".csv";
-
-        File x = new File(path);
-
-        if (x.exists()) {
-            int res = JOptionPane.showConfirmDialog(null, "The file you are trying to save already exists. Are you sure you want to overwrite it?", "Existing file", JOptionPane.YES_NO_OPTION);
-            if (res == JOptionPane.NO_OPTION) {
-                return;
-            }
-        }
-
-        FileWriter out = new FileWriter(path);
-
-        DefaultTableModel m = (DefaultTableModel) table1.getModel();
-
-        for (int i = 0; i < m.getRowCount(); i++) {
-            String []r = new String[3];
-
-            r[0] = Integer.toString((Integer) m.getValueAt(i, 0));
-            r[1] = (String) m.getValueAt(i, 1);
-            r[2] = Float.toString((Float) m.getValueAt(i, 2));
-
-            String line = r[0] + "," + r[1] + "," + r[2];
-            out.write(line);
-            out.write("\r\n");
-        }
-
-        out.flush();
-        out.close();
-
-        JOptionPane.showMessageDialog(null, "Results exported to : " + f.getAbsolutePath() + ".csv", "Info", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void button1(ActionEvent e) {
+    public void saveChanges() {
         JFileChooser fileChooser = new JFileChooser();
         FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
         fileChooser.setFileFilter(filter);
         if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
 
-            try {
-                exportResultsCSV(file);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(null, "Cannot write to file.", "Error", JOptionPane.ERROR_MESSAGE);
+            String fileAbsolutePath = file.getAbsolutePath();
+            if (!fileAbsolutePath.endsWith(".csv")) {
+                fileAbsolutePath += ".csv";
             }
+
+            File f = new File(fileAbsolutePath);
+
+            while (f.exists()) {
+                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    break;
+                }
+
+                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    file = fileChooser.getSelectedFile();
+                    fileAbsolutePath = file.getAbsolutePath();
+                    if (!fileAbsolutePath.endsWith(".csv")) {
+                        fileAbsolutePath += ".csv";
+                    }
+
+                    f = new File(fileAbsolutePath);
+                }
+                else {
+                    return;
+                }
+            }
+
+            try {
+                FileWriter out = new FileWriter(fileAbsolutePath);
+
+                DefaultTableModel m = (DefaultTableModel) table1.getModel();
+
+                for (int i = 0; i < m.getRowCount(); i++) {
+                    String []r = new String[3];
+
+                    r[0] = Integer.toString((Integer) m.getValueAt(i, 0));
+                    r[1] = (String) m.getValueAt(i, 1);
+                    r[2] = Float.toString((Float) m.getValueAt(i, 2));
+
+                    String line = r[0] + "," + r[1] + "," + r[2];
+                    out.write(line);
+                    out.write("\r\n");
+                }
+
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+
+            }
+
+
+            JOptionPane.showMessageDialog(null, "Results exported to : " + f.getAbsolutePath() + ".csv", "Info", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+
+    private void button1(ActionEvent e) {
+        saveChanges();
     }
 
     private void initComponents() {

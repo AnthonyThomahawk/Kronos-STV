@@ -7,6 +7,8 @@ package org.kronos;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.*;
@@ -39,6 +41,32 @@ public class mainForm extends JPanel {
         //label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
     }
 
+    private void safeClose(JDialog form, Class formClass, Object formObj) {
+        try {
+            Field unsavedField = formClass.getDeclaredField("unsaved");
+            boolean unsaved = unsavedField.getBoolean(null);
+            if (!unsaved) {
+                form.dispose();
+                return;
+            }
+        } catch (Exception e) {
+            return;
+        }
+
+
+        int res = JOptionPane.showConfirmDialog(null, "Save unsaved changes?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+            try {
+                Method saveChanges = formObj.getClass().getMethod("saveChanges");
+                saveChanges.invoke(formObj);
+            } catch (Exception e) {
+                return;
+            }
+        } else if (res == JOptionPane.NO_OPTION){
+            form.dispose();
+        }
+    }
+
     private void button1(ActionEvent e) {
         inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
         inputCandidates f = new inputCandidates();
@@ -50,15 +78,7 @@ public class mainForm extends JPanel {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
 
-                if (!inputCandidates.unsaved) {
-                    inputCandidatesDlg.dispose();
-                    return;
-                }
-
-                int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    inputCandidatesDlg.dispose();
-                }
+                safeClose(inputCandidatesDlg, inputCandidates.class, f);
             }
         });
         inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -79,15 +99,7 @@ public class mainForm extends JPanel {
                 public void windowClosing(WindowEvent e) {
                     super.windowClosing(e);
 
-                    if (!createScenario.unsaved) {
-                        createBallotsDlg.dispose();
-                        return;
-                    }
-
-                    int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
-                    if (res == JOptionPane.YES_OPTION) {
-                        createBallotsDlg.dispose();
-                    }
+                    safeClose(createBallotsDlg, createScenario.class, c);
                 }
             });
             createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -120,15 +132,7 @@ public class mainForm extends JPanel {
                 public void windowClosing(WindowEvent e) {
                     super.windowClosing(e);
 
-                    if (!createScenario.unsaved) {
-                        createBallotsDlg.dispose();
-                        return;
-                    }
-
-                    int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to close this window? Any unsaved changes will be lost.", "Unsaved changes", JOptionPane.YES_NO_OPTION);
-                    if (res == JOptionPane.YES_OPTION) {
-                        createBallotsDlg.dispose();
-                    }
+                    safeClose(createBallotsDlg, createScenario.class, c);
                 }
             });
             createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

@@ -220,8 +220,6 @@ public class createScenario extends JPanel {
                 updateStatus();
             }
         });
-
-        unsaved = true;
     }
 
     private void populateTableFromFile() {
@@ -391,7 +389,7 @@ public class createScenario extends JPanel {
         button3.setEnabled(true);
     }
 
-    private void button3(ActionEvent e) {
+    public void saveChanges() {
         JFileChooser fileChooser = new JFileChooser();
         FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
         fileChooser.setFileFilter(filter);
@@ -405,9 +403,22 @@ public class createScenario extends JPanel {
 
             File f = new File(fileAbsolutePath);
 
-            if (f.exists()) {
-                int res = JOptionPane.showConfirmDialog(null, "The file you are trying to save already exists. Are you sure you want to overwrite it?", "Existing file", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.NO_OPTION) {
+            while (f.exists()) {
+                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    break;
+                }
+
+                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    file = fileChooser.getSelectedFile();
+                    fileAbsolutePath = file.getAbsolutePath();
+                    if (!fileAbsolutePath.endsWith(".csv")) {
+                        fileAbsolutePath += ".csv";
+                    }
+
+                    f = new File(fileAbsolutePath);
+                }
+                else {
                     return;
                 }
             }
@@ -416,6 +427,11 @@ public class createScenario extends JPanel {
             unsaved = false;
             JOptionPane.showMessageDialog(null, "Ballots exported to : " + fileAbsolutePath, "Info", JOptionPane.INFORMATION_MESSAGE);
         }
+    }
+
+
+    private void button3(ActionEvent e) {
+        saveChanges();
     }
 
     private void button4(ActionEvent e) {
