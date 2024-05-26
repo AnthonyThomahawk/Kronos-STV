@@ -64,80 +64,12 @@ public class resultForm extends JPanel {
 
     }
 
-    public void saveChanges() {
-        JFileChooser fileChooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
-        fileChooser.setFileFilter(filter);
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-
-            String fileAbsolutePath = file.getAbsolutePath();
-            if (!fileAbsolutePath.endsWith(".csv")) {
-                fileAbsolutePath += ".csv";
-            }
-
-            File f = new File(fileAbsolutePath);
-
-            while (f.exists()) {
-                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    break;
-                }
-
-                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
-                    fileAbsolutePath = file.getAbsolutePath();
-                    if (!fileAbsolutePath.endsWith(".csv")) {
-                        fileAbsolutePath += ".csv";
-                    }
-
-                    f = new File(fileAbsolutePath);
-                }
-                else {
-                    return;
-                }
-            }
-
-            try {
-                FileWriter out = new FileWriter(fileAbsolutePath);
-
-                DefaultTableModel m = (DefaultTableModel) table1.getModel();
-
-                for (int i = 0; i < m.getRowCount(); i++) {
-                    String []r = new String[3];
-
-                    r[0] = Integer.toString((Integer) m.getValueAt(i, 0));
-                    r[1] = (String) m.getValueAt(i, 1);
-                    r[2] = Float.toString((Float) m.getValueAt(i, 2));
-
-                    String line = r[0] + "," + r[1] + "," + r[2];
-                    out.write(line);
-                    out.write("\r\n");
-                }
-
-                out.flush();
-                out.close();
-            } catch (Exception e) {
-
-            }
-
-
-            JOptionPane.showMessageDialog(null, "Results exported to : " + f.getAbsolutePath() + ".csv", "Info", JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-
-    private void button1(ActionEvent e) {
-        saveChanges();
-    }
-
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
-        button1 = new JButton();
 
         //======== this ========
 
@@ -150,10 +82,6 @@ public class resultForm extends JPanel {
             scrollPane1.setViewportView(table1);
         }
 
-        //---- button1 ----
-        button1.setText("Export as CSV");
-        button1.addActionListener(e -> button1(e));
-
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,8 +91,7 @@ public class resultForm extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
-                            .addComponent(button1))
+                            .addGap(0, 0, Short.MAX_VALUE))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
                     .addContainerGap())
         );
@@ -172,9 +99,7 @@ public class resultForm extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label1)
-                        .addComponent(button1))
+                    .addComponent(label1)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                     .addContainerGap())
@@ -187,6 +112,5 @@ public class resultForm extends JPanel {
     private JLabel label1;
     private JScrollPane scrollPane1;
     private JTable table1;
-    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

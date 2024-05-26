@@ -482,7 +482,7 @@ public class createScenario extends JPanel {
         }
 
         //---- button1 ----
-        button1.setText("Get results");
+        button1.setText("View results");
         button1.addActionListener(e -> button1(e));
 
         //---- button2 ----
@@ -501,7 +501,7 @@ public class createScenario extends JPanel {
         label1.setVerticalAlignment(SwingConstants.TOP);
 
         //---- button3 ----
-        button3.setText("Export As CSV");
+        button3.setText("Export scenario");
         button3.addActionListener(e -> button3(e));
 
         //---- button4 ----
