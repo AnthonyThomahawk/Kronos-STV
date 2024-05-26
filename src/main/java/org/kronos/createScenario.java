@@ -121,7 +121,7 @@ public class createScenario extends JPanel {
     }
 
     private void initTable() {
-        button4.setEnabled(false);
+        remBtn.setEnabled(false);
         Class<?>[] columnTypes = new Class[inputCandidates.candidateCount+2];
         columnTypes[0] = Integer.class;
         for (int i = 1; i < columnTypes.length-1; i++) {
@@ -189,7 +189,7 @@ public class createScenario extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (table1.getSelectedRows().length != 0) {
-                    button4.setEnabled(true);
+                    remBtn.setEnabled(true);
                 }
             }
         });
