@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp button2:::p::p, space :::p, comp button4:::p::p, space ::34:x, comp checkBox1:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp button1:::p:115:p, space :::p, comp button3:::p:115:p}, comp scrollPane1::l::658:x, comp label1::l::658:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1::::31:x, space :p::p, comp scrollPane1::::421:x, space :p::p, par b {comp button3::b:p::p, comp spinner1::b:p::p, comp checkBox1::b:p::p, comp button1::b:p::p, comp button2::b:p::p, comp button4::b:p::p}, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space ::34:x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p}, comp scrollPane1::l::658:x, comp label1::l:::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1::::31:x, space :::p, comp scrollPane1::::421:x, space :p::p, par b {comp exportBtn::b:p::p, comp spinner1::b:p::p, comp customSeats::b:p::p, comp viewBtn::b:p::p, comp addBtn::b:p::p, comp remBtn::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -16,19 +16,22 @@ new FormModel {
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button1"
+				name: "viewBtn"
 				"text": "View results"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "viewBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button2"
+				name: "addBtn"
 				"text": "Add +"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
-				name: "checkBox1"
+				name: "customSeats"
 				"text": "Custom seats to be filled"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBox1", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "customSeats", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
 				name: "spinner1"
@@ -40,14 +43,16 @@ new FormModel {
 				"verticalAlignment": 1
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button3"
+				name: "exportBtn"
 				"text": "Export scenario"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exportBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button4"
+				name: "remBtn"
 				"text": "Remove -"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

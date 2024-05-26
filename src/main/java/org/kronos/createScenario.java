@@ -249,7 +249,7 @@ public class createScenario extends JPanel {
         unsaved = false;
     }
 
-    private void button2(ActionEvent e) {
+    private void addBtn(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         ballotCount++;
         Object[] row = new Object[inputCandidates.candidateCount+2];
@@ -302,13 +302,13 @@ public class createScenario extends JPanel {
         }
     }
 
-    private void button1(ActionEvent e) {
+    private void viewBtn(ActionEvent e) {
         generateBallotFile("b1.csv");
         STVpy stv = new STVpy();
         String stvOutput;
 
         try {
-            if (checkBox1.isSelected()) {
+            if (customSeats.isSelected()) {
                 stvOutput = stv.callSTV("b1.csv", (Integer)spinner1.getValue());
             } else {
                 stvOutput = stv.callSTV("b1.csv");
@@ -329,8 +329,8 @@ public class createScenario extends JPanel {
         j.setVisible(true);
     }
 
-    private void checkBox1(ActionEvent e) {
-        spinner1.setEnabled(checkBox1.isSelected());
+    private void customSeats(ActionEvent e) {
+        spinner1.setEnabled(customSeats.isSelected());
     }
 
     private void spinner1StateChanged(ChangeEvent e) {
@@ -347,8 +347,8 @@ public class createScenario extends JPanel {
         if (rows < 1) {
             label1.setText("<html>" + "<b> Alert : </b>" +
                     "<br> <b style=\"color:RED;\">There must be at least 1 ballot.</b>" +"</html>");
-            button1.setEnabled(false);
-            button3.setEnabled(false);
+            viewBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
             return;
         }
 
@@ -360,8 +360,8 @@ public class createScenario extends JPanel {
                     if (dtm.getValueAt(i,j) == null) {
                         label1.setText("<html>" + "<b> Alert : </b>" +
                                 "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " does not have a first choice.</b>" +"</html>");
-                        button1.setEnabled(false);
-                        button3.setEnabled(false);
+                        viewBtn.setEnabled(false);
+                        exportBtn.setEnabled(false);
                         return;
                     }
                 }
@@ -372,8 +372,8 @@ public class createScenario extends JPanel {
                 if (dtm.getValueAt(i,j) != null && endOnNull) {
                     label1.setText("<html>" + "<b> Alert : </b>" +
                             "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " skips choices.</b>" +"</html>");
-                    button1.setEnabled(false);
-                    button3.setEnabled(false);
+                    viewBtn.setEnabled(false);
+                    exportBtn.setEnabled(false);
                     return;
                 }
 
@@ -385,8 +385,8 @@ public class createScenario extends JPanel {
 
         label1.setText("<html>" + "<b> Status : </b>" +
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
-        button1.setEnabled(true);
-        button3.setEnabled(true);
+        viewBtn.setEnabled(true);
+        exportBtn.setEnabled(true);
     }
 
     public void saveChanges() {
@@ -430,11 +430,11 @@ public class createScenario extends JPanel {
     }
 
 
-    private void button3(ActionEvent e) {
+    private void exportBtn(ActionEvent e) {
         saveChanges();
     }
 
-    private void button4(ActionEvent e) {
+    private void remBtn(ActionEvent e) {
         int numRows = table1.getSelectedRows().length;
         if (numRows != 0) {
             ballotCount -= numRows;
@@ -446,11 +446,31 @@ public class createScenario extends JPanel {
             for (int i = 0; i < m.getRowCount(); i++) {
                 m.setValueAt(i+1, i, 0);
             }
-            button4.setEnabled(false);
+            remBtn.setEnabled(false);
         }
     }
 
     private void table1MouseClicked(MouseEvent e) {
+    }
+
+    private void button1(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void button3(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void checkBox1(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void button2(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void button4(ActionEvent e) {
+        // TODO add your code here
     }
 
     private void initComponents() {
@@ -458,13 +478,13 @@ public class createScenario extends JPanel {
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
-        button1 = new JButton();
-        button2 = new JButton();
-        checkBox1 = new JCheckBox();
+        viewBtn = new JButton();
+        addBtn = new JButton();
+        customSeats = new JCheckBox();
         spinner1 = new JSpinner();
         label1 = new JLabel();
-        button3 = new JButton();
-        button4 = new JButton();
+        exportBtn = new JButton();
+        remBtn = new JButton();
 
         //======== this ========
 
@@ -481,17 +501,26 @@ public class createScenario extends JPanel {
             scrollPane1.setViewportView(table1);
         }
 
-        //---- button1 ----
-        button1.setText("View results");
-        button1.addActionListener(e -> button1(e));
+        //---- viewBtn ----
+        viewBtn.setText("View results");
+        viewBtn.addActionListener(e -> {
+			button1(e);
+			viewBtn(e);
+		});
 
-        //---- button2 ----
-        button2.setText("Add +");
-        button2.addActionListener(e -> button2(e));
+        //---- addBtn ----
+        addBtn.setText("Add +");
+        addBtn.addActionListener(e -> {
+			button2(e);
+			addBtn(e);
+		});
 
-        //---- checkBox1 ----
-        checkBox1.setText("Custom seats to be filled");
-        checkBox1.addActionListener(e -> checkBox1(e));
+        //---- customSeats ----
+        customSeats.setText("Custom seats to be filled");
+        customSeats.addActionListener(e -> {
+			checkBox1(e);
+			customSeats(e);
+		});
 
         //---- spinner1 ----
         spinner1.addChangeListener(e -> spinner1StateChanged(e));
@@ -500,13 +529,19 @@ public class createScenario extends JPanel {
         label1.setText("tooltip");
         label1.setVerticalAlignment(SwingConstants.TOP);
 
-        //---- button3 ----
-        button3.setText("Export scenario");
-        button3.addActionListener(e -> button3(e));
+        //---- exportBtn ----
+        exportBtn.setText("Export scenario");
+        exportBtn.addActionListener(e -> {
+			button3(e);
+			exportBtn(e);
+		});
 
-        //---- button4 ----
-        button4.setText("Remove -");
-        button4.addActionListener(e -> button4(e));
+        //---- remBtn ----
+        remBtn.setText("Remove -");
+        remBtn.addActionListener(e -> {
+			button4(e);
+			remBtn(e);
+		});
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -516,19 +551,19 @@ public class createScenario extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(button2)
+                            .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button4)
+                            .addComponent(remBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                            .addComponent(checkBox1)
+                            .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(viewBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button3, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE))
+                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -540,12 +575,12 @@ public class createScenario extends JPanel {
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(button3)
+                        .addComponent(exportBtn)
                         .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(checkBox1)
-                        .addComponent(button1)
-                        .addComponent(button2)
-                        .addComponent(button4))
+                        .addComponent(customSeats)
+                        .addComponent(viewBtn)
+                        .addComponent(addBtn)
+                        .addComponent(remBtn))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -555,12 +590,12 @@ public class createScenario extends JPanel {
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
     private JScrollPane scrollPane1;
     private JTable table1;
-    private JButton button1;
-    private JButton button2;
-    private JCheckBox checkBox1;
+    private JButton viewBtn;
+    private JButton addBtn;
+    private JCheckBox customSeats;
     private JSpinner spinner1;
     private JLabel label1;
-    private JButton button3;
-    private JButton button4;
+    private JButton exportBtn;
+    private JButton remBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
