@@ -270,8 +270,8 @@ public class createScenario extends JPanel {
         }
 
         try {
-            OutputStream outputStream = new FileOutputStream(filename);
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
             for (int i = 0; i < cbGroups.size(); i++) {
                 JComboBox[] cbg = cbGroups.get(i);
                 StringBuilder permutation = new StringBuilder();
@@ -297,6 +297,66 @@ public class createScenario extends JPanel {
 
             out.flush();
             out.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void generateResultFile(String filename, String input) {
+        try {
+            STVpy stv = new STVpy();
+            String stvOutput;
+            try {
+                if (customSeats.isSelected()) {
+                    stvOutput = stv.callSTV(input, (Integer)spinner1.getValue());
+                } else {
+                    stvOutput = stv.callSTV(input);
+                }
+            } catch (Exception x) {
+                return;
+            }
+
+            electionResults = new STVResults(stvOutput, ballotCount);
+
+
+            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+
+            out.println("Rank,Name,Votes");
+            for (int i = 1; i <= electionResults.lastRank; i++) {
+                out.println(i + "," + electionResults.getElected(i) + "," + electionResults.getVotes(i));
+            }
+
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void generateAnalysisFile(String filename, String input) {
+        try {
+            STVpy stv = new STVpy();
+            String stvOutput;
+            try {
+                if (customSeats.isSelected()) {
+                    stvOutput = stv.callSTV(input, (Integer)spinner1.getValue());
+                } else {
+                    stvOutput = stv.callSTV(input);
+                }
+            } catch (Exception x) {
+                return;
+            }
+
+            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+
+            out.print(stvOutput);
+
+            out.flush();
+            out.close();
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -397,8 +457,16 @@ public class createScenario extends JPanel {
             File file = fileChooser.getSelectedFile();
 
             String fileAbsolutePath = file.getAbsolutePath();
+            String resultAbsolutePath;
+            String analysisAbsolutePath;
+
             if (!fileAbsolutePath.endsWith(".csv")) {
+                resultAbsolutePath = fileAbsolutePath + "_results.csv";
+                analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
                 fileAbsolutePath += ".csv";
+            } else {
+                resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
+                analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.csv");
             }
 
             File f = new File(fileAbsolutePath);
@@ -412,8 +480,14 @@ public class createScenario extends JPanel {
                 if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                     file = fileChooser.getSelectedFile();
                     fileAbsolutePath = file.getAbsolutePath();
+
                     if (!fileAbsolutePath.endsWith(".csv")) {
+                        resultAbsolutePath = fileAbsolutePath + "_results.csv";
+                        analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
                         fileAbsolutePath += ".csv";
+                    } else {
+                        resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
+                        analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.csv");
                     }
 
                     f = new File(fileAbsolutePath);
@@ -424,8 +498,14 @@ public class createScenario extends JPanel {
             }
 
             generateBallotFile(fileAbsolutePath);
+            generateResultFile(resultAbsolutePath, fileAbsolutePath);
+            generateAnalysisFile(analysisAbsolutePath, fileAbsolutePath);
+
             unsaved = false;
-            JOptionPane.showMessageDialog(null, "Ballots exported to : " + fileAbsolutePath, "Info", JOptionPane.INFORMATION_MESSAGE);
+            String msg = "Ballots exported to : " + fileAbsolutePath + "\n" +
+                    "Election result exported to : " + resultAbsolutePath + "\n" +
+                    "Election analysis exported to : " + analysisAbsolutePath;
+            JOptionPane.showMessageDialog(null, msg, "Scenario exported successfully", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
