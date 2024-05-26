@@ -453,26 +453,6 @@ public class createScenario extends JPanel {
     private void table1MouseClicked(MouseEvent e) {
     }
 
-    private void button1(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void button3(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void checkBox1(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void button2(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void button4(ActionEvent e) {
-        // TODO add your code here
-    }
-
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -503,24 +483,15 @@ public class createScenario extends JPanel {
 
         //---- viewBtn ----
         viewBtn.setText("View results");
-        viewBtn.addActionListener(e -> {
-			button1(e);
-			viewBtn(e);
-		});
+        viewBtn.addActionListener(e -> viewBtn(e));
 
         //---- addBtn ----
         addBtn.setText("Add +");
-        addBtn.addActionListener(e -> {
-			button2(e);
-			addBtn(e);
-		});
+        addBtn.addActionListener(e -> addBtn(e));
 
         //---- customSeats ----
         customSeats.setText("Custom seats to be filled");
-        customSeats.addActionListener(e -> {
-			checkBox1(e);
-			customSeats(e);
-		});
+        customSeats.addActionListener(e -> customSeats(e));
 
         //---- spinner1 ----
         spinner1.addChangeListener(e -> spinner1StateChanged(e));
@@ -531,17 +502,11 @@ public class createScenario extends JPanel {
 
         //---- exportBtn ----
         exportBtn.setText("Export scenario");
-        exportBtn.addActionListener(e -> {
-			button3(e);
-			exportBtn(e);
-		});
+        exportBtn.addActionListener(e -> exportBtn(e));
 
         //---- remBtn ----
         remBtn.setText("Remove -");
-        remBtn.addActionListener(e -> {
-			button4(e);
-			remBtn(e);
-		});
+        remBtn.addActionListener(e -> remBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);

@@ -18,19 +18,16 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "viewBtn"
 				"text": "View results"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "viewBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "addBtn"
 				"text": "Add +"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "customSeats"
 				"text": "Custom seats to be filled"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBox1", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "customSeats", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
@@ -45,13 +42,11 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "exportBtn"
 				"text": "Export scenario"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exportBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "remBtn"
 				"text": "Remove -"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
