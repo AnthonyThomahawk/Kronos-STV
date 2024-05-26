@@ -21,9 +21,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class mainForm extends JPanel {
     public static JDialog inputCandidatesDlg;
+    public boolean darktheme = true;
     public static JDialog createBallotsDlg;
     public mainForm() {
         initComponents();
+        darkThemeBtn.setSelected(true);
         //initLocale();
 
         //label3.setText("<html>" + "Create a voting scenario with Kronos by entering all the available candidates, and then add the ballots of the voters. You will then be able to adjust all the ballot permutations and find out which candidate gets elected." + "</html>");
@@ -141,6 +143,36 @@ public class mainForm extends JPanel {
         }
     }
 
+    private void button2(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void darkThemeBtn(ActionEvent e) {
+        if (darktheme) {
+            darkThemeBtn.setSelected(true);
+            return;
+        }
+        try {
+            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+            com.formdev.flatlaf.FlatLaf.updateUI();
+            lightThemeBtn.setSelected(false);
+            darktheme = true;
+        } catch (Exception ignored) {}
+    }
+
+    private void lightThemeBtn(ActionEvent e) {
+        if (!darktheme) {
+            lightThemeBtn.setSelected(true);
+            return;
+        }
+        try {
+            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+            com.formdev.flatlaf.FlatLaf.updateUI();
+            darkThemeBtn.setSelected(false);
+            darktheme = false;
+        } catch (Exception ignored) {}
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -150,6 +182,8 @@ public class mainForm extends JPanel {
         label3 = new JLabel();
         label4 = new JLabel();
         label5 = new JLabel();
+        darkThemeBtn = new JRadioButton();
+        lightThemeBtn = new JRadioButton();
 
         //======== this ========
 
@@ -164,7 +198,9 @@ public class mainForm extends JPanel {
         button2.setText("\ud83d\udcc1");
         button2.setFont(button2.getFont().deriveFont(button2.getFont().getStyle() | Font.BOLD, button2.getFont().getSize() + 15f));
         button2.addActionListener(e -> {
-			button2();
+			button2(e);
+			button2(e);
+			button2(e);
 		});
 
         //---- label2 ----
@@ -186,24 +222,39 @@ public class mainForm extends JPanel {
         label5.setVerticalAlignment(SwingConstants.TOP);
         label5.setFont(label5.getFont().deriveFont(label5.getFont().getSize() + 3f));
 
+        //---- darkThemeBtn ----
+        darkThemeBtn.setText("Dark theme");
+        darkThemeBtn.addActionListener(e -> darkThemeBtn(e));
+
+        //---- lightThemeBtn ----
+        lightThemeBtn.setText("Light theme");
+        lightThemeBtn.addActionListener(e -> lightThemeBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE))))
+                            .addContainerGap()
+                            .addGroup(layout.createParallelGroup()
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(button2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)))))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(146, 146, 146)
+                            .addComponent(darkThemeBtn)
+                            .addGap(18, 18, 18)
+                            .addComponent(lightThemeBtn)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -221,7 +272,11 @@ public class mainForm extends JPanel {
                         .addComponent(label3, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(label5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(71, Short.MAX_VALUE))
+                    .addGap(18, 18, 18)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(darkThemeBtn)
+                        .addComponent(lightThemeBtn))
+                    .addContainerGap(33, Short.MAX_VALUE))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -234,5 +289,7 @@ public class mainForm extends JPanel {
     private JLabel label3;
     private JLabel label4;
     private JLabel label5;
+    private JRadioButton darkThemeBtn;
+    private JRadioButton lightThemeBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

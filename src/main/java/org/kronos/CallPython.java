@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class CallPython {
     private String scriptPath = "";
-    private String interpreterPath = "";
+    public static String interpreterPath = "";
     private String[] extraArgs;
     // call python script without arguments
     public CallPython(String script) {

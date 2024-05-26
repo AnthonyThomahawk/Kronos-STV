@@ -1,6 +1,8 @@
 package org.kronos;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.io.File;
@@ -41,6 +43,13 @@ public class Main {
     }
 
     private static void checkPython() throws IOException {
+        String custominterp = System.getenv("PYTHON_CUSTOM");
+        if (custominterp != null) {
+            System.out.println("Using python : " + custominterp);
+            CallPython.interpreterPath = custominterp;
+            return;
+        }
+
         try {
             Runtime.getRuntime().exec("python --version");
         } catch (Exception e) {
@@ -79,7 +88,7 @@ public class Main {
         try{
             checkPython();
         } catch (Exception ignored){}
-
+        
         checkSTV();
         mainFrame = new JFrame();
         mainForm m = new mainForm();

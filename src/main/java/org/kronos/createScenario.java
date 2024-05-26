@@ -466,7 +466,7 @@ public class createScenario extends JPanel {
                 fileAbsolutePath += ".csv";
             } else {
                 resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
-                analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.csv");
+                analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
             }
 
             File f = new File(fileAbsolutePath);
@@ -487,7 +487,7 @@ public class createScenario extends JPanel {
                         fileAbsolutePath += ".csv";
                     } else {
                         resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
-                        analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.csv");
+                        analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
                     }
 
                     f = new File(fileAbsolutePath);
