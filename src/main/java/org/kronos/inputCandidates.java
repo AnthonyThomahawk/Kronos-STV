@@ -31,7 +31,7 @@ public class inputCandidates extends JPanel {
     }
 
     private void initTable() {
-        button3.setEnabled(false);
+        remBtn.setEnabled(false);
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {"1", ""}
         }, new String[] {
@@ -51,7 +51,7 @@ public class inputCandidates extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (table1.getSelectedRows().length != 0) {
-                    button3.setEnabled(true);
+                    remBtn.setEnabled(true);
                 }
             }
         });
@@ -89,7 +89,7 @@ public class inputCandidates extends JPanel {
 
         ResourceBundle messages = ResourceBundle.getBundle("messages", currentLocale, new UTF8Control());
 
-        button1.setText(messages.getString("create"));
+        createBtn.setText(messages.getString("create"));
     }
 
     private void updateStatus() {
@@ -99,7 +99,7 @@ public class inputCandidates extends JPanel {
         // candidate >= 1 count check
         if (rows <= 1) {
             label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">There must be more than 1 candidate.</b></html>");
-            button1.setEnabled(false);
+            createBtn.setEnabled(false);
             return;
         }
 
@@ -108,7 +108,7 @@ public class inputCandidates extends JPanel {
             if (dtm.getValueAt(i, 1).equals("")) {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " does not have a name.</b>" +"</html>");
-                button1.setEnabled(false);
+                createBtn.setEnabled(false);
                 return;
             }
         }
@@ -118,7 +118,7 @@ public class inputCandidates extends JPanel {
             if (Character.isDigit(d.charAt(0))) {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot start with a digit.</b>" +"</html>");
-                button1.setEnabled(false);
+                createBtn.setEnabled(false);
                 return;
             }
         }
@@ -132,14 +132,14 @@ public class inputCandidates extends JPanel {
                 if (dtm.getValueAt(i,1).equals(dtm.getValueAt(j,1))) {
                     label2.setText("<html>" + "<b> Alert : </b>" +
                             "<br> <b style=\"color:RED;\">Candidates " + (i+1) + " and " + (j+1) + " cannot have the same name.</b>" +"</html>");
-                    button1.setEnabled(false);
+                    createBtn.setEnabled(false);
                     return;
                 }
             }
         }
 
         label2.setText("<html><b> Status : </b><br> <b style=\"color:GREEN;\">OK</b></html>");
-        button1.setEnabled(true);
+        createBtn.setEnabled(true);
     }
 
     private String[] extractDataToString() {
@@ -154,7 +154,7 @@ public class inputCandidates extends JPanel {
         return data;
     }
 
-    private void button1(ActionEvent e) {
+    private void createBtn(ActionEvent e) {
         candidates = extractDataToString();
 
         try {
@@ -165,7 +165,7 @@ public class inputCandidates extends JPanel {
 
     }
 
-    private void button2(ActionEvent e) {
+    private void addBtn(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         candidateCount++;
         model.addRow(new Object[]{candidateCount, ""});
@@ -177,7 +177,7 @@ public class inputCandidates extends JPanel {
 
     }
 
-    private void button3(ActionEvent e) {
+    private void remBtn(ActionEvent e) {
         int numRows = table1.getSelectedRows().length;
         if (numRows != 0) {
             candidateCount -= numRows;
@@ -188,7 +188,7 @@ public class inputCandidates extends JPanel {
             for (int i = 0; i < m.getRowCount(); i++) {
                 m.setValueAt(i+1, i, 0);
             }
-            button3.setEnabled(false);
+            remBtn.setEnabled(false);
         }
     }
 
@@ -196,12 +196,12 @@ public class inputCandidates extends JPanel {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
-        button1 = new JButton();
+        createBtn = new JButton();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
-        button2 = new JButton();
+        addBtn = new JButton();
         label2 = new JLabel();
-        button3 = new JButton();
+        remBtn = new JButton();
 
         //======== this ========
 
@@ -209,9 +209,9 @@ public class inputCandidates extends JPanel {
         label1.setText("Enter candidates");
         label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 9f));
 
-        //---- button1 ----
-        button1.setText("Create");
-        button1.addActionListener(e -> button1(e));
+        //---- createBtn ----
+        createBtn.setText("Create");
+        createBtn.addActionListener(e -> createBtn(e));
 
         //======== scrollPane1 ========
         {
@@ -221,18 +221,18 @@ public class inputCandidates extends JPanel {
             scrollPane1.setViewportView(table1);
         }
 
-        //---- button2 ----
-        button2.setText("Add +");
-        button2.addActionListener(e -> button2(e));
+        //---- addBtn ----
+        addBtn.setText("Add +");
+        addBtn.addActionListener(e -> addBtn(e));
 
         //---- label2 ----
         label2.setText("tooltip");
         label2.setVerticalAlignment(SwingConstants.TOP);
         label2.setHorizontalAlignment(SwingConstants.LEFT);
 
-        //---- button3 ----
-        button3.setText("Remove -");
-        button3.addActionListener(e -> button3(e));
+        //---- remBtn ----
+        remBtn.setText("Remove -");
+        remBtn.addActionListener(e -> remBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -245,14 +245,14 @@ public class inputCandidates extends JPanel {
                             .addGap(0, 2, Short.MAX_VALUE)
                             .addComponent(label2, GroupLayout.PREFERRED_SIZE, 363, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button1))
+                            .addComponent(createBtn))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-                            .addComponent(button2)
+                            .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(button3)))
+                            .addComponent(remBtn)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -261,14 +261,14 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label1)
-                        .addComponent(button3)
-                        .addComponent(button2))
+                        .addComponent(remBtn)
+                        .addComponent(addBtn))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 502, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(button1)
+                            .addComponent(createBtn)
                             .addContainerGap())
                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)))
         );
@@ -278,11 +278,11 @@ public class inputCandidates extends JPanel {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
     private JLabel label1;
-    private JButton button1;
+    private JButton createBtn;
     private JScrollPane scrollPane1;
     private JTable table1;
-    private JButton button2;
+    private JButton addBtn;
     private JLabel label2;
-    private JButton button3;
+    private JButton remBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

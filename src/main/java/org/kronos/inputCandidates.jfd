@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :0:2:x, comp label2:::p:363:p, space :::p, comp button1:::p::p}, comp scrollPane1::::0:x, seq {comp label1:::p::p, space ::130:x, comp button2:::p::p, space :::p, comp button3:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp button3::b:p::p, comp button2::b:p::p}, space :::p, comp scrollPane1::::502:x, space :::p, par t {seq {comp button1:::p::p, space :::p}, comp label2:::p:36:p}}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :0:2:x, comp label2:::p:363:p, space :::p, comp createBtn:::p::p}, comp scrollPane1::::0:x, seq {comp label1:::p::p, space ::130:x, comp addBtn:::p::p, space :::p, comp remBtn:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp remBtn::b:p::p, comp addBtn::b:p::p}, space :::p, comp scrollPane1::::502:x, space :::p, par t {seq {comp createBtn:::p::p, space :::p}, comp label2:::p:36:p}}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -14,9 +14,9 @@ new FormModel {
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 9, false )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button1"
+				name: "createBtn"
 				"text": "Create"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createBtn", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
@@ -26,9 +26,9 @@ new FormModel {
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button2"
+				name: "addBtn"
 				"text": "Add +"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
@@ -37,9 +37,9 @@ new FormModel {
 				"horizontalAlignment": 2
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button3"
+				name: "remBtn"
 				"text": "Remove -"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
