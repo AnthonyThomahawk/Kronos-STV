@@ -69,7 +69,7 @@ public class mainForm extends JPanel {
         }
     }
 
-    private void button1(ActionEvent e) {
+    private void createScenarioBtn(ActionEvent e) {
         inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
         inputCandidates f = new inputCandidates();
         inputCandidatesDlg.setContentPane(f);
@@ -110,7 +110,33 @@ public class mainForm extends JPanel {
         }
     }
 
-    private void button2() {
+    private void darkThemeBtn(ActionEvent e) {
+        if (darktheme) {
+            darkThemeBtn.setSelected(true);
+            return;
+        }
+        try {
+            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+            com.formdev.flatlaf.FlatLaf.updateUI();
+            lightThemeBtn.setSelected(false);
+            darktheme = true;
+        } catch (Exception ignored) {}
+    }
+
+    private void lightThemeBtn(ActionEvent e) {
+        if (!darktheme) {
+            lightThemeBtn.setSelected(true);
+            return;
+        }
+        try {
+            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+            com.formdev.flatlaf.FlatLaf.updateUI();
+            darkThemeBtn.setSelected(false);
+            darktheme = false;
+        } catch (Exception ignored) {}
+    }
+
+    private void loadScenarioBtn(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
         FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
         fileChooser.setFileFilter(filter);
@@ -143,41 +169,11 @@ public class mainForm extends JPanel {
         }
     }
 
-    private void button2(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void darkThemeBtn(ActionEvent e) {
-        if (darktheme) {
-            darkThemeBtn.setSelected(true);
-            return;
-        }
-        try {
-            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
-            com.formdev.flatlaf.FlatLaf.updateUI();
-            lightThemeBtn.setSelected(false);
-            darktheme = true;
-        } catch (Exception ignored) {}
-    }
-
-    private void lightThemeBtn(ActionEvent e) {
-        if (!darktheme) {
-            lightThemeBtn.setSelected(true);
-            return;
-        }
-        try {
-            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-            com.formdev.flatlaf.FlatLaf.updateUI();
-            darkThemeBtn.setSelected(false);
-            darktheme = false;
-        } catch (Exception ignored) {}
-    }
-
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-        button1 = new JButton();
-        button2 = new JButton();
+        createScenarioBtn = new JButton();
+        loadScenarioBtn = new JButton();
         label2 = new JLabel();
         label3 = new JLabel();
         label4 = new JLabel();
@@ -187,21 +183,17 @@ public class mainForm extends JPanel {
 
         //======== this ========
 
-        //---- button1 ----
-        button1.setIcon(null);
-        button1.setText("+");
-        button1.setFont(button1.getFont().deriveFont(button1.getFont().getStyle() | Font.BOLD, button1.getFont().getSize() + 15f));
-        button1.setVerticalAlignment(SwingConstants.TOP);
-        button1.addActionListener(e -> button1(e));
+        //---- createScenarioBtn ----
+        createScenarioBtn.setIcon(null);
+        createScenarioBtn.setText("+");
+        createScenarioBtn.setFont(createScenarioBtn.getFont().deriveFont(createScenarioBtn.getFont().getStyle() | Font.BOLD, createScenarioBtn.getFont().getSize() + 15f));
+        createScenarioBtn.setVerticalAlignment(SwingConstants.TOP);
+        createScenarioBtn.addActionListener(e -> createScenarioBtn(e));
 
-        //---- button2 ----
-        button2.setText("\ud83d\udcc1");
-        button2.setFont(button2.getFont().deriveFont(button2.getFont().getStyle() | Font.BOLD, button2.getFont().getSize() + 15f));
-        button2.addActionListener(e -> {
-			button2(e);
-			button2(e);
-			button2(e);
-		});
+        //---- loadScenarioBtn ----
+        loadScenarioBtn.setText("\ud83d\udcc1");
+        loadScenarioBtn.setFont(loadScenarioBtn.getFont().deriveFont(loadScenarioBtn.getFont().getStyle() | Font.BOLD, loadScenarioBtn.getFont().getSize() + 15f));
+        loadScenarioBtn.addActionListener(e -> loadScenarioBtn(e));
 
         //---- label2 ----
         label2.setText("Create a voting scenario");
@@ -240,14 +232,14 @@ public class mainForm extends JPanel {
                             .addContainerGap()
                             .addGroup(layout.createParallelGroup()
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(button2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(label3, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE))
                                 .addComponent(label5, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                     .addComponent(label4, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(createScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)))))
                         .addGroup(layout.createSequentialGroup()
@@ -262,13 +254,13 @@ public class mainForm extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(button1, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(createScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(label4, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(button2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loadScenarioBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(label3, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(label5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -283,8 +275,8 @@ public class mainForm extends JPanel {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-    private JButton button1;
-    private JButton button2;
+    private JButton createScenarioBtn;
+    private JButton loadScenarioBtn;
     private JLabel label2;
     private JLabel label3;
     private JLabel label4;

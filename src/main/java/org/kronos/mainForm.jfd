@@ -4,25 +4,23 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {par l {seq {space :::p, par l {seq l {comp button2:::p:46:p, space :::p, comp label3:::p:422:p}, comp label5::l:p:461:p, par t:l {comp label4:::p:461:p, seq {comp button1:::p:46:p, space :::p, comp label2:::p:409:p}}}}, seq l {space :p:146:p, comp darkThemeBtn:::p::p, space s:::p, comp lightThemeBtn:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp button1:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:68:p, space :::p, par l:::p {comp button2:::::x, comp label3:::p:46:p}, space :::p, comp label5:::p::p, space s:::p, par b {comp darkThemeBtn::b:p::p, comp lightThemeBtn::b:p::p}, space ::33:x}}"
+			"$horizontalGroup": "par l {seq {par l {seq {space :::p, par l {seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label3:::p:422:p}, comp label5::l:p:461:p, par t:l {comp label4:::p:461:p, seq {comp createScenarioBtn:::p:46:p, space :::p, comp label2:::p:409:p}}}}, seq l {space :p:146:p, comp darkThemeBtn:::p::p, space s:::p, comp lightThemeBtn:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp createScenarioBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:68:p, space :::p, par l:::p {comp loadScenarioBtn:::::x, comp label3:::p:46:p}, space :::p, comp label5:::p::p, space s:::p, par b {comp darkThemeBtn::b:p::p, comp lightThemeBtn::b:p::p}, space ::33:x}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button1"
+				name: "createScenarioBtn"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
 				"text": "+"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				"verticalAlignment": 1
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createScenarioBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button2"
+				name: "loadScenarioBtn"
 				"text": "\ud83d\udcc1"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadScenarioBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
