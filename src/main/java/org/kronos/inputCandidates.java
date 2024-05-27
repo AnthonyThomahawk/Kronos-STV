@@ -10,9 +10,18 @@ import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.TableView;
+import java.io.File;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -192,6 +201,51 @@ public class inputCandidates extends JPanel {
         }
     }
 
+    public void saveChanges() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileFilter filter = new FileNameExtensionFilter("Text File","txt");
+        fileChooser.setFileFilter(filter);
+        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            String fileAbsolutePath = file.getAbsolutePath();
+
+            while (file.exists()) {
+                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    break;
+                }
+
+                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    file = fileChooser.getSelectedFile();
+                    fileAbsolutePath = file.getAbsolutePath();
+                } else {
+                    return;
+                }
+            }
+
+            try {
+                OutputStream outputStream = Files.newOutputStream(Paths.get(fileAbsolutePath));
+                PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+
+                DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+                for (int i = 0; i < dtm.getRowCount(); i++) {
+                    String val = (String) dtm.getValueAt(i, 1);
+                    out.println(val);
+                }
+
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+
+        }
+    }
+
+    private void exportBtn(ActionEvent e) {
+        saveChanges();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -202,6 +256,7 @@ public class inputCandidates extends JPanel {
         addBtn = new JButton();
         label2 = new JLabel();
         remBtn = new JButton();
+        exportBtn = new JButton();
 
         //======== this ========
 
@@ -234,6 +289,10 @@ public class inputCandidates extends JPanel {
         remBtn.setText("Remove -");
         remBtn.addActionListener(e -> remBtn(e));
 
+        //---- exportBtn ----
+        exportBtn.setText("Export candidates");
+        exportBtn.addActionListener(e -> exportBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -242,14 +301,15 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(0, 3, Short.MAX_VALUE)
-                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-                            .addGap(63, 63, 63)
-                            .addComponent(createBtn))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(exportBtn, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)))
@@ -266,10 +326,11 @@ public class inputCandidates extends JPanel {
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(createBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addContainerGap())
+                        .addComponent(exportBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -283,5 +344,6 @@ public class inputCandidates extends JPanel {
     private JButton addBtn;
     private JLabel label2;
     private JButton remBtn;
+    private JButton exportBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
