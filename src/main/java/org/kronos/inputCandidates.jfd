@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :0:2:x, comp label2:::p:363:p, space :::p, comp createBtn:::p::p}, comp scrollPane1::::0:x, seq {comp label1:::p::p, space ::130:x, comp addBtn:::p::p, space :::p, comp remBtn:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp remBtn::b:p::p, comp addBtn::b:p::p}, space :::p, comp scrollPane1::::502:x, space :::p, par t {seq {comp createBtn:::p::p, space :::p}, comp label2:::p:36:p}}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {space :0:3:x, comp label2:::p:306:p, space :p:63:p, comp createBtn:::p::p}, comp scrollPane1::::0:x, seq {comp label1:::p::p, space ::170:x, comp addBtn:::p::p, space :::p, comp remBtn:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp remBtn::b:p::p, comp addBtn::b:p::p}, space :::p, comp scrollPane1::::496:x, space :::p, par l:::p {comp label2:::p:36:p, comp createBtn:::::x}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -15,7 +15,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "createBtn"
-				"text": "Create"
+				"text": "Create scenario"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createBtn", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -43,7 +43,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 455, 585 )
+			"size": new java.awt.Dimension( 495, 585 )
 		} )
 	}
 }
