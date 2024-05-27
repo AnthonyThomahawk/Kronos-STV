@@ -52,7 +52,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "loadedFileTxt"
 				"text": "Loaded file"
-				"verticalAlignment": 1
+				"verticalAlignment": 3
 				"horizontalAlignment": 4
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 4, false )
 			} )

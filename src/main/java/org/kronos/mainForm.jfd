@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {par l {seq {space :::p, par l {seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label3:::p:422:p}, comp label5::l:p:461:p, par t:l {comp label4:::p:461:p, seq {comp createScenarioBtn:::p:46:p, space :::p, comp label2:::p:409:p}}}}, seq l {space :p:146:p, comp darkThemeBtn:::p::p, space s:::p, comp lightThemeBtn:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp createScenarioBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:68:p, space :::p, par l:::p {comp loadScenarioBtn:::::x, comp label3:::p:46:p}, space :::p, comp label5:::p::p, space s:::p, par b {comp darkThemeBtn::b:p::p, comp lightThemeBtn::b:p::p}, space ::33:x}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {par l:::p {seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label3:::p:422:p}, par t:l {seq l {comp loadCandidatesBtn:::p:46:p, space :::x, comp label6:::p:422:p}, comp label5::l:p:461:p}}, par t {comp label4:::p:461:p, seq {comp createScenarioBtn:::p:46:p, space :::p, comp label2:::p:409:p}}, comp label7::l:p:461:p}, space :::x}, seq t {space ::291:x, comp darkThemeBtn:::p::p, space s:::p, comp lightThemeBtn:::p::p, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp createScenarioBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:46:p, space :::p, par b {comp loadScenarioBtn::b:p:46:p, comp label3::b::46:x}, space :::p, comp label5:::p:49:p, space :::p, par l {comp loadCandidatesBtn:::p:46:p, seq {space :8:8:p, comp label6:::p:40:p}}, space :::p, comp label7:::p:49:p, space :p:17:p, par b {comp darkThemeBtn::b:p::p, comp lightThemeBtn::b:p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -30,11 +30,11 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
 				"text": "Load scenario"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
+				"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
-				"text": "<html> <p align=\"justify\"> Create a voting scenario with kronos by entering your desired candidates, and then create virtual ballots to determine the winner. </p></html>"
+				"text": "<html> <p align=\"justify\"> Create an election scenario with kronos by entering your desired candidates, and then create virtual ballots to determine the winner. </p></html>"
 				"horizontalAlignment": 2
 				"verticalAlignment": 1
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
@@ -42,8 +42,8 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label5"
 				"text": "<html> <p align=\"justify\"> Load a pre-made scenario that contains candidates and their virtual ballots. Scenarios have .CSV and .XLSX formats. </p> </html>"
+				"font": &SwingDerivedFont1 new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
 				"verticalAlignment": 1
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
 			} )
 			add( new FormComponent( "javax.swing.JRadioButton" ) {
 				name: "darkThemeBtn"
@@ -55,9 +55,28 @@ new FormModel {
 				"text": "Light theme"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "lightThemeBtn", true ) )
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "loadCandidatesBtn"
+				"text": "\ud83d\udcc1"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadCandidatesBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "Load candidate list"
+				"font": #SwingDerivedFont0
+				"horizontalAlignment": 2
+				"verticalAlignment": 1
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "<html> <p align=\"justify\"> Load a pre-made list that contains the names of candidates. You can then use those names to create election scenarios. </p> </html>"
+				"font": #SwingDerivedFont1
+				"verticalAlignment": 1
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 485, 295 )
+			"size": new java.awt.Dimension( 485, 365 )
 		} )
 	}
 }

@@ -578,7 +578,7 @@ public class createScenario extends JPanel {
 
         //---- loadedFileTxt ----
         loadedFileTxt.setText("Loaded file");
-        loadedFileTxt.setVerticalAlignment(SwingConstants.TOP);
+        loadedFileTxt.setVerticalAlignment(SwingConstants.BOTTOM);
         loadedFileTxt.setHorizontalAlignment(SwingConstants.RIGHT);
         loadedFileTxt.setFont(loadedFileTxt.getFont().deriveFont(loadedFileTxt.getFont().getSize() + 4f));
 

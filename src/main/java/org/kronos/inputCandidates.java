@@ -15,10 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.TableView;
-import java.io.File;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,6 +34,13 @@ public class inputCandidates extends JPanel {
         //initLocale();
         initTable();
         success = false;
+    }
+
+    public inputCandidates(File inFile) {
+        initComponents();
+        initTable();
+        success = false;
+        populateTableFromFile(inFile);
     }
 
     private void initTable() {
@@ -87,6 +91,32 @@ public class inputCandidates extends JPanel {
         });
 
         unsaved = false;
+    }
+
+    private void populateTableFromFile(File inFile) {
+        BufferedReader reader;
+        String path = inFile.getAbsolutePath();
+        try {
+            DefaultTableModel model = (DefaultTableModel) table1.getModel();
+
+            model.removeRow(0);
+            candidateCount = 0;
+
+            reader = new BufferedReader(new FileReader(path));
+            String line = reader.readLine();
+            while (line != null) {
+                candidateCount++;
+                model.addRow(new Object[]{candidateCount, line});
+
+                line = reader.readLine();
+            }
+
+            reader.close();
+
+            unsaved = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initLocale() {
@@ -209,6 +239,9 @@ public class inputCandidates extends JPanel {
             File file = fileChooser.getSelectedFile();
             String fileAbsolutePath = file.getAbsolutePath();
 
+            if (!fileAbsolutePath.endsWith(".txt"))
+                fileAbsolutePath += ".txt";
+
             while (file.exists()) {
                 int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
@@ -218,6 +251,9 @@ public class inputCandidates extends JPanel {
                 if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                     file = fileChooser.getSelectedFile();
                     fileAbsolutePath = file.getAbsolutePath();
+
+                    if (!fileAbsolutePath.endsWith(".txt"))
+                        fileAbsolutePath += ".txt";
                 } else {
                     return;
                 }
@@ -227,10 +263,9 @@ public class inputCandidates extends JPanel {
                 OutputStream outputStream = Files.newOutputStream(Paths.get(fileAbsolutePath));
                 PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
 
-                DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
-                for (int i = 0; i < dtm.getRowCount(); i++) {
-                    String val = (String) dtm.getValueAt(i, 1);
-                    out.println(val);
+                String[] data = extractDataToString();
+                for (String d : data) {
+                    out.println(d);
                 }
 
                 out.flush();
@@ -239,6 +274,7 @@ public class inputCandidates extends JPanel {
                 System.out.println(e);
             }
 
+            unsaved = false;
         }
     }
 
@@ -300,13 +336,13 @@ public class inputCandidates extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(label2, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(exportBtn, GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                        .addComponent(scrollPane1)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -324,13 +360,14 @@ public class inputCandidates extends JPanel {
                         .addComponent(remBtn)
                         .addComponent(addBtn))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 496, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(exportBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap(7, Short.MAX_VALUE))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
