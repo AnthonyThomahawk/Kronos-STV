@@ -302,22 +302,26 @@ public class createScenario extends JPanel {
         }
     }
 
+    private String generateOutput (String inputFile) {
+        STVpy stv = new STVpy();
+        String stvOutput;
+        try {
+            if (customSeats.isSelected()) {
+                stvOutput = stv.callSTV(inputFile, (Integer)spinner1.getValue());
+            } else {
+                stvOutput = stv.callSTV(inputFile);
+            }
+        } catch (Exception x) {
+            return null;
+        }
+
+        return stvOutput;
+    }
+
+
     private void generateResultFile(String filename, String input) {
         try {
-            STVpy stv = new STVpy();
-            String stvOutput;
-            try {
-                if (customSeats.isSelected()) {
-                    stvOutput = stv.callSTV(input, (Integer)spinner1.getValue());
-                } else {
-                    stvOutput = stv.callSTV(input);
-                }
-            } catch (Exception x) {
-                return;
-            }
-
-            electionResults = new STVResults(stvOutput, ballotCount);
-
+            electionResults = new STVResults(generateOutput(input), ballotCount);
 
             OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
             PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
@@ -337,17 +341,7 @@ public class createScenario extends JPanel {
 
     private void generateAnalysisFile(String filename, String input) {
         try {
-            STVpy stv = new STVpy();
-            String stvOutput;
-            try {
-                if (customSeats.isSelected()) {
-                    stvOutput = stv.callSTV(input, (Integer)spinner1.getValue());
-                } else {
-                    stvOutput = stv.callSTV(input);
-                }
-            } catch (Exception x) {
-                return;
-            }
+            String stvOutput = generateOutput(input);
 
             OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
             PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
@@ -364,22 +358,11 @@ public class createScenario extends JPanel {
 
     private void viewBtn(ActionEvent e) {
         generateBallotFile("b1.csv");
-        STVpy stv = new STVpy();
-        String stvOutput;
 
-        try {
-            if (customSeats.isSelected()) {
-                stvOutput = stv.callSTV("b1.csv", (Integer)spinner1.getValue());
-            } else {
-                stvOutput = stv.callSTV("b1.csv");
-            }
-        } catch (Exception x) {
-            return;
-        }
+        electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
 
         File ballotsFile = new File("b1.csv");
         ballotsFile.delete();
-        electionResults = new STVResults(stvOutput, ballotCount);
 
         JDialog j = new JDialog(Main.mainFrame, "", true);
         resultForm x = new resultForm();
