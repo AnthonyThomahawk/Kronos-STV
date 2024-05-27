@@ -38,6 +38,7 @@ public class createScenario extends JPanel {
         loadedPermutations = null;
         spinner1.setEnabled(false);
         spinner1.setValue(1);
+        loadedFileTxt.setText("Unsaved scenario");
         initTable();
     }
 
@@ -46,6 +47,7 @@ public class createScenario extends JPanel {
         spinner1.setEnabled(false);
         spinner1.setValue(1);
         parseBallotFile(ballotFile);
+        loadedFileTxt.setText(ballotFile);
         initTable();
     }
 
@@ -217,6 +219,7 @@ public class createScenario extends JPanel {
             @Override
             public void tableChanged(TableModelEvent e) {
                 unsaved = true;
+                loadedFileTxt.setText("Unsaved scenario");
                 updateStatus();
             }
         });
@@ -302,7 +305,7 @@ public class createScenario extends JPanel {
         }
     }
 
-    private String generateOutput (String inputFile) {
+    private String generateOutput(String inputFile) {
         STVpy stv = new STVpy();
         String stvOutput;
         try {
@@ -485,6 +488,7 @@ public class createScenario extends JPanel {
             generateAnalysisFile(analysisAbsolutePath, fileAbsolutePath);
 
             unsaved = false;
+            loadedFileTxt.setText(fileAbsolutePath);
             String msg = "Ballots exported to : " + fileAbsolutePath + "\n" +
                     "Election result exported to : " + resultAbsolutePath + "\n" +
                     "Election analysis exported to : " + analysisAbsolutePath;
@@ -528,6 +532,7 @@ public class createScenario extends JPanel {
         label1 = new JLabel();
         exportBtn = new JButton();
         remBtn = new JButton();
+        loadedFileTxt = new JLabel();
 
         //======== this ========
 
@@ -571,6 +576,12 @@ public class createScenario extends JPanel {
         remBtn.setText("Remove -");
         remBtn.addActionListener(e -> remBtn(e));
 
+        //---- loadedFileTxt ----
+        loadedFileTxt.setText("Loaded file");
+        loadedFileTxt.setVerticalAlignment(SwingConstants.TOP);
+        loadedFileTxt.setHorizontalAlignment(SwingConstants.RIGHT);
+        loadedFileTxt.setFont(loadedFileTxt.getFont().deriveFont(loadedFileTxt.getFont().getSize() + 4f));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -591,14 +602,19 @@ public class createScenario extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label1, GroupLayout.PREFERRED_SIZE, 329, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(loadedFileTxt, GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                        .addComponent(loadedFileTxt, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -625,5 +641,6 @@ public class createScenario extends JPanel {
     private JLabel label1;
     private JButton exportBtn;
     private JButton remBtn;
+    private JLabel loadedFileTxt;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
