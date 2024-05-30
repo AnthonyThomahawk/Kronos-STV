@@ -21,11 +21,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class mainForm extends JPanel {
     public static JDialog inputCandidatesDlg;
-    public boolean darktheme = true;
     public static JDialog createBallotsDlg;
     public mainForm() {
         initComponents();
-        darkThemeBtn.setSelected(true);
         //initLocale();
 
         //label3.setText("<html>" + "Create a voting scenario with Kronos by entering all the available candidates, and then add the ballots of the voters. You will then be able to adjust all the ballot permutations and find out which candidate gets elected." + "</html>");
@@ -71,32 +69,6 @@ public class mainForm extends JPanel {
 
     private void createScenarioBtn(ActionEvent e) {
         openCandidatesForm(null);
-    }
-
-    private void darkThemeBtn(ActionEvent e) {
-        if (darktheme) {
-            darkThemeBtn.setSelected(true);
-            return;
-        }
-        try {
-            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
-            com.formdev.flatlaf.FlatLaf.updateUI();
-            lightThemeBtn.setSelected(false);
-            darktheme = true;
-        } catch (Exception ignored) {}
-    }
-
-    private void lightThemeBtn(ActionEvent e) {
-        if (!darktheme) {
-            lightThemeBtn.setSelected(true);
-            return;
-        }
-        try {
-            javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-            com.formdev.flatlaf.FlatLaf.updateUI();
-            darkThemeBtn.setSelected(false);
-            darktheme = false;
-        } catch (Exception ignored) {}
     }
 
     private void loadScenarioBtn(ActionEvent e) {
@@ -192,6 +164,16 @@ public class mainForm extends JPanel {
         }
     }
 
+    private void settingsBtn(ActionEvent e) {
+        JDialog settings = new JDialog(Main.mainFrame, "", true);
+        SettingsUI settingsPane = new SettingsUI();
+        settings.setContentPane(settingsPane);
+        settings.pack();
+        settings.setLocationRelativeTo(null);
+        settings.setVisible(true);
+        settings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -201,11 +183,10 @@ public class mainForm extends JPanel {
         label3 = new JLabel();
         label4 = new JLabel();
         label5 = new JLabel();
-        darkThemeBtn = new JRadioButton();
-        lightThemeBtn = new JRadioButton();
         loadCandidatesBtn = new JButton();
         label6 = new JLabel();
         label7 = new JLabel();
+        settingsBtn = new JButton();
 
         //======== this ========
 
@@ -240,14 +221,6 @@ public class mainForm extends JPanel {
         label5.setFont(label5.getFont().deriveFont(label5.getFont().getSize() + 3f));
         label5.setVerticalAlignment(SwingConstants.TOP);
 
-        //---- darkThemeBtn ----
-        darkThemeBtn.setText("Dark theme");
-        darkThemeBtn.addActionListener(e -> darkThemeBtn(e));
-
-        //---- lightThemeBtn ----
-        lightThemeBtn.setText("Light theme");
-        lightThemeBtn.addActionListener(e -> lightThemeBtn(e));
-
         //---- loadCandidatesBtn ----
         loadCandidatesBtn.setText("\ud83d\udcc1");
         loadCandidatesBtn.setFont(loadCandidatesBtn.getFont().deriveFont(loadCandidatesBtn.getFont().getStyle() | Font.BOLD, loadCandidatesBtn.getFont().getSize() + 15f));
@@ -263,6 +236,11 @@ public class mainForm extends JPanel {
         label7.setText("<html> <p align=\"justify\"> Load a pre-made list that contains the names of candidates. You can then use those names to create election scenarios. </p> </html>");
         label7.setFont(label7.getFont().deriveFont(label7.getFont().getSize() + 3f));
         label7.setVerticalAlignment(SwingConstants.TOP);
+
+        //---- settingsBtn ----
+        settingsBtn.setText("\u2699");
+        settingsBtn.setFont(settingsBtn.getFont().deriveFont(settingsBtn.getFont().getSize() + 11f));
+        settingsBtn.addActionListener(e -> settingsBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -291,10 +269,8 @@ public class mainForm extends JPanel {
                         .addComponent(label7, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(291, Short.MAX_VALUE)
-                    .addComponent(darkThemeBtn)
-                    .addGap(18, 18, 18)
-                    .addComponent(lightThemeBtn)
+                    .addContainerGap(443, Short.MAX_VALUE)
+                    .addComponent(settingsBtn)
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -320,10 +296,8 @@ public class mainForm extends JPanel {
                             .addComponent(label6, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(label7, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-                    .addGap(17, 17, 17)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(darkThemeBtn)
-                        .addComponent(lightThemeBtn))
+                    .addGap(3, 3, 3)
+                    .addComponent(settingsBtn)
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -337,10 +311,9 @@ public class mainForm extends JPanel {
     private JLabel label3;
     private JLabel label4;
     private JLabel label5;
-    private JRadioButton darkThemeBtn;
-    private JRadioButton lightThemeBtn;
     private JButton loadCandidatesBtn;
     private JLabel label6;
     private JLabel label7;
+    private JButton settingsBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

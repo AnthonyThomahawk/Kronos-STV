@@ -1,8 +1,6 @@
 package org.kronos;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.io.File;
@@ -11,6 +9,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 import java.util.Scanner;
 
 public class Main {
@@ -85,6 +84,30 @@ public class Main {
 
     public static void main(String[] args) {
         FlatDarkLaf.setup();
+
+        if (new File("settings.xml").exists()) {
+            try {
+                Properties loadProps = new Properties();
+                loadProps.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
+                String theme = loadProps.getProperty("theme");
+
+                if (theme.equals("dark")) {
+                    javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+                } else if (theme.equals("light")) {
+                    javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+                } else {
+                    if (DarkModeDetector.isDarkMode()) {
+                        javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
+                    } else {
+                        javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
+                    }
+                }
+                com.formdev.flatlaf.FlatLaf.updateUI();
+
+            } catch (Exception ignored) {
+            }
+        }
+
         try{
             checkPython();
         } catch (Exception ignored){}
