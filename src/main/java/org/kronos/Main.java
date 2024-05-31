@@ -1,6 +1,7 @@
 package org.kronos;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.io.File;
@@ -14,6 +15,40 @@ import java.util.Scanner;
 
 public class Main {
     public static JFrame mainFrame;
+
+    private static boolean checkConfig() {
+        File s = new File("settings.xml");
+        if (!s.exists()) {
+            int input = JOptionPane.showOptionDialog(null, "Kronos detected this is the first time its running on this system.\n" +
+                    "<html><b><i>In order to use Kronos, you must pick a Working folder in Settings.</b></i></html>", "First time running Kronos", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+            if (input == JOptionPane.CANCEL_OPTION) {
+                System.exit(1);
+            }
+
+            return false;
+        }
+
+        try {
+            Properties loadProps = new Properties();
+            loadProps.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
+
+            String workDir = loadProps.getProperty("workDir");
+            if (workDir == null || !new File(workDir).exists()) {
+                int input = JOptionPane.showOptionDialog(null, "<html><b><i>In order to use Kronos, you must pick a Working folder in Settings.</b></i></html>", "Invalid Work Directory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+                if (input == JOptionPane.CANCEL_OPTION) {
+                    System.exit(1);
+                }
+
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 
     private static void checkSTV() {
         File l = new File("loader.py");
@@ -83,7 +118,28 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        FlatDarkLaf.setup();
+        if (DarkModeDetector.isDarkMode())
+            FlatDarkLaf.setup();
+        else
+            FlatLightLaf.setup();
+
+        mainFrame = new JFrame();
+
+        try{
+            checkPython();
+        } catch (Exception ignored){}
+
+        checkSTV();
+
+        while (!checkConfig()) {
+            JDialog settings = new JDialog(Main.mainFrame, "", true);
+            SettingsUI settingsPane = new SettingsUI();
+            settings.setContentPane(settingsPane);
+            settings.pack();
+            settings.setLocationRelativeTo(null);
+            settings.setVisible(true);
+            settings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        }
 
         if (new File("settings.xml").exists()) {
             try {
@@ -104,16 +160,9 @@ public class Main {
                 }
                 com.formdev.flatlaf.FlatLaf.updateUI();
 
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
 
-        try{
-            checkPython();
-        } catch (Exception ignored){}
-        
-        checkSTV();
-        mainFrame = new JFrame();
         mainForm m = new mainForm();
         mainFrame.setContentPane(m);
         mainFrame.pack();

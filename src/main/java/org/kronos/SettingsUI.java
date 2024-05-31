@@ -60,6 +60,10 @@ public class SettingsUI extends JPanel {
                 JOptionPane.showMessageDialog(null, "Failed to load settings.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
+        } else {
+            darkThemeBtn.setSelected(false);
+            lightThemeBtn.setSelected(false);
+            followSystemBtn.setSelected(true);
         }
     }
 
