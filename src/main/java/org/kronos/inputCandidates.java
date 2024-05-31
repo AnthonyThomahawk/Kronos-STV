@@ -139,6 +139,7 @@ public class inputCandidates extends JPanel {
         if (rows <= 1) {
             label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">There must be more than 1 candidate.</b></html>");
             createBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
             return;
         }
 
@@ -148,6 +149,7 @@ public class inputCandidates extends JPanel {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " does not have a name.</b>" +"</html>");
                 createBtn.setEnabled(false);
+                exportBtn.setEnabled(false);
                 return;
             }
         }
@@ -158,6 +160,20 @@ public class inputCandidates extends JPanel {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot start with a digit.</b>" +"</html>");
                 createBtn.setEnabled(false);
+                exportBtn.setEnabled(false);
+                return;
+            }
+        }
+
+        for (int i = 0; i < rows; i++) {
+            String d = (String) dtm.getValueAt(i, 1);
+
+            if(d.matches(".*[!@#$%^&*();'><?].*") || d.contains("\\") || d.contains("/") || d.contains("[") || d.contains("]"))
+            {
+                label2.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot contain special characters.</b>" +"</html>");
+                createBtn.setEnabled(false);
+                exportBtn.setEnabled(false);
                 return;
             }
         }
@@ -172,6 +188,7 @@ public class inputCandidates extends JPanel {
                     label2.setText("<html>" + "<b> Alert : </b>" +
                             "<br> <b style=\"color:RED;\">Candidates " + (i+1) + " and " + (j+1) + " cannot have the same name.</b>" +"</html>");
                     createBtn.setEnabled(false);
+                    exportBtn.setEnabled(false);
                     return;
                 }
             }
@@ -179,6 +196,7 @@ public class inputCandidates extends JPanel {
 
         label2.setText("<html><b> Status : </b><br> <b style=\"color:GREEN;\">OK</b></html>");
         createBtn.setEnabled(true);
+        exportBtn.setEnabled(true);
     }
 
     private String[] extractDataToString() {
@@ -337,18 +355,18 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label2, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addGap(12, 12, 12)
+                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(scrollPane1)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(remBtn)))
+                            .addComponent(remBtn))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -360,14 +378,14 @@ public class inputCandidates extends JPanel {
                         .addComponent(remBtn)
                         .addComponent(addBtn))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap(7, Short.MAX_VALUE))
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(label2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
