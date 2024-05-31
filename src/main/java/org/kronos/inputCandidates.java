@@ -170,7 +170,7 @@ public class inputCandidates extends JPanel {
         for (int i = 0; i < rows; i++) {
             String d = (String) dtm.getValueAt(i, 1);
 
-            if(d.matches(".*[!@#$%^&*(),;'~`><?=-].*") || d.contains("\\") || d.contains("/") || d.contains("[") || d.contains("]"))
+            if (d.matches(".*[!@#$%^&*(),;'~`><?=-].*") || d.contains("\\") || d.contains("/") || d.contains("[") || d.contains("]"))
             {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot contain special characters.</b>" +"</html>");
