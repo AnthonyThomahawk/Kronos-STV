@@ -4,10 +4,15 @@
 
 package org.kronos;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.awt.event.*;
 import java.beans.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
@@ -17,9 +22,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.TableView;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class inputCandidates extends JPanel {
@@ -90,6 +98,18 @@ public class inputCandidates extends JPanel {
             }
         });
 
+        electionNameBox.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+        });
+
         unsaved = false;
     }
 
@@ -134,6 +154,13 @@ public class inputCandidates extends JPanel {
     private void updateStatus() {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
+
+        if (electionNameBox.getText().isEmpty()) {
+            label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Election must have a name.</b></html>");
+            createBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
+            return;
+        }
 
         // candidate >= 1 count check
         if (rows <= 1) {
@@ -252,50 +279,41 @@ public class inputCandidates extends JPanel {
     }
 
     public void saveChanges() {
-        JFileChooser fileChooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("Text File","txt");
-        fileChooser.setFileFilter(filter);
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            String fileAbsolutePath = file.getAbsolutePath();
-
-            if (!fileAbsolutePath.endsWith(".txt"))
-                fileAbsolutePath += ".txt";
-
-            while (file.exists()) {
-                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    break;
-                }
-
-                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
-                    fileAbsolutePath = file.getAbsolutePath();
-
-                    if (!fileAbsolutePath.endsWith(".txt"))
-                        fileAbsolutePath += ".txt";
-                } else {
-                    return;
-                }
-            }
-
-            try {
-                OutputStream outputStream = Files.newOutputStream(Paths.get(fileAbsolutePath));
-                PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-
-                String[] data = extractDataToString();
-                for (String d : data) {
-                    out.println(d);
-                }
-
-                out.flush();
-                out.close();
-            } catch (Exception e) {
-                System.out.println(e);
-            }
-
-            unsaved = false;
+        if (label2.getText().contains("Alert")) {
+            JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
+            return;
         }
+
+        if (!Main.checkConfig())
+            return;
+
+        try {
+            Properties settings = new Properties();
+            settings.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
+            String workDir = settings.getProperty("workDir");
+
+            JSONObject election = new JSONObject();
+            election.put("Title", electionNameBox.getText());
+            JSONArray candidates = new JSONArray();
+            candidates.addAll(Arrays.asList(extractDataToString()));
+            election.put("Candidates", candidates);
+
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String filePath = workDir + fileSeperator + electionNameBox.getText() + ".election";
+
+            FileWriter file = new FileWriter(filePath);
+
+            file.write(election.toJSONString());
+            file.flush();
+            file.close();
+
+
+        } catch (Exception x) {
+            return;
+        }
+
+        unsaved = false;
+
     }
 
     private void exportBtn(ActionEvent e) {
@@ -313,11 +331,13 @@ public class inputCandidates extends JPanel {
         label2 = new JLabel();
         remBtn = new JButton();
         exportBtn = new JButton();
+        label3 = new JLabel();
+        electionNameBox = new JTextField();
 
         //======== this ========
 
         //---- label1 ----
-        label1.setText("Enter candidates");
+        label1.setText("Start election");
         label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 9f));
 
         //---- createBtn ----
@@ -333,7 +353,7 @@ public class inputCandidates extends JPanel {
         }
 
         //---- addBtn ----
-        addBtn.setText("Add +");
+        addBtn.setText("Add candidate +");
         addBtn.addActionListener(e -> addBtn(e));
 
         //---- label2 ----
@@ -342,12 +362,15 @@ public class inputCandidates extends JPanel {
         label2.setHorizontalAlignment(SwingConstants.LEFT);
 
         //---- remBtn ----
-        remBtn.setText("Remove -");
+        remBtn.setText("Remove candidate -");
         remBtn.addActionListener(e -> remBtn(e));
 
         //---- exportBtn ----
-        exportBtn.setText("Export candidates");
+        exportBtn.setText("Save election");
         exportBtn.addActionListener(e -> exportBtn(e));
+
+        //---- label3 ----
+        label3.setText("Election name : ");
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -357,30 +380,39 @@ public class inputCandidates extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(label2, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addComponent(label2, GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                             .addGap(12, 12, 12)
-                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 126, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label3)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(electionNameBox, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addGroup(layout.createParallelGroup()
                         .addComponent(label1)
-                        .addComponent(remBtn)
-                        .addComponent(addBtn))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(remBtn)
+                            .addComponent(addBtn)))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label3)
+                        .addComponent(electionNameBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -402,5 +434,7 @@ public class inputCandidates extends JPanel {
     private JLabel label2;
     private JButton remBtn;
     private JButton exportBtn;
+    private JLabel label3;
+    private JTextField electionNameBox;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

@@ -17,6 +17,8 @@ dependencies {
     implementation 'com.formdev:flatlaf:3.4.1'
     // https://mvnrepository.com/artifact/com.formdev/flatlaf-extras
     implementation 'com.formdev:flatlaf-extras:3.4.1'
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 test {

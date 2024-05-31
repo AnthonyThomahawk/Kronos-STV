@@ -4,13 +4,13 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq t {comp label2::::318:x, space :p:12:p, comp exportBtn:::p:126:p, space :::p, comp createBtn:::p:111:p}, seq {comp label1:::p::p, space :::x, comp addBtn:::p::p, space :::p, comp remBtn:::p::p}, comp scrollPane1::l::573:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, par b {comp label1::b:p::p, comp remBtn::b:p::p, comp addBtn::b:p::p}, space :::p, comp scrollPane1::::461:x, space :::p, par l {par b:t {comp createBtn::b:p:36:p, comp exportBtn::b:p:36:p}, comp label2::t:p:36:p}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq t {comp label2::::333:x, space :p:12:p, comp exportBtn:::p:111:p, space :::p, comp createBtn:::p:111:p}, seq {comp label1:::p::p, space ::191:x, comp addBtn:::p::p, space :::p, comp remBtn:::p::p}, comp scrollPane1::l::573:x, seq l {comp label3:::p::p, space :::p, comp electionNameBox::::483:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp label1:::p::p, par b {comp remBtn::b:p::p, comp addBtn::b:p::p}}, space :::p, par b {comp label3::b:p::p, comp electionNameBox::b:p::p}, space :::x, comp scrollPane1:::p:492:p, space :::p, par l {par b:t {comp createBtn::b:p:36:p, comp exportBtn::b:p:36:p}, comp label2::t:p:36:p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
-				"text": "Enter candidates"
+				"text": "Start election"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 9, false )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -27,7 +27,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "addBtn"
-				"text": "Add +"
+				"text": "Add candidate +"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -38,17 +38,24 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "remBtn"
-				"text": "Remove -"
+				"text": "Remove candidate -"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "exportBtn"
-				"text": "Export candidates"
+				"text": "Save election"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exportBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Election name : "
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "electionNameBox"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 585, 550 )
+			"size": new java.awt.Dimension( 585, 605 )
 		} )
 	}
 }
