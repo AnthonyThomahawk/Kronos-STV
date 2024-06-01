@@ -531,6 +531,10 @@ public class createScenario extends JPanel {
             FileWriter file = new FileWriter(filePath);
             file.write(scenario.toJSONString());
             file.close();
+
+            unsaved = false;
+
+            JOptionPane.showMessageDialog(null, "Scenario '" + scenarioTitleTxt.getText() + "' has been saved!");
         } catch (Exception e) {
 
         }

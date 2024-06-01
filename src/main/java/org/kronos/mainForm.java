@@ -72,43 +72,15 @@ public class mainForm extends JPanel {
     }
 
     private void loadElectionBtn(ActionEvent e) {
-
-
-
-
-//        JFileChooser fileChooser = new JFileChooser();
-//        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
-//        fileChooser.setFileFilter(filter);
-//        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-//            File file = fileChooser.getSelectedFile();
-//            if (!file.exists()) {
-//                JOptionPane.showMessageDialog(null, "File does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//
-//            String fileAbsolutePath = file.getAbsolutePath();
-//
-//            createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
-//            createScenario c = new createScenario(fileAbsolutePath);
-//            createBallotsDlg.setContentPane(c);
-//            createBallotsDlg.pack();
-//            createBallotsDlg.setLocationRelativeTo(null);
-//
-//            createBallotsDlg.addWindowListener(new WindowAdapter() {
-//                @Override
-//                public void windowClosing(WindowEvent e) {
-//                    super.windowClosing(e);
-//
-//                    safeClose(createBallotsDlg, createScenario.class, c);
-//                }
-//            });
-//            createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//
-//            createBallotsDlg.setVisible(true); // BLOCKING CALL
-//        }
+        JDialog j = new JDialog(Main.mainFrame, "Load election", true);
+        electionLoad el = new electionLoad();
+        j.setContentPane(el);
+        j.pack();
+        j.setLocationRelativeTo(null);
+        j.setVisible(true);
     }
 
-    private void openCandidatesForm(File inFile) {
+    public static void openCandidatesForm(File inFile) {
         inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
 
         inputCandidates f;
@@ -130,27 +102,6 @@ public class mainForm extends JPanel {
 
 
         inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
-
-
-//        if (inputCandidates.success) {
-//            createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
-//            createScenario c = new createScenario();
-//            createBallotsDlg.setContentPane(c);
-//            createBallotsDlg.pack();
-//            createBallotsDlg.setLocationRelativeTo(null);
-//
-//            createBallotsDlg.addWindowListener(new WindowAdapter() {
-//                @Override
-//                public void windowClosing(WindowEvent e) {
-//                    super.windowClosing(e);
-//
-//                    safeClose(createBallotsDlg, createScenario.class, c);
-//                }
-//            });
-//            createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-//
-//            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
-//        }
     }
 
     private void loadCandidatesBtn(ActionEvent e) {

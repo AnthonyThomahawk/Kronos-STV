@@ -4,6 +4,7 @@
 
 package org.kronos;
 
+import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -20,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -107,27 +109,26 @@ public class inputCandidates extends JPanel {
     }
 
     private void populateTableFromFile(File inFile) {
-        BufferedReader reader;
-        String path = inFile.getAbsolutePath();
         try {
             DefaultTableModel model = (DefaultTableModel) table1.getModel();
 
             model.removeRow(0);
             candidateCount = 0;
 
-            reader = new BufferedReader(new FileReader(path));
-            String line = reader.readLine();
-            while (line != null) {
-                candidateCount++;
-                model.addRow(new Object[]{candidateCount, line});
+            JSONParser parser = new JSONParser();
+            JSONObject election = (JSONObject) parser.parse(new FileReader(inFile.getAbsolutePath()));
 
-                line = reader.readLine();
+            electionNameBox.setText((String) election.get("Title"));
+
+            JSONArray candidatesJSON = (JSONArray) election.get("Candidates");
+
+            for (Object o : candidatesJSON) {
+                candidateCount++;
+                model.addRow(new Object[]{candidateCount, o});
             }
 
-            reader.close();
-
             unsaved = false;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
