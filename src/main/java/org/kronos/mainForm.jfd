@@ -4,44 +4,44 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {par l:::p {seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label3:::p:422:p}, par t:l {seq l {comp loadCandidatesBtn:::p:46:p, space :::x, comp label6:::p:422:p}, comp label5::l:p:461:p}}, par t {comp label4:::p:461:p, seq {comp createScenarioBtn:::p:46:p, space :::p, comp label2:::p:409:p}}, comp label7::l:p:461:p}, space :::x}, seq t {space ::443:x, comp settingsBtn:::p::p, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp createScenarioBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:46:p, space :::p, par b {comp loadScenarioBtn::b:p:46:p, comp label3::b::46:x}, space :::p, comp label5:::p:49:p, space :::p, par l {comp loadCandidatesBtn:::p:46:p, seq {space :8:8:p, comp label6:::p:40:p}}, space :::p, comp label7:::p:49:p, space :p:3:p, comp settingsBtn:::p::p, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq t {space :0:0:x, comp settingsBtn:::p::p}, seq {par l {seq l {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:422:p}, comp label5::l:p:461:p, par t {comp label4:::p:461:p, seq {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:409:p}}, par t:l::p {seq l {comp loadCandidatesBtn:::p:46:p, space :::x, comp label6:::p:409:p}, comp label7::l:p:461:p}}, space :0:0:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp startElectionBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:46:p, space :::p, par b {comp loadElectionBtn::b:p:46:p, comp label3::b::46:x}, space :::p, comp label5:::p::p, space :p:12:p, par b {comp loadCandidatesBtn::b:p:46:p, comp label6::b:p:40:p}, space :p:8:p, comp label7:::p:49:p, space u:::p, comp settingsBtn:::p::p, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "createScenarioBtn"
+				name: "startElectionBtn"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
 				"text": "+"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				"verticalAlignment": 1
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createScenarioBtn", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startElectionBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "loadScenarioBtn"
+				name: "loadElectionBtn"
 				"text": "\ud83d\udcc1"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadScenarioBtn", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadElectionBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
-				"text": "Create a voting scenario"
+				"text": "Start an election"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
-				"text": "Load scenario"
+				"text": "Load an election"
 				"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
-				"text": "<html> <p align=\"justify\"> Create an election scenario with kronos by entering your desired candidates, and then create virtual ballots to determine the winner. </p></html>"
+				"text": "<html> <p align=\"justify\">Create a virtual election in Kronos that can be then used to create scenarios</p></html>"
 				"horizontalAlignment": 2
 				"verticalAlignment": 1
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label5"
-				"text": "<html> <p align=\"justify\"> Load a pre-made scenario that contains candidates and their virtual ballots. Scenarios have .CSV and .XLSX formats. </p> </html>"
+				"text": "<html> <p align=\"justify\"> Load a pre-made election, and then create scenarios based on it.</p> </html>"
 				"font": &SwingDerivedFont1 new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
 				"verticalAlignment": 1
 			} )
@@ -53,14 +53,12 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label6"
-				"text": "Load candidate list"
+				"text": "Load a scenario"
 				"font": #SwingDerivedFont0
-				"horizontalAlignment": 2
-				"verticalAlignment": 1
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label7"
-				"text": "<html> <p align=\"justify\"> Load a pre-made list that contains the names of candidates. You can then use those names to create election scenarios. </p> </html>"
+				"text": "<html> <p align=\"justify\"> Load a pre-made scenario and change it to your liking. </p> </html>"
 				"font": #SwingDerivedFont1
 				"verticalAlignment": 1
 			} )

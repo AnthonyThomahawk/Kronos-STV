@@ -15,19 +15,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.TableView;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class inputCandidates extends JPanel {
@@ -241,11 +234,26 @@ public class inputCandidates extends JPanel {
     }
 
     private void createBtn(ActionEvent e) {
-        candidates = extractDataToString();
-
         try {
             success = true;
-            mainForm.inputCandidatesDlg.dispose();
+
+            JDialog createBallotsDlg = new JDialog(mainForm.inputCandidatesDlg, "Create ballots", true);
+            createScenario c = new createScenario(saveChanges(), false);
+            createBallotsDlg.setContentPane(c);
+            createBallotsDlg.pack();
+            createBallotsDlg.setLocationRelativeTo(null);
+
+            createBallotsDlg.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    super.windowClosing(e);
+
+                    mainForm.safeClose(createBallotsDlg, createScenario.class, c);
+                }
+            });
+            createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
         } catch (Exception ignored) {
         }
 
@@ -278,19 +286,20 @@ public class inputCandidates extends JPanel {
         }
     }
 
-    public void saveChanges() {
+    public String saveChanges() {
         if (label2.getText().contains("Alert")) {
             JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
-            return;
+            return null;
         }
 
         if (!Main.checkConfig())
-            return;
+            return null;
 
         try {
-            Properties settings = new Properties();
-            settings.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
-            String workDir = settings.getProperty("workDir");
+            String workDir = Main.getWorkDir();
+
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String filePath = workDir + fileSeperator + electionNameBox.getText() + ".election";
 
             JSONObject election = new JSONObject();
             election.put("Title", electionNameBox.getText());
@@ -298,21 +307,17 @@ public class inputCandidates extends JPanel {
             candidates.addAll(Arrays.asList(extractDataToString()));
             election.put("Candidates", candidates);
 
-            String fileSeperator = FileSystems.getDefault().getSeparator();
-            String filePath = workDir + fileSeperator + electionNameBox.getText() + ".election";
-
             FileWriter file = new FileWriter(filePath);
 
             file.write(election.toJSONString());
             file.flush();
             file.close();
 
-
+            unsaved = false;
+            return filePath;
         } catch (Exception x) {
-            return;
+            return null;
         }
-
-        unsaved = false;
 
     }
 

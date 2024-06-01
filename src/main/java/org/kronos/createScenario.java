@@ -4,9 +4,13 @@
 
 package org.kronos;
 
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.nio.file.FileSystems;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -31,6 +35,9 @@ public class createScenario extends JPanel {
     private ArrayList<String[]> loadedPermutations;
     private ArrayList<Integer> loadedPermutationsMult;
     private ArrayList<JComboBox[]> cbGroups;
+    private String electionTitle;
+    private String[] candidates;
+    private int candidateCount;
 
     public createScenario() {
         initComponents();
@@ -38,7 +45,17 @@ public class createScenario extends JPanel {
         loadedPermutations = null;
         spinner1.setEnabled(false);
         spinner1.setValue(1);
-        loadedFileTxt.setText("Unsaved scenario");
+        //loadedFileTxt.setText("Unsaved scenario");
+        initTable();
+    }
+
+    public createScenario(String file, boolean scenario) {
+        initComponents();
+        spinner1.setEnabled(false);
+        spinner1.setValue(1);
+
+        parseElection(file);
+        electionTitleTxt.setText("Election : " + electionTitle);
         initTable();
     }
 
@@ -47,8 +64,23 @@ public class createScenario extends JPanel {
         spinner1.setEnabled(false);
         spinner1.setValue(1);
         parseBallotFile(ballotFile);
-        loadedFileTxt.setText(ballotFile);
+        //loadedFileTxt.setText(ballotFile);
         initTable();
+    }
+
+    private void parseElection(String electionFile) {
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject election = (JSONObject) parser.parse(new FileReader(electionFile));
+            electionTitle = (String) election.get("Title");
+            JSONArray jCandidates = (JSONArray) election.get("Candidates");
+            ArrayList<String> cList = new ArrayList<>();
+            jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
+            candidates = cList.toArray(new String[0]);
+            candidateCount = candidates.length;
+        } catch (Exception ignored) {}
+
+
     }
 
     private void parseBallotFile(String file) {
@@ -85,10 +117,10 @@ public class createScenario extends JPanel {
     }
 
     private JComboBox[] createCBGroup() {
-        JComboBox[] cbGroup = new JComboBox[inputCandidates.candidateCount];
+        JComboBox[] cbGroup = new JComboBox[candidateCount];
         for (int i = 0; i < cbGroup.length; i++) {
-            String[] opts = Arrays.copyOf(inputCandidates.candidates, inputCandidates.candidateCount+1);
-            opts[inputCandidates.candidateCount] = "Clear option [x]";
+            String[] opts = Arrays.copyOf(candidates, candidateCount+1);
+            opts[candidateCount] = "Clear option [x]";
 
             cbGroup[i] = new JComboBox(opts);
 
@@ -98,7 +130,7 @@ public class createScenario extends JPanel {
                 if (cbGroup[currentBox].getSelectedIndex() == -1)
                     return;
 
-                if (cbGroup[currentBox].getSelectedIndex() == inputCandidates.candidateCount) {
+                if (cbGroup[currentBox].getSelectedIndex() == candidateCount) {
                     cbGroup[currentBox].setSelectedIndex(-1);
                     return;
                 }
@@ -124,21 +156,21 @@ public class createScenario extends JPanel {
 
     private void initTable() {
         remBtn.setEnabled(false);
-        Class<?>[] columnTypes = new Class[inputCandidates.candidateCount+2];
+        Class<?>[] columnTypes = new Class[candidateCount+2];
         columnTypes[0] = Integer.class;
         for (int i = 1; i < columnTypes.length-1; i++) {
             columnTypes[i] = Object.class;
         }
         columnTypes[columnTypes.length-1] = Integer.class;
 
-        String[] tCol = new String[inputCandidates.candidateCount+2];
+        String[] tCol = new String[candidateCount+2];
         tCol[0] = "Ballot #";
         for (int i = 1; i < tCol.length - 1; i++) {
             tCol[i] = "Option " + i;
         }
         tCol[tCol.length-1] = "Multiplier";
 
-        Object[] tRow = new Object[inputCandidates.candidateCount+2];
+        Object[] tRow = new Object[candidateCount+2];
         tRow[0] = ballotCount;
         for (int i = 1; i < tRow.length - 1; i++) {
             tRow[i] = null;
@@ -151,7 +183,7 @@ public class createScenario extends JPanel {
         table1 = new JTable() {
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                if (column != 0 && column != inputCandidates.candidateCount+1){
+                if (column != 0 && column != candidateCount+1){
                     return new DefaultCellEditor(cbGroups.get(row)[column-1]);
                 }
                 return super.getCellEditor(row, column);
@@ -219,7 +251,19 @@ public class createScenario extends JPanel {
             @Override
             public void tableChanged(TableModelEvent e) {
                 unsaved = true;
-                loadedFileTxt.setText("Unsaved scenario");
+                //loadedFileTxt.setText("Unsaved scenario");
+                updateStatus();
+            }
+        });
+
+        scenarioTitleTxt.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+            public void insertUpdate(DocumentEvent e) {
                 updateStatus();
             }
         });
@@ -232,7 +276,7 @@ public class createScenario extends JPanel {
         cbGroups = new ArrayList<>();
         for (int i = 0; i < loadedPermutations.size(); i++) {
             ballotCount++;
-            Object[] row = new Object[inputCandidates.candidateCount+2];
+            Object[] row = new Object[candidateCount+2];
             row[0] = ballotCount;
             String[] sel = loadedPermutations.get(i);
             for (int j = 1; j < row.length - 1; j++) {
@@ -255,7 +299,7 @@ public class createScenario extends JPanel {
     private void addBtn(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         ballotCount++;
-        Object[] row = new Object[inputCandidates.candidateCount+2];
+        Object[] row = new Object[candidateCount+2];
         row[0] = ballotCount;
         for (int i = 1; i < row.length - 1; i++) {
             row[i] = null;
@@ -269,7 +313,7 @@ public class createScenario extends JPanel {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int multipliers[] = new int[dtm.getRowCount()];
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            multipliers[i] = (Integer)dtm.getValueAt(i, inputCandidates.candidateCount+1);
+            multipliers[i] = (Integer)dtm.getValueAt(i, candidateCount+1);
         }
 
         try {
@@ -390,6 +434,14 @@ public class createScenario extends JPanel {
         int rows = dtm.getRowCount();
         int cols = dtm.getColumnCount();
 
+        if (scenarioTitleTxt.getText().isEmpty()) {
+            label1.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">Scenario must have a title.</b>" +"</html>");
+            viewBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
+            return;
+        }
+
         if (rows < 1) {
             label1.setText("<html>" + "<b> Alert : </b>" +
                     "<br> <b style=\"color:RED;\">There must be at least 1 ballot.</b>" +"</html>");
@@ -435,66 +487,117 @@ public class createScenario extends JPanel {
         exportBtn.setEnabled(true);
     }
 
-    public void saveChanges() {
-        JFileChooser fileChooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
-        fileChooser.setFileFilter(filter);
-        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-
-            String fileAbsolutePath = file.getAbsolutePath();
-            String resultAbsolutePath;
-            String analysisAbsolutePath;
-
-            if (!fileAbsolutePath.endsWith(".csv")) {
-                resultAbsolutePath = fileAbsolutePath + "_results.csv";
-                analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
-                fileAbsolutePath += ".csv";
-            } else {
-                resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
-                analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
-            }
-
-            File f = new File(fileAbsolutePath);
-
-            while (f.exists()) {
-                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    break;
-                }
-
-                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                    file = fileChooser.getSelectedFile();
-                    fileAbsolutePath = file.getAbsolutePath();
-
-                    if (!fileAbsolutePath.endsWith(".csv")) {
-                        resultAbsolutePath = fileAbsolutePath + "_results.csv";
-                        analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
-                        fileAbsolutePath += ".csv";
-                    } else {
-                        resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
-                        analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
-                    }
-
-                    f = new File(fileAbsolutePath);
-                }
-                else {
-                    return;
-                }
-            }
-
-            generateBallotFile(fileAbsolutePath);
-            generateResultFile(resultAbsolutePath, fileAbsolutePath);
-            generateAnalysisFile(analysisAbsolutePath, fileAbsolutePath);
-
-            unsaved = false;
-            loadedFileTxt.setText(fileAbsolutePath);
-            String msg = "Ballots exported to : " + fileAbsolutePath + "\n" +
-                    "Election result exported to : " + resultAbsolutePath + "\n" +
-                    "Election analysis exported to : " + analysisAbsolutePath;
-            JOptionPane.showMessageDialog(null, msg, "Scenario exported successfully", JOptionPane.INFORMATION_MESSAGE);
+    public String saveChanges() {
+        if (label2.getText().contains("Alert")) {
+            JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
+            return null;
         }
+
+        if (!Main.checkConfig())
+            return null;
+
+        try {
+            String workDir = Main.getWorkDir();
+
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String filePath = workDir + fileSeperator + scenarioTitleTxt.getText() + ".scenario";
+
+            JSONObject scenario = new JSONObject();
+
+            scenario.put("ScenarioTitle", scenarioTitleTxt.getText());
+            scenario.put("ElectionTitle", electionTitle);
+            JSONArray arr = new JSONArray();
+            for (String s : candidates)
+                arr.add(s);
+            scenario.put("Candidates", arr);
+
+            JSONArray choices = new JSONArray();
+
+            DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                JSONArray row = new JSONArray();
+                for (int j = 0; j < dtm.getColumnCount(); j++) {
+                    Object val = dtm.getValueAt(i, j);
+                    if (val == null) break;
+
+                    row.add(val);
+                }
+                choices.add(row);
+            }
+
+            scenario.put("Choices", choices);
+
+            FileWriter file = new FileWriter(filePath);
+            file.write(scenario.toJSONString());
+            file.close();
+        } catch (Exception e) {
+
+        }
+
+        return null;
     }
+
+//    public void saveChanges() {
+//        JFileChooser fileChooser = new JFileChooser();
+//        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
+//        fileChooser.setFileFilter(filter);
+//        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+//            File file = fileChooser.getSelectedFile();
+//
+//            String fileAbsolutePath = file.getAbsolutePath();
+//            String resultAbsolutePath;
+//            String analysisAbsolutePath;
+//
+//            if (!fileAbsolutePath.endsWith(".csv")) {
+//                resultAbsolutePath = fileAbsolutePath + "_results.csv";
+//                analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
+//                fileAbsolutePath += ".csv";
+//            } else {
+//                resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
+//                analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
+//            }
+//
+//            File f = new File(fileAbsolutePath);
+//
+//            while (f.exists()) {
+//                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
+//                if (res == JOptionPane.YES_OPTION) {
+//                    break;
+//                }
+//
+//                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+//                    file = fileChooser.getSelectedFile();
+//                    fileAbsolutePath = file.getAbsolutePath();
+//
+//                    if (!fileAbsolutePath.endsWith(".csv")) {
+//                        resultAbsolutePath = fileAbsolutePath + "_results.csv";
+//                        analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
+//                        fileAbsolutePath += ".csv";
+//                    } else {
+//                        resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
+//                        analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
+//                    }
+//
+//                    f = new File(fileAbsolutePath);
+//                }
+//                else {
+//                    return;
+//                }
+//            }
+//
+//            generateBallotFile(fileAbsolutePath);
+//            generateResultFile(resultAbsolutePath, fileAbsolutePath);
+//            generateAnalysisFile(analysisAbsolutePath, fileAbsolutePath);
+//
+//            unsaved = false;
+//            //loadedFileTxt.setText(fileAbsolutePath);
+//            String msg = "Ballots exported to : " + fileAbsolutePath + "\n" +
+//                    "Election result exported to : " + resultAbsolutePath + "\n" +
+//                    "Election analysis exported to : " + analysisAbsolutePath;
+//            JOptionPane.showMessageDialog(null, msg, "Scenario exported successfully", JOptionPane.INFORMATION_MESSAGE);
+//        }
+//    }
 
 
     private void exportBtn(ActionEvent e) {
@@ -532,7 +635,9 @@ public class createScenario extends JPanel {
         label1 = new JLabel();
         exportBtn = new JButton();
         remBtn = new JButton();
-        loadedFileTxt = new JLabel();
+        electionTitleTxt = new JLabel();
+        label2 = new JLabel();
+        scenarioTitleTxt = new JTextField();
 
         //======== this ========
 
@@ -569,18 +674,21 @@ public class createScenario extends JPanel {
         label1.setVerticalAlignment(SwingConstants.TOP);
 
         //---- exportBtn ----
-        exportBtn.setText("Export scenario");
+        exportBtn.setText("Save scenario");
         exportBtn.addActionListener(e -> exportBtn(e));
 
         //---- remBtn ----
         remBtn.setText("Remove -");
         remBtn.addActionListener(e -> remBtn(e));
 
-        //---- loadedFileTxt ----
-        loadedFileTxt.setText("Loaded file");
-        loadedFileTxt.setVerticalAlignment(SwingConstants.BOTTOM);
-        loadedFileTxt.setHorizontalAlignment(SwingConstants.RIGHT);
-        loadedFileTxt.setFont(loadedFileTxt.getFont().deriveFont(loadedFileTxt.getFont().getSize() + 4f));
+        //---- electionTitleTxt ----
+        electionTitleTxt.setText("Election title");
+        electionTitleTxt.setVerticalAlignment(SwingConstants.BOTTOM);
+        electionTitleTxt.setHorizontalAlignment(SwingConstants.RIGHT);
+        electionTitleTxt.setFont(electionTitleTxt.getFont().deriveFont(electionTitleTxt.getFont().getSize() + 5f));
+
+        //---- label2 ----
+        label2.setText("Scenario title :");
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -593,7 +701,7 @@ public class createScenario extends JPanel {
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -601,11 +709,16 @@ public class createScenario extends JPanel {
                             .addComponent(viewBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
+                        .addComponent(scrollPane1)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1, GroupLayout.PREFERRED_SIZE, 329, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(loadedFileTxt, GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)))
+                            .addComponent(electionTitleTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label2)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(scenarioTitleTxt, GroupLayout.PREFERRED_SIZE, 572, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -613,18 +726,22 @@ public class createScenario extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                        .addComponent(loadedFileTxt, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                        .addComponent(electionTitleTxt, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label2)
+                        .addComponent(scenarioTitleTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(6, 6, 6)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(exportBtn)
                         .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(customSeats)
                         .addComponent(viewBtn)
                         .addComponent(addBtn)
-                        .addComponent(remBtn))
+                        .addComponent(remBtn)
+                        .addComponent(customSeats))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -641,6 +758,8 @@ public class createScenario extends JPanel {
     private JLabel label1;
     private JButton exportBtn;
     private JButton remBtn;
-    private JLabel loadedFileTxt;
+    private JLabel electionTitleTxt;
+    private JLabel label2;
+    private JTextField scenarioTitleTxt;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

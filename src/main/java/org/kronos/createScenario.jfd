@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space ::34:x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p}, comp scrollPane1::l::658:x, seq l {comp label1:::p:329:p, space :::p, comp loadedFileTxt::::323:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp label1::::31:x, comp loadedFileTxt::::31:x}, space :::p, comp scrollPane1::::421:x, space :p::p, par b {comp exportBtn::b:p::p, comp spinner1::b:p::p, comp customSeats::b:p::p, comp viewBtn::b:p::p, comp addBtn::b:p::p, comp remBtn::b:p::p}, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p}, comp scrollPane1::l:::x, seq l {comp label1:::p:329:p, space :::p, comp electionTitleTxt:::p:323:p, space :0:0:x}, seq l {comp label2:::p::p, space :::x, comp scenarioTitleTxt:::p:572:p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp label1::::27:x, comp electionTitleTxt::::27:x}, space :::p, par b {comp label2::b:p::p, comp scenarioTitleTxt::b:p::p}, space :p:6:p, comp scrollPane1::::412:x, space :p::p, par b {comp exportBtn::b:p::p, comp spinner1::b:p::p, comp viewBtn::b:p::p, comp addBtn::b:p::p, comp remBtn::b:p::p, comp customSeats::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -41,7 +41,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "exportBtn"
-				"text": "Export scenario"
+				"text": "Save scenario"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exportBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -50,15 +50,22 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "loadedFileTxt"
-				"text": "Loaded file"
+				name: "electionTitleTxt"
+				"text": "Election title"
 				"verticalAlignment": 3
 				"horizontalAlignment": 4
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 4, false )
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 5, false )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Scenario title :"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "scenarioTitleTxt"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 670, 500 )
+			"size": new java.awt.Dimension( 670, 515 )
 		} )
 	}
 }

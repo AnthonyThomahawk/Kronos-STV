@@ -2,11 +2,7 @@ package org.kronos;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-import org.json.simple.parser.*;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import javax.lang.model.element.Element;
 import javax.swing.*;
 import java.util.*;
 import java.io.*;
@@ -16,6 +12,18 @@ import java.nio.file.Paths;
 
 public class Main {
     public static JFrame mainFrame;
+
+    public static String getWorkDir() throws IOException {
+        Properties loadProps = new Properties();
+        loadProps.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
+
+        String workDir = loadProps.getProperty("workDir");
+
+        if (!new File(workDir).exists())
+            return null;
+
+        return workDir;
+    }
 
     public static boolean checkConfig() {
         File s = new File("settings.xml");
@@ -31,11 +39,9 @@ public class Main {
         }
 
         try {
-            Properties loadProps = new Properties();
-            loadProps.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
+            String workDir = getWorkDir();
 
-            String workDir = loadProps.getProperty("workDir");
-            if (workDir == null || !new File(workDir).exists()) {
+            if (workDir == null) {
                 int input = JOptionPane.showOptionDialog(null, "<html><b><i>In order to use Kronos, you must pick a Working folder in Settings.</b></i></html>", "Invalid Work Directory", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 
                 if (input == JOptionPane.CANCEL_OPTION) {
@@ -44,7 +50,8 @@ public class Main {
 
                 return false;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An error occured and Kronos cannot read settings.xml", "Error", JOptionPane.OK_OPTION);
             return false;
         }
 
@@ -152,13 +159,8 @@ public class Main {
                     javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
                 } else if (theme.equals("light")) {
                     javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-                } else {
-                    if (DarkModeDetector.isDarkMode()) {
-                        javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
-                    } else {
-                        javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
-                    }
                 }
+
                 com.formdev.flatlaf.FlatLaf.updateUI();
 
             } catch (Exception ignored) {}
