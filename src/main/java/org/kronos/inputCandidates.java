@@ -19,7 +19,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -112,7 +115,7 @@ public class inputCandidates extends JPanel {
             candidateCount = 0;
 
             JSONParser parser = new JSONParser();
-            JSONObject election = (JSONObject) parser.parse(new FileReader(inFile.getAbsolutePath()));
+            JSONObject election = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(inFile.getAbsoluteFile().toPath()), StandardCharsets.UTF_8));
 
             electionNameBox.setText((String) election.get("Title"));
 
@@ -286,7 +289,7 @@ public class inputCandidates extends JPanel {
             candidates.addAll(Arrays.asList(extractDataToString()));
             election.put("Candidates", candidates);
 
-            FileWriter file = new FileWriter(filePath);
+            OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
 
             file.write(election.toJSONString());
             file.flush();

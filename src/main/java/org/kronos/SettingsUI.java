@@ -167,9 +167,9 @@ public class SettingsUI extends JPanel {
                         f.delete();
                     }
                 }
-                JOptionPane.showMessageDialog(this, "All kronos data has been deleted.", "Success", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(this, "All Κronos data has been deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error deleting files in work directory.", "Error", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(this, "Error deleting files in work directory.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         }

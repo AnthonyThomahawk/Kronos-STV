@@ -66,7 +66,7 @@ public class createScenario extends JPanel {
     private void parseElection(String electionFile) {
         JSONParser parser = new JSONParser();
         try {
-            JSONObject election = (JSONObject) parser.parse(new FileReader(electionFile));
+            JSONObject election = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(electionFile)), StandardCharsets.UTF_8));
             electionTitle = (String) election.get("Title");
 
             JSONArray jCandidates = (JSONArray) election.get("Candidates");
@@ -80,7 +80,7 @@ public class createScenario extends JPanel {
     private void parseScenario(String scenarioFile) {
         JSONParser parser = new JSONParser();
         try {
-            JSONObject scenario = (JSONObject) parser.parse(new FileReader(scenarioFile));
+            JSONObject scenario = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(scenarioFile)), StandardCharsets.UTF_8));
             electionTitle = (String) scenario.get("ElectionTitle");
 
             JSONArray jCandidates = (JSONArray) scenario.get("Candidates");
@@ -529,7 +529,7 @@ public class createScenario extends JPanel {
 
             scenario.put("Choices", choices);
 
-            FileWriter file = new FileWriter(filePath);
+            OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
             file.write(scenario.toJSONString());
             file.close();
 
