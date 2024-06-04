@@ -155,6 +155,26 @@ public class SettingsUI extends JPanel {
         } catch (Exception ignored) {}
     }
 
+    private void clearWorkDirectory(ActionEvent e) {
+        int res = JOptionPane.showConfirmDialog(this, "<html> <b><i><u> WARNING : </b></i></u> This action will <b> DELETE ALL Kronos data (elections, scenarios, etc.)</b> \n Are you sure you want to continue?", "WARNING", JOptionPane.YES_NO_OPTION);
+        if (res == JOptionPane.YES_OPTION) {
+            try {
+                String workDir = Main.getWorkDir();
+                File wDir = new File(workDir);
+                File[] kronosFiles = wDir.listFiles();
+                if (kronosFiles != null) {
+                    for (File f : kronosFiles) {
+                        f.delete();
+                    }
+                }
+                JOptionPane.showMessageDialog(this, "All kronos data has been deleted.", "Success", JOptionPane.OK_OPTION);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error deleting files in work directory.", "Error", JOptionPane.OK_OPTION);
+            }
+
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -167,6 +187,7 @@ public class SettingsUI extends JPanel {
         lightThemeBtn = new JRadioButton();
         followSystemBtn = new JRadioButton();
         saveBtn = new JButton();
+        clearWorkDirectory = new JButton();
 
         //======== this ========
 
@@ -200,6 +221,10 @@ public class SettingsUI extends JPanel {
         saveBtn.setText("Save");
         saveBtn.addActionListener(e -> saveBtn(e));
 
+        //---- clearWorkDirectory ----
+        clearWorkDirectory.setText("\u26a0 Clear Work directory \u26a0");
+        clearWorkDirectory.addActionListener(e -> clearWorkDirectory(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -207,23 +232,26 @@ public class SettingsUI extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(label1)
-                        .addComponent(label2)
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGap(0, 316, Short.MAX_VALUE)
+                            .addComponent(saveBtn))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(dirPickerbtn))
-                        .addComponent(label3)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(darkThemeBtn)
-                            .addGap(18, 18, 18)
-                            .addComponent(lightThemeBtn)
-                            .addGap(18, 18, 18)
-                            .addComponent(followSystemBtn)))
-                    .addContainerGap(32, Short.MAX_VALUE))
-                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(322, Short.MAX_VALUE)
-                    .addComponent(saveBtn)
+                            .addGroup(layout.createParallelGroup()
+                                .addComponent(label1)
+                                .addComponent(label2)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 252, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(dirPickerbtn))
+                                .addComponent(clearWorkDirectory)
+                                .addComponent(label3)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(darkThemeBtn)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(lightThemeBtn)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(followSystemBtn)))
+                            .addGap(0, 26, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -238,6 +266,8 @@ public class SettingsUI extends JPanel {
                         .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(dirPickerbtn))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(clearWorkDirectory)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(label3)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
@@ -245,7 +275,7 @@ public class SettingsUI extends JPanel {
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(lightThemeBtn)
                             .addComponent(followSystemBtn)))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                     .addComponent(saveBtn)
                     .addContainerGap())
         );
@@ -263,5 +293,6 @@ public class SettingsUI extends JPanel {
     private JRadioButton lightThemeBtn;
     private JRadioButton followSystemBtn;
     private JButton saveBtn;
+    private JButton clearWorkDirectory;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
