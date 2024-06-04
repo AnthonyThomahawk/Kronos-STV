@@ -21,6 +21,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class mainForm extends JPanel {
     public static JDialog inputCandidatesDlg;
+    public static inputCandidates inputCandidatesObj;
     public static JDialog createBallotsDlg;
     public mainForm() {
         initComponents();
@@ -83,11 +84,10 @@ public class mainForm extends JPanel {
     public static void openCandidatesForm(File inFile) {
         inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
 
-        inputCandidates f;
-        if (inFile != null) f = new inputCandidates(inFile);
-        else f = new inputCandidates();
+        if (inFile != null) inputCandidatesObj = new inputCandidates(inFile);
+        else inputCandidatesObj = new inputCandidates();
 
-        inputCandidatesDlg.setContentPane(f);
+        inputCandidatesDlg.setContentPane(inputCandidatesObj);
         inputCandidatesDlg.pack();
         inputCandidatesDlg.setLocationRelativeTo(null);
         inputCandidatesDlg.addWindowListener(new WindowAdapter() {
@@ -95,7 +95,7 @@ public class mainForm extends JPanel {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
 
-                safeClose(inputCandidatesDlg, inputCandidates.class, f);
+                safeClose(inputCandidatesDlg, inputCandidates.class, inputCandidatesObj);
             }
         });
         inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -104,19 +104,38 @@ public class mainForm extends JPanel {
         inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
     }
 
-    private void loadCandidatesBtn(ActionEvent e) {
-        JFileChooser fileChooser = new JFileChooser();
-        FileFilter filter = new FileNameExtensionFilter("Text File","txt");
-        fileChooser.setFileFilter(filter);
-        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
-            if (!file.exists()) {
-                JOptionPane.showMessageDialog(null, "File does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            openCandidatesForm(file);
+    public static void openScenarioForm(File inFile) {
+        JDialog createBallotsDlg = new JDialog(mainForm.inputCandidatesDlg, "Create ballots", true);
+        createScenario c;
+        if (inputCandidatesObj != null && inFile == null) {
+            c = new createScenario(inputCandidatesObj.saveChanges(), false);
+        } else {
+            c = new createScenario(inFile.getAbsolutePath(), true);
         }
+        createBallotsDlg.setContentPane(c);
+        createBallotsDlg.pack();
+        createBallotsDlg.setLocationRelativeTo(null);
+
+        createBallotsDlg.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+
+                mainForm.safeClose(createBallotsDlg, createScenario.class, c);
+            }
+        });
+        createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
+    }
+
+    private void loadScenarioBtn(ActionEvent e) {
+        JDialog j = new JDialog(Main.mainFrame, "Load scenario", true);
+        scenarioLoad sl = new scenarioLoad();
+        j.setContentPane(sl);
+        j.pack();
+        j.setLocationRelativeTo(null);
+        j.setVisible(true);
     }
 
     private void settingsBtn(ActionEvent e) {
@@ -138,7 +157,7 @@ public class mainForm extends JPanel {
         label3 = new JLabel();
         label4 = new JLabel();
         label5 = new JLabel();
-        loadCandidatesBtn = new JButton();
+        loadScenarioBtn = new JButton();
         label6 = new JLabel();
         label7 = new JLabel();
         settingsBtn = new JButton();
@@ -176,10 +195,10 @@ public class mainForm extends JPanel {
         label5.setFont(label5.getFont().deriveFont(label5.getFont().getSize() + 3f));
         label5.setVerticalAlignment(SwingConstants.TOP);
 
-        //---- loadCandidatesBtn ----
-        loadCandidatesBtn.setText("\ud83d\udcc1");
-        loadCandidatesBtn.setFont(loadCandidatesBtn.getFont().deriveFont(loadCandidatesBtn.getFont().getStyle() | Font.BOLD, loadCandidatesBtn.getFont().getSize() + 15f));
-        loadCandidatesBtn.addActionListener(e -> loadCandidatesBtn(e));
+        //---- loadScenarioBtn ----
+        loadScenarioBtn.setText("\ud83d\udcc1");
+        loadScenarioBtn.setFont(loadScenarioBtn.getFont().deriveFont(loadScenarioBtn.getFont().getStyle() | Font.BOLD, loadScenarioBtn.getFont().getSize() + 15f));
+        loadScenarioBtn.addActionListener(e -> loadScenarioBtn(e));
 
         //---- label6 ----
         label6.setText("Load a scenario");
@@ -220,7 +239,7 @@ public class mainForm extends JPanel {
                                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)))
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(loadCandidatesBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(label6, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE))
                                     .addComponent(label7, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)))
@@ -244,7 +263,7 @@ public class mainForm extends JPanel {
                     .addComponent(label5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addGap(12, 12, 12)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(loadCandidatesBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label6, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
                     .addGap(8, 8, 8)
                     .addComponent(label7, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
@@ -263,7 +282,7 @@ public class mainForm extends JPanel {
     private JLabel label3;
     private JLabel label4;
     private JLabel label5;
-    private JButton loadCandidatesBtn;
+    private JButton loadScenarioBtn;
     private JLabel label6;
     private JLabel label7;
     private JButton settingsBtn;

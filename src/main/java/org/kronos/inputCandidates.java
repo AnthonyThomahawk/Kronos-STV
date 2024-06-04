@@ -21,14 +21,12 @@ import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class inputCandidates extends JPanel {
     public static int candidateCount = 1;
     public static String[] candidates = {};
-    public static boolean success = false;
     public static boolean unsaved = false;
     public inputCandidates() {
         candidateCount = 1;
@@ -36,13 +34,11 @@ public class inputCandidates extends JPanel {
         initComponents();
         //initLocale();
         initTable();
-        success = false;
     }
 
     public inputCandidates(File inFile) {
         initComponents();
         initTable();
-        success = false;
         populateTableFromFile(inFile);
     }
 
@@ -236,25 +232,7 @@ public class inputCandidates extends JPanel {
 
     private void createBtn(ActionEvent e) {
         try {
-            success = true;
-
-            JDialog createBallotsDlg = new JDialog(mainForm.inputCandidatesDlg, "Create ballots", true);
-            createScenario c = new createScenario(saveChanges(), false);
-            createBallotsDlg.setContentPane(c);
-            createBallotsDlg.pack();
-            createBallotsDlg.setLocationRelativeTo(null);
-
-            createBallotsDlg.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    super.windowClosing(e);
-
-                    mainForm.safeClose(createBallotsDlg, createScenario.class, c);
-                }
-            });
-            createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
+            mainForm.openScenarioForm(null);
         } catch (Exception ignored) {
         }
 

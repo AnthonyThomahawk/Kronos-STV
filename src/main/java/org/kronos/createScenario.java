@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.*;
+import javax.lang.model.element.Element;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
@@ -45,7 +46,6 @@ public class createScenario extends JPanel {
         loadedPermutations = null;
         spinner1.setEnabled(false);
         spinner1.setValue(1);
-        //loadedFileTxt.setText("Unsaved scenario");
         initTable();
     }
 
@@ -54,17 +54,12 @@ public class createScenario extends JPanel {
         spinner1.setEnabled(false);
         spinner1.setValue(1);
 
-        parseElection(file);
-        electionTitleTxt.setText("Election : " + electionTitle);
-        initTable();
-    }
+        if (!scenario)
+            parseElection(file);
+        else
+            parseScenario(file);
 
-    public createScenario(String ballotFile) {
-        initComponents();
-        spinner1.setEnabled(false);
-        spinner1.setValue(1);
-        parseBallotFile(ballotFile);
-        //loadedFileTxt.setText(ballotFile);
+        electionTitleTxt.setText("Election : " + electionTitle);
         initTable();
     }
 
@@ -73,47 +68,48 @@ public class createScenario extends JPanel {
         try {
             JSONObject election = (JSONObject) parser.parse(new FileReader(electionFile));
             electionTitle = (String) election.get("Title");
+
             JSONArray jCandidates = (JSONArray) election.get("Candidates");
             ArrayList<String> cList = new ArrayList<>();
             jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
             candidates = cList.toArray(new String[0]);
             candidateCount = candidates.length;
         } catch (Exception ignored) {}
-
-
     }
 
-    private void parseBallotFile(String file) {
+    private void parseScenario(String scenarioFile) {
+        JSONParser parser = new JSONParser();
         try {
-            byte[] bytes = Files.readAllBytes(Paths.get(file));
-            String content = new String(bytes, StandardCharsets.UTF_8);
+            JSONObject scenario = (JSONObject) parser.parse(new FileReader(scenarioFile));
+            electionTitle = (String) scenario.get("ElectionTitle");
 
-
-            // parse candidates
-            String contentC = content.replace("\r\n", ", ");
-            String[] tokens = contentC.split(", ");
-            String[] unique = new HashSet<>(Arrays.asList(tokens)).toArray(new String[0]);
-            inputCandidates.candidates = unique;
-            inputCandidates.candidateCount = unique.length;
-
-            // parse permutations
-            String[] lines = content.split("\r\n");
-
-            String[] p = new HashSet<>(Arrays.asList(lines)).toArray(new String[0]);
-            List<String> allPermutations = Arrays.asList(lines);
+            JSONArray jCandidates = (JSONArray) scenario.get("Candidates");
+            ArrayList<String> cList = new ArrayList<>();
+            jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
+            candidates = cList.toArray(new String[0]);
+            candidateCount = candidates.length;
 
             loadedPermutations = new ArrayList<>();
             loadedPermutationsMult = new ArrayList<>();
 
-            for (String permutation : p) {
-                loadedPermutations.add(permutation.split(", "));
-                loadedPermutationsMult.add(Collections.frequency(allPermutations, permutation));
+            JSONArray choices = (JSONArray) scenario.get("Choices");
+            for (Object choice : choices) {
+                List list = (List) choice;
+                ArrayList<String> c = new ArrayList<>();
+                for (Object elem : list) {
+                    if (elem instanceof String) {
+                        c.add((String) elem);
+                    } else {
+                        String[] sel = c.toArray(new String[0]);
+                        loadedPermutations.add(sel);
+                        loadedPermutationsMult.add(Math.toIntExact((long) elem));
+                    }
+                }
             }
 
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+            scenarioTitleTxt.setText((String) scenario.get("ScenarioTitle"));
 
+        } catch (Exception ignored) {}
     }
 
     private JComboBox[] createCBGroup() {
@@ -517,9 +513,14 @@ public class createScenario extends JPanel {
 
             for (int i = 0; i < dtm.getRowCount(); i++) {
                 JSONArray row = new JSONArray();
-                for (int j = 0; j < dtm.getColumnCount(); j++) {
+                for (int j = 1; j < dtm.getColumnCount(); j++) {
                     Object val = dtm.getValueAt(i, j);
-                    if (val == null) break;
+
+                    if (val == null) {
+                        val = dtm.getValueAt(i, dtm.getColumnCount()-1);
+                        row.add(val);
+                        break;
+                    }
 
                     row.add(val);
                 }
