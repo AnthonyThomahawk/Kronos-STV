@@ -95,7 +95,7 @@ public class Main {
         try {
             Runtime.getRuntime().exec("python --version");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "This software requires Python 3.6 or newer to function.", "Python not found", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "This software requires Python 3.8 or newer to function.", "Python not found", JOptionPane.ERROR_MESSAGE);
             System.exit(2);
         }
 
@@ -118,9 +118,9 @@ public class Main {
 
         String[] pythonVer = verStr.split("\\.");
 
-        if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) >= 6))
+        if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) >= 8))
         {
-            JOptionPane.showMessageDialog(null, "Python 3.6 or newer is required." + System.lineSeparator() + "Version found : " + verStr + System.lineSeparator() + "Required : 3.6.0 or newer", "Outdated python version", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Python 3.8 or newer is required." + System.lineSeparator() + "Version found : " + verStr + System.lineSeparator() + "Required : 3.8.0 or newer", "Outdated python version", JOptionPane.ERROR_MESSAGE);
             System.exit(3);
         }
     }
