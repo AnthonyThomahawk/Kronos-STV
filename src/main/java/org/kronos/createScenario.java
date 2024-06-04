@@ -32,7 +32,7 @@ import java.util.List;
 public class createScenario extends JPanel {
     private int ballotCount = 1;
     public static boolean unsaved;
-    public static STVResults electionResults;
+    private STVResults electionResults;
     private ArrayList<String[]> loadedPermutations;
     private ArrayList<Integer> loadedPermutationsMult;
     private ArrayList<JComboBox[]> cbGroups;
@@ -408,7 +408,7 @@ public class createScenario extends JPanel {
         ballotsFile.delete();
 
         JDialog j = new JDialog(Main.mainFrame, "", true);
-        resultForm x = new resultForm();
+        resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults);
         j.setContentPane(x);
         j.pack();
         j.setLocationRelativeTo(null);

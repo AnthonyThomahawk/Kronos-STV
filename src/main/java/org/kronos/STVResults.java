@@ -5,6 +5,7 @@ public class STVResults {
     Float[] votes;
     public int lastRank;
     int ballotCount;
+    String stvInput;
 
     private void parseResultString(String input) {
         String results = input.split("Results:"+System.lineSeparator())[1];
@@ -23,15 +24,9 @@ public class STVResults {
         lastRank = lines.length;
     }
 
-    public STVResults(String[] e, Float[] v, int bc) {
-        elected = e;
-        votes = v;
-        lastRank = v.length;
-        ballotCount = bc;
-    }
-
     public STVResults(String resultStr, int bc) {
         parseResultString(resultStr);
+        stvInput = resultStr;
         ballotCount = bc;
     }
 
@@ -41,7 +36,9 @@ public class STVResults {
     public Float getVotes(int rank) {
         return votes[rank-1];
     }
-
+    public String getInput() {
+        return stvInput;
+    }
     public int getBallotCount() {
         return ballotCount;
     }

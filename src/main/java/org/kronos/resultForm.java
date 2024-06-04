@@ -19,9 +19,15 @@ import javax.swing.table.DefaultTableModel;
  * @author Enterprise
  */
 public class resultForm extends JPanel {
-    public resultForm() {
+    STVResults r;
+    String s;
+    public resultForm(String scenarioTitle, STVResults results) {
         initComponents();
+        r = results;
+        s = scenarioTitle;
         initTable();
+
+        label1.setText(scenarioTitle + " Results");
     }
 
     private void initTable() {
@@ -54,14 +60,23 @@ public class resultForm extends JPanel {
     private void populateTable() {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         model.removeRow(0);
-        for (int i = 1; i <= createScenario.electionResults.lastRank; i++) {
+        for (int i = 1; i <= r.lastRank; i++) {
             Object[] row = new Object[3];
             row[0] = i;
-            row[1] = createScenario.electionResults.getElected(i);
-            row[2] = createScenario.electionResults.getVotes(i);
+            row[1] = r.getElected(i);
+            row[2] = r.getVotes(i);
             model.addRow(row);
         }
 
+    }
+
+    private void viewAnalysisBtn(ActionEvent e) {
+        analysisForm f = new analysisForm(r.stvInput, s);
+        JDialog j = new JDialog(Main.mainFrame, "", true);
+        j.setContentPane(f);
+        j.pack();
+        j.setLocationRelativeTo(null);
+        j.setVisible(true);
     }
 
     private void initComponents() {
@@ -70,17 +85,22 @@ public class resultForm extends JPanel {
         label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
+        viewAnalysisBtn = new JButton();
 
         //======== this ========
 
         //---- label1 ----
-        label1.setText("Election results");
-        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 15f));
+        label1.setText("Scenario results");
+        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 10f));
 
         //======== scrollPane1 ========
         {
             scrollPane1.setViewportView(table1);
         }
+
+        //---- viewAnalysisBtn ----
+        viewAnalysisBtn.setText("View analysis");
+        viewAnalysisBtn.addActionListener(e -> viewAnalysisBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -91,7 +111,8 @@ public class resultForm extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label1)
-                            .addGap(0, 0, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
+                            .addComponent(viewAnalysisBtn))
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
                     .addContainerGap())
         );
@@ -99,9 +120,11 @@ public class resultForm extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label1)
+                        .addComponent(viewAnalysisBtn))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -112,5 +135,6 @@ public class resultForm extends JPanel {
     private JLabel label1;
     private JScrollPane scrollPane1;
     private JTable table1;
+    private JButton viewAnalysisBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
