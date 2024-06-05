@@ -24,12 +24,12 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
-				"text": "Start an election"
+				"text": "New election"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
-				"text": "Load an election"
+				"text": "Load election"
 				"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -53,7 +53,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label6"
-				"text": "Load a scenario"
+				"text": "Load scenario"
 				"font": #SwingDerivedFont0
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {

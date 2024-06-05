@@ -55,7 +55,7 @@ public class mainForm extends JPanel {
         }
 
 
-        int res = JOptionPane.showConfirmDialog(null, "Save unsaved changes?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION);
+        int res = JOptionPane.showConfirmDialog(null, "Save changes?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION);
         if (res == JOptionPane.CANCEL_OPTION) return;
         if (res == JOptionPane.YES_OPTION) {
             try {
@@ -178,11 +178,11 @@ public class mainForm extends JPanel {
         loadElectionBtn.addActionListener(e -> loadElectionBtn(e));
 
         //---- label2 ----
-        label2.setText("Start an election");
+        label2.setText("New election");
         label2.setFont(label2.getFont().deriveFont(label2.getFont().getSize() + 13f));
 
         //---- label3 ----
-        label3.setText("Load an election");
+        label3.setText("Load election");
         label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 13f));
 
         //---- label4 ----
@@ -202,7 +202,7 @@ public class mainForm extends JPanel {
         loadScenarioBtn.addActionListener(e -> loadScenarioBtn(e));
 
         //---- label6 ----
-        label6.setText("Load a scenario");
+        label6.setText("Load scenario");
         label6.setFont(label6.getFont().deriveFont(label6.getFont().getSize() + 13f));
 
         //---- label7 ----
