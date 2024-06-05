@@ -158,6 +158,13 @@ public class inputCandidates extends JPanel {
             return false;
         }
 
+        if (electionNameBox.getText().matches(".*[\"*:|?<>/].*") || electionNameBox.getText().contains("\\")) {
+            label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Election name contains illegal characters.</b></html>");
+            createBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
+            return false;
+        }
+
         // candidate >= 1 count check
         if (rows <= 1) {
             label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">There must be more than 1 candidate.</b></html>");

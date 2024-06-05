@@ -416,6 +416,13 @@ public class createScenario extends JPanel {
             return false;
         }
 
+        if (scenarioTitleTxt.getText().matches(".*[\"*:|?<>/].*") || scenarioTitleTxt.getText().contains("\\")) {
+            label1.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Scenario name contains illegal characters.</b></html>");
+            viewBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
+            return false;
+        }
+
         if (rows < 1) {
             label1.setText("<html>" + "<b> Alert : </b>" +
                     "<br> <b style=\"color:RED;\">There must be at least 1 ballot.</b>" +"</html>");
