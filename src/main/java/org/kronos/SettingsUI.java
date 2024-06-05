@@ -64,6 +64,7 @@ public class SettingsUI extends JPanel {
             darkThemeBtn.setSelected(false);
             lightThemeBtn.setSelected(false);
             followSystemBtn.setSelected(true);
+            theme = "system";
         }
     }
 
