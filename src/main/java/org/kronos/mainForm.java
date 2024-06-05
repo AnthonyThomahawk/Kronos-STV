@@ -13,16 +13,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * @author Enterprise
  */
 public class mainForm extends JPanel {
-    public static JDialog inputCandidatesDlg;
+    public static boolean stopLoadingForm;
     public static inputCandidates inputCandidatesObj;
-    public static JDialog createBallotsDlg;
     public mainForm() {
         initComponents();
         //initLocale();
@@ -83,7 +80,8 @@ public class mainForm extends JPanel {
     }
 
     public static void openCandidatesForm(File inFile) {
-        inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
+        stopLoadingForm = false;
+        JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
 
         if (inFile != null) inputCandidatesObj = new inputCandidates(inFile);
         else inputCandidatesObj = new inputCandidates();
@@ -101,12 +99,15 @@ public class mainForm extends JPanel {
         });
         inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-
-        inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
+        if (!stopLoadingForm)
+            inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
+        else
+            inputCandidatesDlg.dispose();
     }
 
     public static void openScenarioForm(File inFile) {
-        JDialog createBallotsDlg = new JDialog(mainForm.inputCandidatesDlg, "Create ballots", true);
+        stopLoadingForm = false;
+        JDialog createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
         createScenario c;
         if (inputCandidatesObj != null && inFile == null) {
             c = new createScenario(inputCandidatesObj.saveChanges(), false);
@@ -127,7 +128,10 @@ public class mainForm extends JPanel {
         });
         createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
+        if (!stopLoadingForm)
+            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
+        else
+            createBallotsDlg.dispose();
     }
 
     private void loadScenarioBtn(ActionEvent e) {

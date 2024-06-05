@@ -12,12 +12,9 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.*;
-import javax.lang.model.element.Element;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -109,7 +106,10 @@ public class createScenario extends JPanel {
 
             scenarioTitleTxt.setText((String) scenario.get("ScenarioTitle"));
 
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            mainForm.stopLoadingForm = true;
+        }
     }
 
     private JComboBox[] createCBGroup() {

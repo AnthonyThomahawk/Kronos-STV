@@ -130,7 +130,8 @@ public class inputCandidates extends JPanel {
 
             unsaved = false;
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "This election file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            mainForm.stopLoadingForm = true;
         }
     }
 
