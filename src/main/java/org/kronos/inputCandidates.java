@@ -4,6 +4,7 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JO;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -22,6 +23,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Locale;
@@ -309,7 +311,17 @@ public class inputCandidates extends JPanel {
     }
 
     private void exportBtn(ActionEvent e) {
-        saveChanges();
+        String filePath = saveChanges();
+
+        if (filePath == null) {
+            JOptionPane.showMessageDialog(null, "Error saving election.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Path p = Paths.get(filePath);
+        String fileName = p.getFileName().toString();
+
+        JOptionPane.showMessageDialog(null, "Election has been saved as " + fileName + " !", "Save successful", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void initComponents() {
