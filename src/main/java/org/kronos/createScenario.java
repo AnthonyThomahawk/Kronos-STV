@@ -361,44 +361,6 @@ public class createScenario extends JPanel {
         return stvOutput;
     }
 
-
-    private void generateResultFile(String filename, String input) {
-        try {
-            electionResults = new STVResults(generateOutput(input), ballotCount);
-
-            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-
-            out.println("Rank,Name,Votes");
-            for (int i = 1; i <= electionResults.lastRank; i++) {
-                out.println(i + "," + electionResults.getElected(i) + "," + electionResults.getVotes(i));
-            }
-
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    private void generateAnalysisFile(String filename, String input) {
-        try {
-            String stvOutput = generateOutput(input);
-
-            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
-
-            out.print(stvOutput);
-
-            out.flush();
-            out.close();
-
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
     private void viewBtn(ActionEvent e) {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
@@ -566,67 +528,6 @@ public class createScenario extends JPanel {
 
         return null;
     }
-
-//    public void saveChanges() {
-//        JFileChooser fileChooser = new JFileChooser();
-//        FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
-//        fileChooser.setFileFilter(filter);
-//        if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-//            File file = fileChooser.getSelectedFile();
-//
-//            String fileAbsolutePath = file.getAbsolutePath();
-//            String resultAbsolutePath;
-//            String analysisAbsolutePath;
-//
-//            if (!fileAbsolutePath.endsWith(".csv")) {
-//                resultAbsolutePath = fileAbsolutePath + "_results.csv";
-//                analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
-//                fileAbsolutePath += ".csv";
-//            } else {
-//                resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
-//                analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
-//            }
-//
-//            File f = new File(fileAbsolutePath);
-//
-//            while (f.exists()) {
-//                int res = JOptionPane.showConfirmDialog(null, "Overwrite existing file?", "File Exists", JOptionPane.YES_NO_OPTION);
-//                if (res == JOptionPane.YES_OPTION) {
-//                    break;
-//                }
-//
-//                if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-//                    file = fileChooser.getSelectedFile();
-//                    fileAbsolutePath = file.getAbsolutePath();
-//
-//                    if (!fileAbsolutePath.endsWith(".csv")) {
-//                        resultAbsolutePath = fileAbsolutePath + "_results.csv";
-//                        analysisAbsolutePath = fileAbsolutePath + "_analysis.txt";
-//                        fileAbsolutePath += ".csv";
-//                    } else {
-//                        resultAbsolutePath = fileAbsolutePath.replace(".csv", "_results.csv");
-//                        analysisAbsolutePath = fileAbsolutePath.replace(".csv", "_analysis.txt");
-//                    }
-//
-//                    f = new File(fileAbsolutePath);
-//                }
-//                else {
-//                    return;
-//                }
-//            }
-//
-//            generateBallotFile(fileAbsolutePath);
-//            generateResultFile(resultAbsolutePath, fileAbsolutePath);
-//            generateAnalysisFile(analysisAbsolutePath, fileAbsolutePath);
-//
-//            unsaved = false;
-//            //loadedFileTxt.setText(fileAbsolutePath);
-//            String msg = "Ballots exported to : " + fileAbsolutePath + "\n" +
-//                    "Election result exported to : " + resultAbsolutePath + "\n" +
-//                    "Election analysis exported to : " + analysisAbsolutePath;
-//            JOptionPane.showMessageDialog(null, msg, "Scenario exported successfully", JOptionPane.INFORMATION_MESSAGE);
-//        }
-//    }
 
 
     private void exportBtn(ActionEvent e) {
