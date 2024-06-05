@@ -4,15 +4,10 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane1::::458:x, seq {comp label1:::p::p, space :0:325:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp scrollPane1::::402:x, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, comp scrollPane1::::458:x, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::433:x, space :::p}}"
 		} ) {
 			name: "this"
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "Scenario analysis"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 6, false )
-			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTextArea" ) {

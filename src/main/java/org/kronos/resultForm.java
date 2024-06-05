@@ -26,8 +26,6 @@ public class resultForm extends JPanel {
         r = results;
         s = scenarioTitle;
         initTable();
-
-        label1.setText(scenarioTitle + " Results");
     }
 
     private void initTable() {
@@ -71,8 +69,8 @@ public class resultForm extends JPanel {
     }
 
     private void viewAnalysisBtn(ActionEvent e) {
-        analysisForm f = new analysisForm(r.stvInput, s);
-        JDialog j = new JDialog(Main.mainFrame, "", true);
+        analysisForm f = new analysisForm(r.stvInput);
+        JDialog j = new JDialog(Main.mainFrame, s + " Analysis", true);
         j.setContentPane(f);
         j.pack();
         j.setLocationRelativeTo(null);
@@ -82,16 +80,11 @@ public class resultForm extends JPanel {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-        label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         viewAnalysisBtn = new JButton();
 
         //======== this ========
-
-        //---- label1 ----
-        label1.setText("Scenario results");
-        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 10f));
 
         //======== scrollPane1 ========
         {
@@ -109,22 +102,19 @@ public class resultForm extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
+                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 138, Short.MAX_VALUE)
-                            .addComponent(viewAnalysisBtn))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                            .addComponent(viewAnalysisBtn)
+                            .addGap(0, 289, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(label1)
-                        .addComponent(viewAnalysisBtn))
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                    .addComponent(viewAnalysisBtn)
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -132,7 +122,6 @@ public class resultForm extends JPanel {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-    private JLabel label1;
     private JScrollPane scrollPane1;
     private JTable table1;
     private JButton viewAnalysisBtn;

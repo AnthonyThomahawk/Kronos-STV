@@ -385,7 +385,7 @@ public class createScenario extends JPanel {
         File ballotsFile = new File("b1.csv");
         ballotsFile.delete();
 
-        JDialog j = new JDialog(Main.mainFrame, "", true);
+        JDialog j = new JDialog(Main.mainFrame, scenarioTitleTxt.getText() + " Results", true);
         resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults);
         j.setContentPane(x);
         j.pack();
