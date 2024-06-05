@@ -70,7 +70,7 @@ public class resultForm extends JPanel {
 
     private void viewAnalysisBtn(ActionEvent e) {
         analysisForm f = new analysisForm(r.stvInput);
-        JDialog j = new JDialog(Main.mainFrame, s + " Analysis", true);
+        JDialog j = new JDialog(Main.mainFrame, "Analysis", true);
         j.setContentPane(f);
         j.pack();
         j.setLocationRelativeTo(null);
