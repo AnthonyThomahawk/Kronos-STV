@@ -60,7 +60,7 @@ public class electionLoad extends JPanel {
     private void loadElectionBtn(ActionEvent e) {
         int selectedIndex = list1.getSelectedIndex();
 
-        mainForm.openCandidatesForm(electionFiles[selectedIndex]);
+        mainForm.openCandidatesForm(electionFiles[selectedIndex], "Edit election");
     }
 
     private void initComponents() {

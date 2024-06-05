@@ -59,7 +59,7 @@ public class scenarioLoad extends JPanel {
     private void loadElectionBtn(ActionEvent e) {
         int selectedIndex = list1.getSelectedIndex();
 
-        mainForm.openScenarioForm(scenarioFiles[selectedIndex]);
+        mainForm.openScenarioForm(scenarioFiles[selectedIndex], "Edit scenario");
     }
 
     private void initComponents() {

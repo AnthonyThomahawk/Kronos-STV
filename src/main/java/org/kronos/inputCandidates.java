@@ -247,7 +247,7 @@ public class inputCandidates extends JPanel {
 
     private void createBtn(ActionEvent e) {
         try {
-            mainForm.openScenarioForm(null);
+            mainForm.openScenarioForm(null, "New scenario");
         } catch (Exception ignored) {
         }
 
