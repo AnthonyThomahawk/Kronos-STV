@@ -165,7 +165,8 @@ public class SettingsUI extends JPanel {
                 File[] kronosFiles = wDir.listFiles();
                 if (kronosFiles != null) {
                     for (File f : kronosFiles) {
-                        f.delete();
+                        if (f.getAbsolutePath().endsWith(".scenario") || f.getAbsolutePath().endsWith(".election"))
+                            f.delete();
                     }
                 }
                 JOptionPane.showMessageDialog(this, "All Κronos data has been deleted.", "Success", JOptionPane.INFORMATION_MESSAGE);
