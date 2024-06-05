@@ -81,7 +81,7 @@ public class mainForm extends JPanel {
 
     public static void openCandidatesForm(File inFile) {
         stopLoadingForm = false;
-        JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, "", true);
+        JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, "Start election", true);
 
         if (inFile != null) inputCandidatesObj = new inputCandidates(inFile);
         else inputCandidatesObj = new inputCandidates();
@@ -107,7 +107,7 @@ public class mainForm extends JPanel {
 
     public static void openScenarioForm(File inFile) {
         stopLoadingForm = false;
-        JDialog createBallotsDlg = new JDialog(Main.mainFrame, "Create ballots", true);
+        JDialog createBallotsDlg = new JDialog(Main.mainFrame, "Edit scenario", true);
         createScenario c;
         if (inputCandidatesObj != null && inFile == null) {
             c = new createScenario(inputCandidatesObj.saveChanges(), false);

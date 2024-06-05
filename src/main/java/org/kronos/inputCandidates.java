@@ -335,7 +335,6 @@ public class inputCandidates extends JPanel {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-        label1 = new JLabel();
         createBtn = new JButton();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
@@ -347,10 +346,6 @@ public class inputCandidates extends JPanel {
         electionNameBox = new JTextField();
 
         //======== this ========
-
-        //---- label1 ----
-        label1.setText("Start election");
-        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 9f));
 
         //---- createBtn ----
         createBtn.setText("Create scenario");
@@ -370,7 +365,7 @@ public class inputCandidates extends JPanel {
 
         //---- label2 ----
         label2.setText("tooltip");
-        label2.setHorizontalAlignment(SwingConstants.RIGHT);
+        label2.setHorizontalAlignment(SwingConstants.LEFT);
 
         //---- remBtn ----
         remBtn.setText("Remove candidate -");
@@ -392,31 +387,28 @@ public class inputCandidates extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label1)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
-                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(addBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(remBtn)
-                            .addGap(84, 84, 84)
-                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 1, Short.MAX_VALUE))
-                        .addGroup(layout.createSequentialGroup()
                             .addComponent(label3)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(electionNameBox, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)))
+                            .addComponent(electionNameBox, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup()
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(addBtn)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(remBtn)
+                                    .addGap(84, 84, 84)
+                                    .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE))
+                            .addGap(0, 1, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(label2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label3)
@@ -438,7 +430,6 @@ public class inputCandidates extends JPanel {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
-    private JLabel label1;
     private JButton createBtn;
     private JScrollPane scrollPane1;
     private JTable table1;
