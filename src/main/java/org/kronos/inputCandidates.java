@@ -144,7 +144,7 @@ public class inputCandidates extends JPanel {
         createBtn.setText(messages.getString("create"));
     }
 
-    private void updateStatus() {
+    private boolean updateStatus() {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
 
@@ -152,7 +152,7 @@ public class inputCandidates extends JPanel {
             label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Election must have a name.</b></html>");
             createBtn.setEnabled(false);
             exportBtn.setEnabled(false);
-            return;
+            return false;
         }
 
         // candidate >= 1 count check
@@ -160,7 +160,7 @@ public class inputCandidates extends JPanel {
             label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">There must be more than 1 candidate.</b></html>");
             createBtn.setEnabled(false);
             exportBtn.setEnabled(false);
-            return;
+            return false;
         }
 
         // candidate name not empty check
@@ -170,7 +170,7 @@ public class inputCandidates extends JPanel {
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " does not have a name.</b>" +"</html>");
                 createBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
-                return;
+                return false;
             }
         }
 
@@ -182,7 +182,7 @@ public class inputCandidates extends JPanel {
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot start with a digit.</b>" +"</html>");
                 createBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
-                return;
+                return false;
             }
         }
 
@@ -196,7 +196,7 @@ public class inputCandidates extends JPanel {
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot contain special characters.</b>" +"</html>");
                 createBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
-                return;
+                return false;
             }
         }
 
@@ -211,7 +211,7 @@ public class inputCandidates extends JPanel {
                             "<br> <b style=\"color:RED;\">Candidates " + (i+1) + " and " + (j+1) + " cannot have the same name.</b>" +"</html>");
                     createBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
-                    return;
+                    return false;
                 }
             }
         }
@@ -219,6 +219,8 @@ public class inputCandidates extends JPanel {
         label2.setText("<html><b> Status : </b><br> <b style=\"color:GREEN;\">OK</b></html>");
         createBtn.setEnabled(true);
         exportBtn.setEnabled(true);
+
+        return true;
     }
 
     private String[] extractDataToString() {
@@ -269,7 +271,10 @@ public class inputCandidates extends JPanel {
     }
 
     public String saveChanges() {
-        if (label2.getText().contains("Alert")) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        if (!updateStatus()) {
             JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
             return null;
         }

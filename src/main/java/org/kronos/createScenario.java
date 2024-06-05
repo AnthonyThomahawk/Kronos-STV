@@ -400,6 +400,15 @@ public class createScenario extends JPanel {
     }
 
     private void viewBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+
+        if (!updateStatus()) {
+            JOptionPane.showMessageDialog(this, "Cannot view results, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
+            return;
+        }
+
         generateBallotFile("b1.csv");
 
         electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
@@ -425,7 +434,7 @@ public class createScenario extends JPanel {
         }
     }
 
-    private void updateStatus() {
+    private boolean updateStatus() {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
         int cols = dtm.getColumnCount();
@@ -435,7 +444,7 @@ public class createScenario extends JPanel {
                     "<br> <b style=\"color:RED;\">Scenario must have a title.</b>" +"</html>");
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
-            return;
+            return false;
         }
 
         if (rows < 1) {
@@ -443,7 +452,7 @@ public class createScenario extends JPanel {
                     "<br> <b style=\"color:RED;\">There must be at least 1 ballot.</b>" +"</html>");
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
-            return;
+            return false;
         }
 
         for (int i = 0; i < rows; i++) {
@@ -456,7 +465,7 @@ public class createScenario extends JPanel {
                                 "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " does not have a first choice.</b>" +"</html>");
                         viewBtn.setEnabled(false);
                         exportBtn.setEnabled(false);
-                        return;
+                        return false;
                     }
                 }
 
@@ -468,7 +477,7 @@ public class createScenario extends JPanel {
                             "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " skips choices.</b>" +"</html>");
                     viewBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
-                    return;
+                    return false;
                 }
 
                 // null found
@@ -477,14 +486,29 @@ public class createScenario extends JPanel {
             }
         }
 
+        for (int i = 0; i < rows; i ++) {
+            if (dtm.getValueAt(i, cols-1) == null) {
+                label1.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\">Multiplier " + (i+1) + " is empty.</b>" +"</html>");
+                viewBtn.setEnabled(false);
+                exportBtn.setEnabled(false);
+                return false;
+            }
+        }
+
         label1.setText("<html>" + "<b> Status : </b>" +
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
         viewBtn.setEnabled(true);
         exportBtn.setEnabled(true);
+
+        return true;
     }
 
     public String saveChanges() {
-        if (label2.getText().contains("Alert")) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        if (!updateStatus()) {
             JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
             return null;
         }

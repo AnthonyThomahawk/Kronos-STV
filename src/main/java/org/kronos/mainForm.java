@@ -56,6 +56,7 @@ public class mainForm extends JPanel {
 
 
         int res = JOptionPane.showConfirmDialog(null, "Save unsaved changes?", "Unsaved changes", JOptionPane.YES_NO_CANCEL_OPTION);
+        if (res == JOptionPane.CANCEL_OPTION) return;
         if (res == JOptionPane.YES_OPTION) {
             try {
                 Method saveChanges = formObj.getClass().getMethod("saveChanges");
@@ -63,9 +64,9 @@ public class mainForm extends JPanel {
             } catch (Exception e) {
                 return;
             }
-        } else if (res == JOptionPane.NO_OPTION){
-            form.dispose();
         }
+
+        form.dispose();
     }
 
     private void startElectionBtn(ActionEvent e) {
