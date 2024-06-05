@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::573:x, seq {comp label1:::p::p, space ::217:x, comp label2:::p:234:p}, seq l {comp addBtn:::p::p, space :p:12:p, comp remBtn:::p::p, space :p:78:p, comp exportBtn:::p:111:p, space :::p, comp createBtn:::p:111:p, space :0:1:x}, seq {comp label3:::p::p, space :::p, comp electionNameBox::::483:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l:::p {comp label2:::::x, comp label1:::::x}, space :::p, par b {comp label3::b:p::p, comp electionNameBox::b:p::p}, space :::p, comp scrollPane1:::p:492:p, space :::p, par l {par b {comp remBtn::b:::x, comp createBtn::b:p::p, comp exportBtn::b:p::p}, seq l {comp addBtn:::p::p, space :0:0:x}}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::573:x, seq {comp label1:::p::p, space ::217:x, comp label2:::p:234:p}, seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :p:84:p, comp exportBtn:::p:111:p, space :::p, comp createBtn:::p:111:p, space :0:1:x}, seq {comp label3:::p::p, space :::p, comp electionNameBox::::483:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l:::p {comp label2:::::x, comp label1:::::x}, space :::p, par b {comp label3::b:p::p, comp electionNameBox::b:p::p}, space :::p, comp scrollPane1:::p:492:p, space :::p, par l {par b {comp createBtn::b:p::p, comp exportBtn::b:p::p}, par b:l {comp addBtn::b:p::p, comp remBtn::b:::x}}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
