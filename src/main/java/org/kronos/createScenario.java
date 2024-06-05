@@ -162,7 +162,14 @@ public class createScenario extends JPanel {
         String[] tCol = new String[candidateCount+2];
         tCol[0] = "Ballot #";
         for (int i = 1; i < tCol.length - 1; i++) {
-            tCol[i] = "Option " + i;
+            if (i == 1)
+                tCol[i] = "1st Choice";
+            else if (i == 2)
+                tCol[i] = "2nd Choice";
+            else if (i == 3)
+                tCol[i] = "3rd Choice";
+            else
+                tCol[i] = i + "th Choice";
         }
         tCol[tCol.length-1] = "Multiplier";
 
@@ -640,15 +647,14 @@ public class createScenario extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1)
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(label1, GroupLayout.PREFERRED_SIZE, 329, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(electionTitleTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(electionTitleTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(scenarioTitleTxt, GroupLayout.PREFERRED_SIZE, 572, GroupLayout.PREFERRED_SIZE)))
+                            .addGap(12, 12, 12)
+                            .addComponent(scenarioTitleTxt)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(

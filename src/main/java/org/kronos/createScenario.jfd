@@ -1,10 +1,10 @@
-JFDML JFormDesigner: "8.2.2.0.382" Java: "17.0.10" encoding: "UTF-8"
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.11" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p}, comp scrollPane1::l:::x, seq l {comp label1:::p:329:p, space :::p, comp electionTitleTxt:::p:323:p, space :0:0:x}, seq l {comp label2:::p::p, space :::x, comp scenarioTitleTxt:::p:572:p}}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :p::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p}, comp scrollPane1::l:::x, seq t {comp label1:::p:329:p, space :::x, comp electionTitleTxt:::p:323:p}, seq l {comp label2:::p::p, space :p:12:p, comp scenarioTitleTxt:::::x}}, space :p::p}}"
 			"$verticalGroup": "par l {seq l {space :::p, par l {comp label1::::27:x, comp electionTitleTxt::::27:x}, space :::p, par b {comp label2::b:p::p, comp scenarioTitleTxt::b:p::p}, space :p:6:p, comp scrollPane1::::412:x, space :p::p, par b {comp exportBtn::b:p::p, comp spinner1::b:p::p, comp viewBtn::b:p::p, comp addBtn::b:p::p, comp remBtn::b:p::p, comp customSeats::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
@@ -69,4 +69,3 @@ new FormModel {
 		} )
 	}
 }
-
