@@ -190,13 +190,13 @@ public class mainForm extends JPanel {
         label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 13f));
 
         //---- label4 ----
-        label4.setText("<html> <p align=\"justify\">Create a virtual election in Kronos that can be then used to create scenarios</p></html>");
+        label4.setText("<html> <p align=\"justify\">Supply election title and list of candidates.</p></html>");
         label4.setHorizontalAlignment(SwingConstants.LEFT);
         label4.setVerticalAlignment(SwingConstants.TOP);
         label4.setFont(label4.getFont().deriveFont(label4.getFont().getSize() + 3f));
 
         //---- label5 ----
-        label5.setText("<html> <p align=\"justify\"> Load a pre-made election, and then create scenarios based on it.</p> </html>");
+        label5.setText("<html> <p align=\"justify\"> Load an election to edit and create scenarios.</p> </html>");
         label5.setFont(label5.getFont().deriveFont(label5.getFont().getSize() + 3f));
         label5.setVerticalAlignment(SwingConstants.TOP);
 
@@ -210,7 +210,7 @@ public class mainForm extends JPanel {
         label6.setFont(label6.getFont().deriveFont(label6.getFont().getSize() + 13f));
 
         //---- label7 ----
-        label7.setText("<html> <p align=\"justify\"> Load a pre-made scenario and change it to your liking. </p> </html>");
+        label7.setText("<html> <p align=\"justify\"> Load a scenario to edit and analyze. </p> </html>");
         label7.setFont(label7.getFont().deriveFont(label7.getFont().getSize() + 3f));
         label7.setVerticalAlignment(SwingConstants.TOP);
 
@@ -226,29 +226,26 @@ public class mainForm extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(settingsBtn))
+                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup()
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 422, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                    .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(label6, GroupLayout.PREFERRED_SIZE, 409, GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(label7, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 461, GroupLayout.PREFERRED_SIZE)))
-                            .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(label7, GroupLayout.Alignment.LEADING)
+                            .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(label6, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(label4, GroupLayout.PREFERRED_SIZE, 324, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap(41, Short.MAX_VALUE))
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(342, Short.MAX_VALUE)
+                    .addComponent(settingsBtn)
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -259,20 +256,20 @@ public class mainForm extends JPanel {
                         .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label3, GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(12, 12, 12)
+                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label6, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-                    .addGap(8, 8, 8)
-                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, 49, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGap(13, 13, 13)
                     .addComponent(settingsBtn)
                     .addContainerGap())
         );
