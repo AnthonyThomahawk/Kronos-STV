@@ -577,64 +577,10 @@ public class createScenario extends JPanel {
     }
 
     private void copyBtn(ActionEvent e) {
-        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
-        String formatHeader = "";
-        String[] headerArr = new String[dtm.getColumnCount()-1];
-        String data;
-
-        int k = 0;
-        for (int i = 1; i < dtm.getColumnCount()-1; i++) {
-            formatHeader += "%-10s ";
-            if (i == 1)
-                headerArr[k] = "1st";
-            else if (i == 2)
-                headerArr[k] = "2nd";
-            else if (i == 3)
-                headerArr[k] = "3rd";
-            else
-                headerArr[k] = i + "th";
-            k++;
-        }
-
-        formatHeader += "%-10s ";
-        headerArr[dtm.getColumnCount()-2] = "# of Voters";
-
-        data = String.format(formatHeader, headerArr);
-        data += "\n";
-
-        for (int i = 0; i < dtm.getRowCount(); i++) {
-            String formatStr = "";
-            List<String> choices = new ArrayList<>();
-            String mult = "1";
-            for (int j = 1; j < dtm.getColumnCount(); j++) {
-                if (dtm.getValueAt(i,j) instanceof String) {
-                    formatStr += "%-10s ";
-                    choices.add((String) dtm.getValueAt(i,j));
-                } else if (dtm.getValueAt(i,j) == null) {
-                    formatStr += "%-10s ";
-                    choices.add("None");
-                } else {
-                    formatStr += "%-10s ";
-                    mult = Integer.toString((int) dtm.getValueAt(i,j));
-                }
-            }
-
-            String[] choicesArr = choices.toArray(new String[0]);
-
-            Object[] objects = new Object[choicesArr.length + 1];
-            for (int x = 0; x < choicesArr.length; x++)
-                objects[x] = choicesArr[x];
-            objects[choicesArr.length] = mult;
-
-            data += String.format(formatStr, objects);
-            data += "\n";
-        }
-
-        data = "--- " + "Election : " + electionTitle + "\n--- Scenario : " + scenarioTitleTxt.getText() + "\n" + data;
-
-        StringSelection selection = new StringSelection(data);
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clipboard.setContents(selection, selection);
+        table1.selectAll();
+        Action copy = table1.getActionMap().get("copy");
+        ActionEvent ae = new ActionEvent(table1, ActionEvent.ACTION_PERFORMED, "");
+        copy.actionPerformed(ae);
     }
 
     private void initComponents() {
