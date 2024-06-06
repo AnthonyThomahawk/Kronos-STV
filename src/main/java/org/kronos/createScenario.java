@@ -415,6 +415,7 @@ public class createScenario extends JPanel {
                     "<br> <b style=\"color:RED;\">Scenario must have a title.</b>" +"</html>");
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
+            copyBtn.setEnabled(false);
             return false;
         }
 
@@ -422,6 +423,7 @@ public class createScenario extends JPanel {
             label1.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Scenario name contains illegal characters.</b></html>");
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
+            copyBtn.setEnabled(false);
             return false;
         }
 
@@ -430,6 +432,7 @@ public class createScenario extends JPanel {
                     "<br> <b style=\"color:RED;\">There must be at least 1 ballot.</b>" +"</html>");
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
+            copyBtn.setEnabled(false);
             return false;
         }
 
@@ -443,6 +446,7 @@ public class createScenario extends JPanel {
                                 "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " does not have a first choice.</b>" +"</html>");
                         viewBtn.setEnabled(false);
                         exportBtn.setEnabled(false);
+                        copyBtn.setEnabled(false);
                         return false;
                     }
                 }
@@ -455,6 +459,7 @@ public class createScenario extends JPanel {
                             "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " skips choices.</b>" +"</html>");
                     viewBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
+                    copyBtn.setEnabled(false);
                     return false;
                 }
 
@@ -470,6 +475,7 @@ public class createScenario extends JPanel {
                         "<br> <b style=\"color:RED;\">Multiplier " + (i+1) + " is empty.</b>" +"</html>");
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
+                copyBtn.setEnabled(false);
                 return false;
             }
         }
@@ -478,6 +484,7 @@ public class createScenario extends JPanel {
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
         viewBtn.setEnabled(true);
         exportBtn.setEnabled(true);
+        copyBtn.setEnabled(true);
 
         return true;
     }
