@@ -58,12 +58,14 @@ public class mainForm extends JPanel {
             try {
                 Method saveChanges = formObj.getClass().getMethod("saveChanges");
                 saveChanges.invoke(formObj);
+                form.dispose();
             } catch (Exception e) {
                 return;
             }
+        } else {
+            form.dispose();
         }
 
-        form.dispose();
     }
 
     private void startElectionBtn(ActionEvent e) {
@@ -108,9 +110,12 @@ public class mainForm extends JPanel {
     public static void openScenarioForm(File inFile, String title) {
         stopLoadingForm = false;
         JDialog createBallotsDlg = new JDialog(Main.mainFrame, title, true);
-        createScenario c;
+        createScenario c = null;
         if (inputCandidatesObj != null && inFile == null) {
-            c = new createScenario(inputCandidatesObj.saveChanges(), false);
+            try{
+                c = new createScenario(inputCandidatesObj.saveChanges(), false);
+            } catch (Exception ignored){}
+
         } else {
             c = new createScenario(inFile.getAbsolutePath(), true);
         }
@@ -118,12 +123,13 @@ public class mainForm extends JPanel {
         createBallotsDlg.pack();
         createBallotsDlg.setLocationRelativeTo(null);
 
+        createScenario finalC = c;
         createBallotsDlg.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
 
-                mainForm.safeClose(createBallotsDlg, createScenario.class, c);
+                mainForm.safeClose(createBallotsDlg, createScenario.class, finalC);
             }
         });
         createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 
 import java.awt.event.*;
 import java.beans.*;
+import javax.management.openmbean.OpenDataException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.DocumentEvent;
@@ -280,13 +281,13 @@ public class inputCandidates extends JPanel {
         }
     }
 
-    public String saveChanges() {
+    public String saveChanges() throws OpenDataException {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
         if (!updateStatus()) {
             JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
-            return null;
+            throw new OpenDataException();
         }
 
         if (!Main.checkConfig())
@@ -319,7 +320,11 @@ public class inputCandidates extends JPanel {
     }
 
     private void exportBtn(ActionEvent e) {
-        String filePath = saveChanges();
+        String filePath = null;
+        try {
+            filePath = saveChanges();
+        } catch (Exception ignored){}
+
 
         if (filePath == null) {
             JOptionPane.showMessageDialog(null, "Error saving election.", "Error", JOptionPane.ERROR_MESSAGE);

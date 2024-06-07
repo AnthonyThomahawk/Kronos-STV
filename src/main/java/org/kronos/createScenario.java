@@ -14,6 +14,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.util.*;
+import javax.management.openmbean.OpenDataException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
@@ -489,13 +490,13 @@ public class createScenario extends JPanel {
         return true;
     }
 
-    public String saveChanges() {
+    public String saveChanges() throws OpenDataException {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
         if (!updateStatus()) {
             JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
-            return null;
+            throw new OpenDataException();
         }
 
         if (!Main.checkConfig())
@@ -554,7 +555,9 @@ public class createScenario extends JPanel {
 
 
     private void exportBtn(ActionEvent e) {
-        saveChanges();
+        try {
+            saveChanges();
+        } catch (Exception ignored) {}
     }
 
     private void remBtn(ActionEvent e) {
