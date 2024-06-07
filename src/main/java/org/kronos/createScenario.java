@@ -40,15 +40,6 @@ public class createScenario extends JPanel {
     private String[] candidates;
     private int candidateCount;
 
-    public createScenario() {
-        initComponents();
-        loadedPermutationsMult = null;
-        loadedPermutations = null;
-        spinner1.setEnabled(false);
-        spinner1.setValue(1);
-        initTable();
-    }
-
     public createScenario(String file, boolean scenario) {
         initComponents();
         spinner1.setEnabled(false);
@@ -546,8 +537,8 @@ public class createScenario extends JPanel {
             unsaved = false;
 
             JOptionPane.showMessageDialog(null, "Scenario '" + scenarioTitleTxt.getText() + "' has been saved!");
-        } catch (Exception e) {
-
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(null, "Error saving scenario", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         return null;
