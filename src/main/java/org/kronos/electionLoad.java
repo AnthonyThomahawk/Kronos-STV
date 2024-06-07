@@ -63,6 +63,16 @@ public class electionLoad extends JPanel {
         mainForm.openCandidatesForm(electionFiles[selectedIndex], "Edit election");
     }
 
+    private void list1MouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 2 && !e.isConsumed()) {
+            e.consume();
+
+            int selectedIndex = list1.getSelectedIndex();
+
+            mainForm.openCandidatesForm(electionFiles[selectedIndex], "Edit election");
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -75,6 +85,14 @@ public class electionLoad extends JPanel {
 
         //======== scrollPane1 ========
         {
+
+            //---- list1 ----
+            list1.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    list1MouseClicked(e);
+                }
+            });
             scrollPane1.setViewportView(list1);
         }
 

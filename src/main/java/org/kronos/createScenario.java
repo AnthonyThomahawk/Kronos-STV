@@ -173,7 +173,7 @@ public class createScenario extends JPanel {
             else
                 tCol[i] = i + "th Choice";
         }
-        tCol[tCol.length-1] = "Multiplier";
+        tCol[tCol.length-1] = "# Of Voters";
 
         Object[] tRow = new Object[candidateCount+2];
         tRow[0] = ballotCount;
