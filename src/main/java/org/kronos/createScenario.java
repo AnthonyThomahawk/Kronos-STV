@@ -461,10 +461,17 @@ public class createScenario extends JPanel {
             }
         }
 
-        for (int i = 0; i < rows; i ++) {
+        for (int i = 0; i < rows; i++) {
             if (dtm.getValueAt(i, cols-1) == null) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">Multiplier " + (i+1) + " is empty.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\"># of votes " + (i+1) + " is empty.</b>" +"</html>");
+                viewBtn.setEnabled(false);
+                exportBtn.setEnabled(false);
+                copyBtn.setEnabled(false);
+                return false;
+            } else if ((int) dtm.getValueAt(i, cols-1) < 0) {
+                label1.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\"># of votes " + (i+1) + " cannot be negative.</b>" +"</html>");
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
@@ -571,6 +578,14 @@ public class createScenario extends JPanel {
     }
 
     private void copyBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        if (!updateStatus()) {
+            JOptionPane.showMessageDialog(null, "Cannot copy to clipboard, because there are active alerts.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         String data = "";
         for (int i = 0; i < dtm.getColumnCount(); i++) {
