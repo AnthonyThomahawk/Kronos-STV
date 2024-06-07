@@ -7,8 +7,6 @@ package org.kronos;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -19,7 +17,6 @@ import javax.swing.GroupLayout;
  * @author Enterprise
  */
 public class SettingsUI extends JPanel {
-    boolean darktheme = true;
     String theme = "dark";
     public SettingsUI() {
         initComponents();
