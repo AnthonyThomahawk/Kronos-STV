@@ -102,10 +102,10 @@ public class resultForm extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(viewAnalysisBtn)
-                            .addGap(0, 289, Short.MAX_VALUE)))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGap(0, 289, Short.MAX_VALUE)
+                            .addComponent(viewAnalysisBtn)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
