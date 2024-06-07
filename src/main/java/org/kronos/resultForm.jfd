@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::::388:x, seq t {space :0:289:x, comp viewAnalysisBtn:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::425:x, space :::p, comp viewAnalysisBtn:::p::p, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::::388:x, seq t {space :0:158:x, comp viewAnalysisBtn:::p::p, space :::p, comp copyBtn:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::425:x, space :::p, par b {comp copyBtn::b:p::p, comp viewAnalysisBtn::b:p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -18,6 +18,11 @@ new FormModel {
 				name: "viewAnalysisBtn"
 				"text": "View analysis"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "viewAnalysisBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "copyBtn"
+				"text": "Copy to clipboard"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "copyBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

@@ -42,7 +42,6 @@ public class resultForm extends JPanel {
         table1.setShowVerticalLines(true);
         table1.setShowHorizontalLines(true);
         table1.setColumnSelectionAllowed(false);
-        table1.setRowSelectionAllowed(false);
         table1.getTableHeader().setReorderingAllowed(false);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -77,12 +76,20 @@ public class resultForm extends JPanel {
         j.setVisible(true);
     }
 
+    private void copyBtn(ActionEvent e) {
+        table1.selectAll();
+        Action copy = table1.getActionMap().get("copy");
+        ActionEvent ae = new ActionEvent(table1, ActionEvent.ACTION_PERFORMED, "");
+        copy.actionPerformed(ae);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         viewAnalysisBtn = new JButton();
+        copyBtn = new JButton();
 
         //======== this ========
 
@@ -95,6 +102,10 @@ public class resultForm extends JPanel {
         viewAnalysisBtn.setText("View analysis");
         viewAnalysisBtn.addActionListener(e -> viewAnalysisBtn(e));
 
+        //---- copyBtn ----
+        copyBtn.setText("Copy to clipboard");
+        copyBtn.addActionListener(e -> copyBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -104,8 +115,10 @@ public class resultForm extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 289, Short.MAX_VALUE)
-                            .addComponent(viewAnalysisBtn)))
+                            .addGap(0, 158, Short.MAX_VALUE)
+                            .addComponent(viewAnalysisBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(copyBtn)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,7 +127,9 @@ public class resultForm extends JPanel {
                     .addContainerGap()
                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 425, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(viewAnalysisBtn)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(copyBtn)
+                        .addComponent(viewAnalysisBtn))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -125,5 +140,6 @@ public class resultForm extends JPanel {
     private JScrollPane scrollPane1;
     private JTable table1;
     private JButton viewAnalysisBtn;
+    private JButton copyBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
