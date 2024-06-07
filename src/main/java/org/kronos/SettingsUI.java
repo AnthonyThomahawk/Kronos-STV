@@ -24,6 +24,7 @@ public class SettingsUI extends JPanel {
     public SettingsUI() {
         initComponents();
         loadSettings();
+        clearWorkDirectory.setVisible(false); // hidden for now
     }
 
     void loadSettings() {
