@@ -580,10 +580,47 @@ public class createScenario extends JPanel {
     }
 
     private void copyBtn(ActionEvent e) {
-        table1.selectAll();
-        Action copy = table1.getActionMap().get("copy");
-        ActionEvent ae = new ActionEvent(table1, ActionEvent.ACTION_PERFORMED, "");
-        copy.actionPerformed(ae);
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        String data = "";
+        for (int i = 0; i < dtm.getColumnCount(); i++) {
+            if (i == 0) {
+                data += "Ballot #\t";
+            } else if (i == 1) {
+                data += "1st Choice\t";
+            } else if (i == 2) {
+                data += "2nd Choice\t";
+            } else if (i == 3) {
+                data += "3rd Choice\t";
+            } else if (i != dtm.getColumnCount()-1) {
+                data += i + "th Choice\t";
+            } else {
+                data += "# of Voters";
+            }
+        }
+        data += "\n";
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            for (int j = 0; j < dtm.getColumnCount(); j++) {
+                String val;
+                if (j == 0 || j == dtm.getColumnCount()-1) {
+                    val = Integer.toString((int)dtm.getValueAt(i,j));
+                } else {
+                    val = (String) dtm.getValueAt(i,j);
+                }
+
+                if (val == null) {
+                    val = "";
+                }
+
+                data += val + "\t";
+            }
+
+            data += "\n";
+        }
+
+        StringSelection selection = new StringSelection(data);
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clipboard.setContents(selection, selection);
     }
 
     private void initComponents() {
