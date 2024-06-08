@@ -134,7 +134,7 @@ public class createScenario extends JPanel {
 
                     if (cbGroup[currentBox].getSelectedIndex() == cbGroup[j].getSelectedIndex()) {
                         cbGroup[currentBox].setSelectedIndex(-1); // clear selection (! only works with item listener !)
-                        JOptionPane.showMessageDialog(null, "Candidate cannot be repeated within a ballot.", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Candidate cannot be repeated within a sequence.", "Error", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }
@@ -154,7 +154,7 @@ public class createScenario extends JPanel {
         columnTypes[columnTypes.length-1] = Integer.class;
 
         String[] tCol = new String[candidateCount+2];
-        tCol[0] = "Ballot #";
+        tCol[0] = "Seq #";
         for (int i = 1; i < tCol.length - 1; i++) {
             if (i == 1)
                 tCol[i] = "1st Choice";
@@ -435,7 +435,7 @@ public class createScenario extends JPanel {
                 if (j == 1) {
                     if (dtm.getValueAt(i,j) == null) {
                         label1.setText("<html>" + "<b> Alert : </b>" +
-                                "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " does not have a first choice.</b>" +"</html>");
+                                "<br> <b style=\"color:RED;\">Sequence " + (i+1) + " does not have a first choice.</b>" +"</html>");
                         viewBtn.setEnabled(false);
                         exportBtn.setEnabled(false);
                         copyBtn.setEnabled(false);
@@ -448,7 +448,7 @@ public class createScenario extends JPanel {
                 // null found AND current element not null, so the ballot skips choices
                 if (dtm.getValueAt(i,j) != null && endOnNull) {
                     label1.setText("<html>" + "<b> Alert : </b>" +
-                            "<br> <b style=\"color:RED;\">Ballot " + (i+1) + " skips choices.</b>" +"</html>");
+                            "<br> <b style=\"color:RED;\">Sequence " + (i+1) + " skips choices.</b>" +"</html>");
                     viewBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
                     copyBtn.setEnabled(false);
@@ -588,9 +588,11 @@ public class createScenario extends JPanel {
 
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         String data = "";
+        data = "Election : " + electionTitle + "\n";
+        data += "Scenario : " + scenarioTitleTxt.getText() + "\n";
         for (int i = 0; i < dtm.getColumnCount(); i++) {
             if (i == 0) {
-                data += "Ballot #\t";
+                data += "Seq #\t";
             } else if (i == 1) {
                 data += "1st Choice\t";
             } else if (i == 2) {
