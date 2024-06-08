@@ -98,6 +98,12 @@ public class createScenario extends JPanel {
                 }
             }
 
+            int c = Math.toIntExact((Long) scenario.get("Seats"));
+            boolean b = (boolean) scenario.get("EnforceSeats");
+            spinner1.setValue(c);
+            customSeats.setSelected(b);
+            spinner1.setEnabled(b);
+
             scenarioTitleTxt.setText((String) scenario.get("ScenarioTitle"));
 
         } catch (Exception e) {
@@ -389,12 +395,14 @@ public class createScenario extends JPanel {
 
     private void customSeats(ActionEvent e) {
         spinner1.setEnabled(customSeats.isSelected());
+        unsaved = true;
     }
 
     private void spinner1StateChanged(ChangeEvent e) {
         if ((Integer)spinner1.getValue() < 1) {
             spinner1.setValue(1);
         }
+        unsaved = true;
     }
 
     private boolean updateStatus() {
@@ -536,6 +544,8 @@ public class createScenario extends JPanel {
             }
 
             scenario.put("Choices", choices);
+            scenario.put("Seats", spinner1.getValue());
+            scenario.put("EnforceSeats", customSeats.isSelected());
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
             file.write(scenario.toJSONString());
@@ -672,7 +682,7 @@ public class createScenario extends JPanel {
         addBtn.addActionListener(e -> addBtn(e));
 
         //---- customSeats ----
-        customSeats.setText("Custom seats to be filled");
+        customSeats.setText("Seats to be filled");
         customSeats.addActionListener(e -> customSeats(e));
 
         //---- spinner1 ----
@@ -714,7 +724,7 @@ public class createScenario extends JPanel {
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
-                            .addGap(28, 28, 28)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                             .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -722,12 +732,12 @@ public class createScenario extends JPanel {
                             .addComponent(viewBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(copyBtn))
                         .addComponent(scrollPane1)
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(label1, GroupLayout.PREFERRED_SIZE, 329, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
                             .addComponent(electionTitleTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
@@ -752,11 +762,11 @@ public class createScenario extends JPanel {
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
                         .addComponent(remBtn)
+                        .addComponent(copyBtn)
                         .addComponent(exportBtn)
                         .addComponent(viewBtn)
-                        .addComponent(customSeats)
-                        .addComponent(copyBtn)
-                        .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(customSeats))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
