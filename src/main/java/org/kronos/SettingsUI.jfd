@@ -22,7 +22,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "dirPickerbtn"
-				"text": "Open chooser"
+				"text": "Choose directory"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "dirPickerbtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {

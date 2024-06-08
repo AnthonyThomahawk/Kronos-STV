@@ -199,7 +199,7 @@ public class SettingsUI extends JPanel {
         label2.setText("Work directory");
 
         //---- dirPickerbtn ----
-        dirPickerbtn.setText("Open chooser");
+        dirPickerbtn.setText("Choose directory");
         dirPickerbtn.addActionListener(e -> dirPickerbtn(e));
 
         //---- label3 ----
