@@ -129,7 +129,9 @@ public class SettingsUI extends JPanel {
                 }
             }
             com.formdev.flatlaf.FlatLaf.updateUI();
-            Main.mainFormObj.setIcons();
+
+            if (Main.mainFormObj != null)
+                Main.mainFormObj.setIcons();
 
         } catch (Exception x) {
             System.out.println(x);
