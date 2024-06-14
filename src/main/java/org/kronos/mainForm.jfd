@@ -4,21 +4,18 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {comp label5:::p:337:p, seq l {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:272:p}, par t:l::p {comp label7::l:::x, seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label6:::p:286:p}}, comp label4::l:p:324:p, seq {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:285:p}}, space ::41:x}, seq t {space ::342:x, comp settingsBtn:::p::p, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp startElectionBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4:::p:34:p, space :::p, par b {comp loadElectionBtn::b:p:46:p, comp label3::b::46:x}, space :::p, comp label5:::p:34:p, space :::p, par b {comp loadScenarioBtn::b:p:46:p, comp label6::b:p:40:p}, space :::p, comp label7:::p::p, space :p:13:p, comp settingsBtn:::p::p, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :p::p, par l {seq l {comp label5:::::x, space :1:1:p}, seq l {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:272:p}, comp label7::l:::x, seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label6:::p:286:p}, seq l {comp label4:::::x, space :14:14:p}, seq {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:285:p}}, space :p:41:p}, seq t {space :::x, comp settingsBtn:::p:40:p, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par l {comp startElectionBtn:::p:46:p, comp label2:::p:46:p}, space :p::p, comp label4::::34:x, space :p::p, par b {comp loadElectionBtn::b:p:46:p, comp label3::b:::x}, space :p::p, comp label5::::36:x, space :p::p, par b {comp loadScenarioBtn::b:p:46:p, comp label6::b:p:40:p}, space :p::p, comp label7:::::x, space :p:13:p, comp settingsBtn:::p:37:p, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "startElectionBtn"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
-				"text": "+"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
-				"verticalAlignment": 1
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startElectionBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "loadElectionBtn"
-				"text": "\ud83d\udcc1"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadElectionBtn", true ) )
 			} )
@@ -47,7 +44,6 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "loadScenarioBtn"
-				"text": "\ud83d\udcc1"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadScenarioBtn", true ) )
 			} )
@@ -64,7 +60,6 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "settingsBtn"
-				"text": "⚙"
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 11, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "settingsBtn", true ) )
 			} )

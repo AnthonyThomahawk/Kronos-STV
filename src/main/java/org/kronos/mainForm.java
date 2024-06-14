@@ -4,13 +4,18 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.runtime.ECMAException;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
@@ -22,21 +27,38 @@ public class mainForm extends JPanel {
     public static inputCandidates inputCandidatesObj;
     public mainForm() {
         initComponents();
-        //initLocale();
-
-        //label3.setText("<html>" + "Create a voting scenario with Kronos by entering all the available candidates, and then add the ballots of the voters. You will then be able to adjust all the ballot permutations and find out which candidate gets elected." + "</html>");
+        setIcons();
     }
 
-    private void initLocale() {
-        Locale currentLocale;
+    public void setIcons() {
+        String[] iconLocations;
 
-        currentLocale = Locale.ENGLISH;
+        String[] darkIcons = {"plusIconDark.png", "darkFolder.png", "darkFolder.png", "gearDark.png"};
+        String[] lightIcons = {"plusicon24.png", "icons8-folder-24.png", "icons8-folder-24.png", "gearLight.png"};
 
-        currentLocale = new Locale("gr", "GR");
+        if (Main.getTheme().equals("system")) {
+            if (DarkModeDetector.isDarkMode()) {
+                iconLocations = darkIcons;
+            } else {
+                iconLocations = lightIcons;
+            }
+        }
+        else if (Main.getTheme().equals("dark")){
+            iconLocations = darkIcons;
+        } else {
+            iconLocations = lightIcons;
+        }
 
-        ResourceBundle messages = ResourceBundle.getBundle("messages", currentLocale, new UTF8Control());
-        //label4.setText("<html>" + messages.getString("createscenariobtn") + "</html>");
-        //label5.setText("<html>" + messages.getString("loadscenariobtn") + "</html>");
+        JButton[] buttons = {startElectionBtn, loadElectionBtn, loadScenarioBtn, settingsBtn};
+
+        try {
+            for (int i = 0; i < iconLocations.length; i++) {
+                InputStream image = Main.class.getClassLoader().getResourceAsStream(iconLocations[i]);
+                BufferedImage bf = ImageIO.read(image);
+                buttons[i].setIcon(new ImageIcon(bf));
+            }
+
+        } catch(Exception ignored) {}
     }
 
     public static void safeClose(JDialog form, Class formClass, Object formObj) {
@@ -177,13 +199,10 @@ public class mainForm extends JPanel {
 
         //---- startElectionBtn ----
         startElectionBtn.setIcon(null);
-        startElectionBtn.setText("+");
         startElectionBtn.setFont(startElectionBtn.getFont().deriveFont(startElectionBtn.getFont().getStyle() | Font.BOLD, startElectionBtn.getFont().getSize() + 15f));
-        startElectionBtn.setVerticalAlignment(SwingConstants.TOP);
         startElectionBtn.addActionListener(e -> startElectionBtn(e));
 
         //---- loadElectionBtn ----
-        loadElectionBtn.setText("\ud83d\udcc1");
         loadElectionBtn.setFont(loadElectionBtn.getFont().deriveFont(loadElectionBtn.getFont().getStyle() | Font.BOLD, loadElectionBtn.getFont().getSize() + 15f));
         loadElectionBtn.addActionListener(e -> loadElectionBtn(e));
 
@@ -207,7 +226,6 @@ public class mainForm extends JPanel {
         label5.setVerticalAlignment(SwingConstants.TOP);
 
         //---- loadScenarioBtn ----
-        loadScenarioBtn.setText("\ud83d\udcc1");
         loadScenarioBtn.setFont(loadScenarioBtn.getFont().deriveFont(loadScenarioBtn.getFont().getStyle() | Font.BOLD, loadScenarioBtn.getFont().getSize() + 15f));
         loadScenarioBtn.addActionListener(e -> loadScenarioBtn(e));
 
@@ -221,7 +239,6 @@ public class mainForm extends JPanel {
         label7.setVerticalAlignment(SwingConstants.TOP);
 
         //---- settingsBtn ----
-        settingsBtn.setText("\u2699");
         settingsBtn.setFont(settingsBtn.getFont().deriveFont(settingsBtn.getFont().getSize() + 11f));
         settingsBtn.addActionListener(e -> settingsBtn(e));
 
@@ -232,26 +249,29 @@ public class mainForm extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label5)
+                            .addGap(1, 1, 1))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(label2, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(label7, GroupLayout.Alignment.LEADING)
-                            .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(label6, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(label4, GroupLayout.PREFERRED_SIZE, 324, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label7)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label4)
+                            .addGap(14, 14, 14))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(label3, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(41, Short.MAX_VALUE))
+                    .addGap(41, 41, 41))
                 .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(342, Short.MAX_VALUE)
-                    .addComponent(settingsBtn)
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -262,21 +282,21 @@ public class mainForm extends JPanel {
                         .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label4, GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label3, GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE))
+                        .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label5, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label6, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label7)
                     .addGap(13, 13, 13)
-                    .addComponent(settingsBtn)
+                    .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on

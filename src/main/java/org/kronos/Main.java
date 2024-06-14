@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 public class Main {
     public static JFrame mainFrame;
+    public static mainForm mainFormObj;
 
     public static String getWorkDir() throws IOException {
         Properties loadProps = new Properties();
@@ -56,6 +57,21 @@ public class Main {
         }
 
         return true;
+    }
+
+    public static String getTheme() {
+        if (new File("settings.xml").exists()) {
+            try {
+                Properties loadProps = new Properties();
+                loadProps.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
+                String theme = loadProps.getProperty("theme");
+
+                return theme;
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
+        return null;
     }
 
     private static void checkSTV() {
@@ -149,25 +165,21 @@ public class Main {
             settings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         }
 
-        if (new File("settings.xml").exists()) {
+        String theme = getTheme();
+        if (theme != null) {
             try {
-                Properties loadProps = new Properties();
-                loadProps.loadFromXML(Files.newInputStream(Paths.get("settings.xml")));
-                String theme = loadProps.getProperty("theme");
-
                 if (theme.equals("dark")) {
                     javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatDarkLaf());
                 } else if (theme.equals("light")) {
                     javax.swing.UIManager.setLookAndFeel(new com.formdev.flatlaf.FlatLightLaf());
                 }
-
-                com.formdev.flatlaf.FlatLaf.updateUI();
-
             } catch (Exception ignored) {}
+
+            com.formdev.flatlaf.FlatLaf.updateUI();
         }
 
-        mainForm m = new mainForm();
-        mainFrame.setContentPane(m);
+        mainFormObj = new mainForm();
+        mainFrame.setContentPane(mainFormObj);
         mainFrame.pack();
         mainFrame.setVisible(true);
         mainFrame.setTitle("Kronos Beta");
