@@ -100,23 +100,15 @@ public class Main {
         }
     }
 
-    private static void checkPython() throws IOException {
-        String custominterp = System.getenv("PYTHON_CUSTOM");
-        if (custominterp != null) {
-            System.out.println("Using python : " + custominterp);
-            CallPython.interpreterPath = custominterp;
-            return;
-        }
-
+    private static int[] getPythonVer(String target) throws IOException {
         try {
-            Runtime.getRuntime().exec("python --version");
+            Runtime.getRuntime().exec(target + " --version");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "This software requires Python 3.8 or newer to function.", "Python not found", JOptionPane.ERROR_MESSAGE);
-            System.exit(2);
+            return null;
         }
 
         String[] args = new String[2];
-        args[0] = "python";
+        args[0] = target;
         args[1] = "--version";
 
         ProcessBuilder processBuilder = new ProcessBuilder(args);
@@ -134,11 +126,71 @@ public class Main {
 
         String[] pythonVer = verStr.split("\\.");
 
-        if (!(Integer.parseInt(pythonVer[0]) == 3 && Integer.parseInt(pythonVer[1]) >= 8))
-        {
-            JOptionPane.showMessageDialog(null, "Python 3.8 or newer is required." + System.lineSeparator() + "Version found : " + verStr + System.lineSeparator() + "Required : 3.8.0 or newer", "Outdated python version", JOptionPane.ERROR_MESSAGE);
-            System.exit(3);
+        int[] res = new int[2];
+
+        res[0] = Integer.parseInt(pythonVer[0]);
+        res[1] = Integer.parseInt(pythonVer[1]);
+
+        return res;
+    }
+
+    private static void checkPython() throws IOException {
+        String custominterp = System.getenv("PYTHON_CUSTOM");
+        if (custominterp != null) {
+            int[] checkVer = getPythonVer(custominterp);
+
+            if (checkVer == null) {
+                JOptionPane.showMessageDialog(null, "The custom python interpreter you provided is not a valid python binary.", "Custom Python error", JOptionPane.ERROR_MESSAGE);
+                System.exit(2);
+            }
+
+            if (!(checkVer[0] == 3 && checkVer[1] >= 8)) {
+                JOptionPane.showMessageDialog(null, "The custom python interpreter you provided is outdated (must be python 3.8 or newer).", "Custom Python error", JOptionPane.ERROR_MESSAGE);
+                System.exit(3);
+            }
+
+            System.out.println("Using python : " + custominterp);
+            CallPython.interpreterPath = custominterp;
+            return;
         }
+
+        int[] pythonVer = getPythonVer("python");
+
+        int error;
+
+        if (pythonVer == null) {
+            error = 2;
+        } else if (!(pythonVer[0] == 3 && pythonVer[1] >= 8)) {
+            error = 3;
+        } else {
+            error = 0;
+        }
+
+        if (error == 0) {
+            CallPython.interpreterPath = "python";
+            return;
+        }
+
+        int[] python3Ver = getPythonVer("python3");
+
+        if (python3Ver == null) {
+            error = 2;
+        } else if (!(python3Ver[0] == 3 && python3Ver[1] >= 8)) {
+            error = 3;
+        } else {
+            error = 0;
+        }
+
+        if (error == 2) {
+            JOptionPane.showMessageDialog(null, "This software requires Python 3.8 or newer to function.", "Python not found", JOptionPane.ERROR_MESSAGE);
+            System.exit(2);
+        } else if (error == 3) {
+            JOptionPane.showMessageDialog(null, "Python 3.8 or newer is required." + System.lineSeparator() + "Version found : " + pythonVer[0] + "." + pythonVer[1] + System.lineSeparator() + "Required : 3.8.0 or newer", "Outdated python version", JOptionPane.ERROR_MESSAGE);
+            System.exit(3);
+        } else {
+            CallPython.interpreterPath = "python3";
+        }
+
     }
 
     public static void main(String[] args) {
