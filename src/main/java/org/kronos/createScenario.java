@@ -50,7 +50,6 @@ public class createScenario extends JPanel {
         else
             parseScenario(file);
 
-        electionTitleTxt.setText("Election : " + electionTitle);
         initTable();
     }
 
@@ -312,6 +311,16 @@ public class createScenario extends JPanel {
         model.addRow(row);
     }
 
+    private int getBallotCount() {
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        int ballots = 0;
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            ballots += (Integer)dtm.getValueAt(i, candidateCount+1);
+        }
+
+        return ballots;
+    }
+
     private void generateBallotFile(String filename) {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int multipliers[] = new int[dtm.getRowCount()];
@@ -409,6 +418,8 @@ public class createScenario extends JPanel {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
         int cols = dtm.getColumnCount();
+
+        voteCountTxt.setText("Ballots in scenario : " + getBallotCount());
 
         if (scenarioTitleTxt.getText().isEmpty()) {
             label1.setText("<html>" + "<b> Alert : </b>" +
@@ -653,7 +664,7 @@ public class createScenario extends JPanel {
         label1 = new JLabel();
         exportBtn = new JButton();
         remBtn = new JButton();
-        electionTitleTxt = new JLabel();
+        voteCountTxt = new JLabel();
         label2 = new JLabel();
         scenarioTitleTxt = new JTextField();
         copyBtn = new JButton();
@@ -700,11 +711,11 @@ public class createScenario extends JPanel {
         remBtn.setText("Remove -");
         remBtn.addActionListener(e -> remBtn(e));
 
-        //---- electionTitleTxt ----
-        electionTitleTxt.setText("Election title");
-        electionTitleTxt.setVerticalAlignment(SwingConstants.BOTTOM);
-        electionTitleTxt.setHorizontalAlignment(SwingConstants.RIGHT);
-        electionTitleTxt.setFont(electionTitleTxt.getFont().deriveFont(electionTitleTxt.getFont().getSize() + 5f));
+        //---- voteCountTxt ----
+        voteCountTxt.setText("VoteCount");
+        voteCountTxt.setVerticalAlignment(SwingConstants.BOTTOM);
+        voteCountTxt.setHorizontalAlignment(SwingConstants.RIGHT);
+        voteCountTxt.setFont(voteCountTxt.getFont().deriveFont(voteCountTxt.getFont().getSize() + 5f));
 
         //---- label2 ----
         label2.setText("Scenario title :");
@@ -738,7 +749,7 @@ public class createScenario extends JPanel {
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(label1, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                             .addGap(131, 131, 131)
-                            .addComponent(electionTitleTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
                             .addGap(12, 12, 12)
@@ -751,7 +762,7 @@ public class createScenario extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addComponent(label1, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-                        .addComponent(electionTitleTxt, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+                        .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label2)
@@ -783,7 +794,7 @@ public class createScenario extends JPanel {
     private JLabel label1;
     private JButton exportBtn;
     private JButton remBtn;
-    private JLabel electionTitleTxt;
+    private JLabel voteCountTxt;
     private JLabel label2;
     private JTextField scenarioTitleTxt;
     private JButton copyBtn;

@@ -4,9 +4,16 @@
 
 package org.kronos;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -59,16 +66,21 @@ public class scenarioLoad extends JPanel {
     private void loadElectionBtn(ActionEvent e) {
         int selectedIndex = list1.getSelectedIndex();
 
-        mainForm.openScenarioForm(scenarioFiles[selectedIndex], "Edit scenario");
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject election = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(scenarioFiles[selectedIndex].toURI())), StandardCharsets.UTF_8));
+            String electionTitle = (String) election.get("ElectionTitle");
+            mainForm.openScenarioForm(scenarioFiles[selectedIndex], "Edit scenario - " + electionTitle);
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void list1MouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2 && !e.isConsumed()) {
             e.consume();
 
-            int selectedIndex = list1.getSelectedIndex();
-
-            mainForm.openScenarioForm(scenarioFiles[selectedIndex], "Edit scenario");
+            loadElectionBtn(null);
         }
     }
 

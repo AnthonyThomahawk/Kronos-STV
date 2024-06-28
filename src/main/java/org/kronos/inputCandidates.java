@@ -248,7 +248,7 @@ public class inputCandidates extends JPanel {
 
     private void createBtn(ActionEvent e) {
         try {
-            mainForm.openScenarioForm(null, "New scenario");
+            mainForm.openScenarioForm(null, "New scenario - " + electionNameBox.getText());
         } catch (Exception ignored) {
         }
 
