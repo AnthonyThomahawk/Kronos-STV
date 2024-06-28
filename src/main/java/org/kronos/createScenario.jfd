@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :p::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space ::72:x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p, space :::p, comp copyBtn:::p::p}, comp scrollPane1::l:::x, seq t {comp label1::::329:x, space :p:131:p, comp voteCountTxt:::p:323:p}, seq l {comp label2:::p::p, space :p:12:p, comp scenarioTitleTxt:::::x}}, space :p::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp label1::::27:x, comp voteCountTxt::::27:x}, space :::p, par b {comp label2::b:p::p, comp scenarioTitleTxt::b:p::p}, space :p:6:p, comp scrollPane1::::412:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp copyBtn::b:p::p, comp exportBtn::b:p::p, comp viewBtn::b:p::p, comp spinner1::b:p::p, comp customSeats::b:p::p}, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq {space :p::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space ::72:x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p, space :::p, comp copyBtn:::p::p}, comp scrollPane1::l:::x, seq t {comp label1::::329:x, space :p:131:p, comp voteCountTxt::::323:x}, seq l {comp label2:::p::p, space :p:12:p, comp scenarioTitleTxt:::::x}}, space :p::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, par l:::p {comp label1::::36:x, comp voteCountTxt::::36:x}, space :::p, par b {comp label2::b:p::p, comp scenarioTitleTxt::b:p::p}, space :p:6:p, comp scrollPane1::::478:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp copyBtn::b:p::p, comp exportBtn::b:p::p, comp viewBtn::b:p::p, comp spinner1::b:p::p, comp customSeats::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -52,7 +52,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "voteCountTxt"
 				"text": "VoteCount"
-				"verticalAlignment": 3
+				"verticalAlignment": 1
 				"horizontalAlignment": 4
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 5, false )
 			} )
@@ -70,7 +70,7 @@ new FormModel {
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 795, 515 )
+			"size": new java.awt.Dimension( 795, 590 )
 		} )
 	}
 }

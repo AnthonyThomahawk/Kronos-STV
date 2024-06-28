@@ -713,7 +713,7 @@ public class createScenario extends JPanel {
 
         //---- voteCountTxt ----
         voteCountTxt.setText("VoteCount");
-        voteCountTxt.setVerticalAlignment(SwingConstants.BOTTOM);
+        voteCountTxt.setVerticalAlignment(SwingConstants.TOP);
         voteCountTxt.setHorizontalAlignment(SwingConstants.RIGHT);
         voteCountTxt.setFont(voteCountTxt.getFont().deriveFont(voteCountTxt.getFont().getSize() + 5f));
 
@@ -749,7 +749,7 @@ public class createScenario extends JPanel {
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                             .addComponent(label1, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                             .addGap(131, 131, 131)
-                            .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
                             .addGap(12, 12, 12)
@@ -760,15 +760,15 @@ public class createScenario extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup()
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-                        .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                        .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label2)
                         .addComponent(scenarioTitleTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGap(6, 6, 6)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
