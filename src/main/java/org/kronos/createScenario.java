@@ -39,6 +39,7 @@ public class createScenario extends JPanel {
     private String electionTitle;
     private String[] candidates;
     private int candidateCount;
+    private String notes = "";
 
     public createScenario(String file, boolean scenario) {
         initComponents();
@@ -102,6 +103,8 @@ public class createScenario extends JPanel {
             spinner1.setValue(c);
             customSeats.setSelected(b);
             spinner1.setEnabled(b);
+
+            notes = (String) scenario.get("Notes");
 
             scenarioTitleTxt.setText((String) scenario.get("ScenarioTitle"));
 
@@ -557,6 +560,7 @@ public class createScenario extends JPanel {
             scenario.put("Choices", choices);
             scenario.put("Seats", spinner1.getValue());
             scenario.put("EnforceSeats", customSeats.isSelected());
+            scenario.put("Notes", notes);
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
             file.write(scenario.toJSONString());
@@ -652,6 +656,17 @@ public class createScenario extends JPanel {
         clipboard.setContents(selection, selection);
     }
 
+    private void viewNotesBtn(ActionEvent e) {
+        scenarioNotes sc = new scenarioNotes(notes);
+        JDialog d = new JDialog(Main.mainFrame, "Notes - " + scenarioTitleTxt.getText(), true);
+        d.setContentPane(sc);
+        d.pack();
+        d.setLocationRelativeTo(null);
+        d.setVisible(true);
+        notes = sc.getNotes();
+        unsaved = true;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -668,6 +683,7 @@ public class createScenario extends JPanel {
         label2 = new JLabel();
         scenarioTitleTxt = new JTextField();
         copyBtn = new JButton();
+        viewNotesBtn = new JButton();
 
         //======== this ========
 
@@ -724,6 +740,10 @@ public class createScenario extends JPanel {
         copyBtn.setText("Copy to clipboard");
         copyBtn.addActionListener(e -> copyBtn(e));
 
+        //---- viewNotesBtn ----
+        viewNotesBtn.setText("View notes");
+        viewNotesBtn.addActionListener(e -> viewNotesBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -735,7 +755,7 @@ public class createScenario extends JPanel {
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
                             .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -744,12 +764,14 @@ public class createScenario extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(copyBtn))
+                            .addComponent(copyBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(viewNotesBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1)
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(label1, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                            .addComponent(label1, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
                             .addGap(131, 131, 131)
-                            .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE))
+                            .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
                             .addGap(12, 12, 12)
@@ -773,6 +795,7 @@ public class createScenario extends JPanel {
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
                         .addComponent(remBtn)
+                        .addComponent(viewNotesBtn)
                         .addComponent(copyBtn)
                         .addComponent(exportBtn)
                         .addComponent(viewBtn)
@@ -798,5 +821,6 @@ public class createScenario extends JPanel {
     private JLabel label2;
     private JTextField scenarioTitleTxt;
     private JButton copyBtn;
+    private JButton viewNotesBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
