@@ -657,6 +657,7 @@ public class createScenario extends JPanel {
     }
 
     private void viewNotesBtn(ActionEvent e) {
+        String oldNotes = notes;
         scenarioNotes sc = new scenarioNotes(notes);
         JDialog d = new JDialog(Main.mainFrame, "Notes - " + scenarioTitleTxt.getText(), true);
         d.setContentPane(sc);
@@ -664,7 +665,9 @@ public class createScenario extends JPanel {
         d.setLocationRelativeTo(null);
         d.setVisible(true);
         notes = sc.getNotes();
-        unsaved = true;
+        if (!(notes.equals(oldNotes))) {
+            unsaved = true;
+        }
     }
 
     private void initComponents() {
