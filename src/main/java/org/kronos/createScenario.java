@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Enterprise
@@ -124,12 +125,15 @@ public class createScenario extends JPanel {
 
             cbGroup[i].setSelectedIndex(-1); // for some reason not all comboboxes had 0 as index and they need to be init with blank (-1)
             final int currentBox = i;
+            AtomicInteger oldSel = new AtomicInteger(-1);
             cbGroup[currentBox].addItemListener(e -> { // CAUTION! use ITEM LISTENER instead of ACTION LISTENER to track combobox changes!
+
                 if (cbGroup[currentBox].getSelectedIndex() == -1)
                     return;
 
                 if (cbGroup[currentBox].getSelectedIndex() == candidateCount) {
                     cbGroup[currentBox].setSelectedIndex(-1);
+                    oldSel.set(-1);
                     return;
                 }
 
@@ -141,11 +145,17 @@ public class createScenario extends JPanel {
                         continue;
 
                     if (cbGroup[currentBox].getSelectedIndex() == cbGroup[j].getSelectedIndex()) {
-                        cbGroup[currentBox].setSelectedIndex(-1); // clear selection (! only works with item listener !)
-                        JOptionPane.showMessageDialog(null, "Candidate cannot be repeated within a sequence.", "Error", JOptionPane.ERROR_MESSAGE);
+                        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+
+                        // swap elements
+                        cbGroup[j].setSelectedIndex(oldSel.get());
+                        int ind = table1.getSelectedRow();
+                        dtm.setValueAt(cbGroup[j].getSelectedItem(), ind, j+1);
                     }
 
                 }
+
+                oldSel.set(cbGroup[currentBox].getSelectedIndex());
             });
         }
 
