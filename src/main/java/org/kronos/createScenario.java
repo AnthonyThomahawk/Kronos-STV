@@ -747,9 +747,9 @@ public class createScenario extends JPanel {
 
         //---- voteCountTxt ----
         voteCountTxt.setText("VoteCount");
-        voteCountTxt.setVerticalAlignment(SwingConstants.TOP);
+        voteCountTxt.setVerticalAlignment(SwingConstants.BOTTOM);
         voteCountTxt.setHorizontalAlignment(SwingConstants.RIGHT);
-        voteCountTxt.setFont(voteCountTxt.getFont().deriveFont(voteCountTxt.getFont().getSize() + 5f));
+        voteCountTxt.setFont(voteCountTxt.getFont().deriveFont(voteCountTxt.getFont().getSize() + 1f));
 
         //---- label2 ----
         label2.setText("Scenario title :");
@@ -800,9 +800,9 @@ public class createScenario extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                        .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(label1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label2)
