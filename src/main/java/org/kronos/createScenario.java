@@ -148,7 +148,12 @@ public class createScenario extends JPanel {
                         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
 
                         // swap elements
-                        cbGroup[j].setSelectedIndex(oldSel.get());
+                        int newSel = cbGroup[currentBox].getSelectedIndex();
+                        if (oldSel.get() == newSel) {
+                            cbGroup[j].setSelectedIndex(-1);
+                        } else {
+                            cbGroup[j].setSelectedIndex(oldSel.get());
+                        }
                         int ind = table1.getSelectedRow();
                         dtm.setValueAt(cbGroup[j].getSelectedItem(), ind, j+1);
                     }
