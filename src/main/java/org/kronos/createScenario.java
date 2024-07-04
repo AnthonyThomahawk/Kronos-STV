@@ -177,7 +177,7 @@ public class createScenario extends JPanel {
         columnTypes[columnTypes.length-1] = Integer.class;
 
         String[] tCol = new String[candidateCount+2];
-        tCol[0] = "Seq #";
+        tCol[0] = "";
         for (int i = 1; i < tCol.length - 1; i++) {
             if (i == 1)
                 tCol[i] = "1st Choice";
@@ -632,7 +632,7 @@ public class createScenario extends JPanel {
         data += "Scenario : " + scenarioTitleTxt.getText() + "\n";
         for (int i = 0; i < dtm.getColumnCount(); i++) {
             if (i == 0) {
-                data += "Seq #\t";
+                data += "\t";
             } else if (i == 1) {
                 data += "1st Choice\t";
             } else if (i == 2) {
