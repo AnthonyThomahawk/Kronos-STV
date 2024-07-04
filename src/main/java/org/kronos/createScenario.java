@@ -18,6 +18,8 @@ import javax.management.openmbean.OpenDataException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
@@ -617,30 +619,20 @@ public class createScenario extends JPanel {
     private void table1MouseClicked(MouseEvent e) {
     }
 
-    private void copyBtn(ActionEvent e) {
-        if (table1.isEditing())
-            table1.getCellEditor().stopCellEditing();
-
-        if (!updateStatus()) {
-            JOptionPane.showMessageDialog(null, "Cannot copy to clipboard, because there are active alerts.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
+    private String getCSVString(String delim) {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         String data = "";
-        data = "Election : " + electionTitle + "\n";
-        data += "Scenario : " + scenarioTitleTxt.getText() + "\n";
         for (int i = 0; i < dtm.getColumnCount(); i++) {
             if (i == 0) {
-                data += "\t";
+                data += delim;
             } else if (i == 1) {
-                data += "1st Choice\t";
+                data += "1st Choice" + delim;
             } else if (i == 2) {
-                data += "2nd Choice\t";
+                data += "2nd Choice" + delim;
             } else if (i == 3) {
-                data += "3rd Choice\t";
+                data += "3rd Choice" + delim;
             } else if (i != dtm.getColumnCount()-1) {
-                data += i + "th Choice\t";
+                data += i + "th Choice" + delim;
             } else {
                 data += "# of Voters";
             }
@@ -660,11 +652,28 @@ public class createScenario extends JPanel {
                     val = "";
                 }
 
-                data += val + "\t";
+                data += val + delim;
             }
 
             data += "\n";
         }
+
+        return data;
+    }
+
+    private void copyBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        if (!updateStatus()) {
+            JOptionPane.showMessageDialog(null, "Cannot copy to clipboard, because there are active alerts.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String data = getCSVString("\t");
+
+        data = "Election : " + electionTitle + "\n" + data;
+        data = "Scenario : " + scenarioTitleTxt.getText() + "\n" + data;
 
         StringSelection selection = new StringSelection(data);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -685,6 +694,35 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void exportFileBtn(ActionEvent e) {
+        String csvData = getCSVString(",");
+
+        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", ".csv");
+        fileChooser.setFileFilter(csvFilter);
+
+        int res = fileChooser.showSaveDialog(null);
+
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            if(!fileChooser.getSelectedFile().getAbsolutePath().endsWith(".csv")){
+                selectedFile = new File(fileChooser.getSelectedFile() + ".csv");
+            }
+
+            try {
+                OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(selectedFile.toPath()), StandardCharsets.UTF_8);
+                fStream.write(csvData);
+                fStream.flush();
+                fStream.close();
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Error exporting scenario to file.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -702,6 +740,7 @@ public class createScenario extends JPanel {
         scenarioTitleTxt = new JTextField();
         copyBtn = new JButton();
         viewNotesBtn = new JButton();
+        exportFileBtn = new JButton();
 
         //======== this ========
 
@@ -762,6 +801,10 @@ public class createScenario extends JPanel {
         viewNotesBtn.setText("View notes");
         viewNotesBtn.addActionListener(e -> viewNotesBtn(e));
 
+        //---- exportFileBtn ----
+        exportFileBtn.setText("Export to file");
+        exportFileBtn.addActionListener(e -> exportFileBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -773,7 +816,7 @@ public class createScenario extends JPanel {
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 101, Short.MAX_VALUE)
+                            .addGap(54, 54, 54)
                             .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -784,12 +827,14 @@ public class createScenario extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(copyBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(exportFileBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                             .addComponent(viewNotesBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1)
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(label1, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE)
+                            .addComponent(label1, GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
                             .addGap(131, 131, 131)
-                            .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
+                            .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
                             .addGap(12, 12, 12)
@@ -813,12 +858,13 @@ public class createScenario extends JPanel {
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
                         .addComponent(remBtn)
-                        .addComponent(viewNotesBtn)
                         .addComponent(copyBtn)
                         .addComponent(exportBtn)
                         .addComponent(viewBtn)
                         .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(customSeats))
+                        .addComponent(customSeats)
+                        .addComponent(viewNotesBtn)
+                        .addComponent(exportFileBtn))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -840,5 +886,6 @@ public class createScenario extends JPanel {
     private JTextField scenarioTitleTxt;
     private JButton copyBtn;
     private JButton viewNotesBtn;
+    private JButton exportFileBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
