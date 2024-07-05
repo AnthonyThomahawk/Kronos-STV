@@ -18,6 +18,7 @@ import javax.management.openmbean.OpenDataException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -714,8 +715,8 @@ public class createScenario extends JPanel {
 
         if (exportChooser == null) {
             exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-            FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", ".csv");
-            exportChooser.setFileFilter(csvFilter);
+            FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
+            exportChooser.setFileFilter(filter);
         }
 
         int res = exportChooser.showSaveDialog(null);
