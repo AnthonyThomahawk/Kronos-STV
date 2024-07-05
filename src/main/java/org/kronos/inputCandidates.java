@@ -53,7 +53,7 @@ public class inputCandidates extends JPanel {
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {"1", ""}
         }, new String[] {
-                "Candidate number #", "Candidate name"
+                "#", "Candidate name"
         })
         {
 
@@ -84,6 +84,9 @@ public class inputCandidates extends JPanel {
         table1.setColumnSelectionAllowed(false);
         table1.setRowSelectionAllowed(true);
         table1.getTableHeader().setReorderingAllowed(false);
+
+        table1.getColumnModel().getColumn(0).setPreferredWidth(5);
+        table1.getColumnModel().getColumn(1).setPreferredWidth(450);
 
         updateStatus();
 

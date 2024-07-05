@@ -179,7 +179,7 @@ public class createScenario extends JPanel {
         columnTypes[columnTypes.length-1] = Integer.class;
 
         String[] tCol = new String[candidateCount+2];
-        tCol[0] = "";
+        tCol[0] = "#";
         for (int i = 1; i < tCol.length - 1; i++) {
             if (i == 1)
                 tCol[i] = "1st Choice";
@@ -255,6 +255,12 @@ public class createScenario extends JPanel {
         table1.setColumnSelectionAllowed(false);
         table1.setRowSelectionAllowed(true);
         table1.getTableHeader().setReorderingAllowed(false);
+
+        table1.getColumnModel().getColumn(0).setPreferredWidth(5);
+        for (int i = 1; i < tCol.length - 1; i++) {
+            table1.getColumnModel().getColumn(i).setPreferredWidth(100);
+        }
+        table1.getColumnModel().getColumn(tCol.length-1).setPreferredWidth(25);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -621,7 +627,7 @@ public class createScenario extends JPanel {
 
     private String getCSVString(String delim) {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
-        String data = "";
+        String data = "#";
         for (int i = 0; i < dtm.getColumnCount(); i++) {
             if (i == 0) {
                 data += delim;
