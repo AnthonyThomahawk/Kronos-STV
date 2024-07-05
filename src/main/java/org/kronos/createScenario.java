@@ -808,7 +808,7 @@ public class createScenario extends JPanel {
         voteCountTxt.setText("VoteCount");
         voteCountTxt.setVerticalAlignment(SwingConstants.BOTTOM);
         voteCountTxt.setHorizontalAlignment(SwingConstants.RIGHT);
-        voteCountTxt.setFont(voteCountTxt.getFont().deriveFont(voteCountTxt.getFont().getSize() + 6f));
+        voteCountTxt.setFont(voteCountTxt.getFont().deriveFont(voteCountTxt.getFont().getSize() + 3f));
 
         //---- label2 ----
         label2.setText("Scenario title :");
@@ -851,29 +851,27 @@ public class createScenario extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(viewNotesBtn, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1)
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addComponent(label1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(131, 131, 131)
-                            .addComponent(voteCountTxt, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
-                            .addGap(12, 12, 12)
-                            .addComponent(scenarioTitleTxt)))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(scenarioTitleTxt, GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup()
-                        .addComponent(label1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                    .addGap(12, 12, 12)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label2)
+                        .addComponent(voteCountTxt)
                         .addComponent(scenarioTitleTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGap(6, 6, 6)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
+                    .addGap(7, 7, 7)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
