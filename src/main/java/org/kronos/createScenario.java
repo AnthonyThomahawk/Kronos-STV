@@ -43,6 +43,7 @@ public class createScenario extends JPanel {
     private String[] candidates;
     private int candidateCount;
     private String notes = "";
+    private static JFileChooser exportChooser;
 
     public createScenario(String file, boolean scenario) {
         initComponents();
@@ -712,17 +713,19 @@ public class createScenario extends JPanel {
     private void exportFileBtn(ActionEvent e) {
         String csvData = getCSVString(",");
 
-        JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", ".csv");
-        fileChooser.setFileFilter(csvFilter);
+        if (exportChooser == null) {
+            exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", ".csv");
+            exportChooser.setFileFilter(csvFilter);
+        }
 
-        int res = fileChooser.showSaveDialog(null);
+        int res = exportChooser.showSaveDialog(null);
 
         if (res == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = fileChooser.getSelectedFile();
+            File selectedFile = exportChooser.getSelectedFile();
 
-            if(!fileChooser.getSelectedFile().getAbsolutePath().endsWith(".csv")){
-                selectedFile = new File(fileChooser.getSelectedFile() + ".csv");
+            if(!exportChooser.getSelectedFile().getAbsolutePath().endsWith(".csv")){
+                selectedFile = new File(exportChooser.getSelectedFile() + ".csv");
             }
 
             try {
