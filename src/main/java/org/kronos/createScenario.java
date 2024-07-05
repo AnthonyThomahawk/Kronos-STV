@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -128,6 +129,7 @@ public class createScenario extends JPanel {
             cbGroup[i].setSelectedIndex(-1); // for some reason not all comboboxes had 0 as index and they need to be init with blank (-1)
             final int currentBox = i;
             AtomicInteger oldSel = new AtomicInteger(-1);
+
             cbGroup[currentBox].addItemListener(e -> { // CAUTION! use ITEM LISTENER instead of ACTION LISTENER to track combobox changes!
 
                 if (cbGroup[currentBox].getSelectedIndex() == -1)
@@ -453,6 +455,7 @@ public class createScenario extends JPanel {
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
             copyBtn.setEnabled(false);
+            exportFileBtn.setEnabled(false);
             return false;
         }
 
@@ -461,6 +464,7 @@ public class createScenario extends JPanel {
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
             copyBtn.setEnabled(false);
+            exportFileBtn.setEnabled(false);
             return false;
         }
 
@@ -470,6 +474,7 @@ public class createScenario extends JPanel {
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);
             copyBtn.setEnabled(false);
+            exportFileBtn.setEnabled(false);
             return false;
         }
 
@@ -484,6 +489,7 @@ public class createScenario extends JPanel {
                         viewBtn.setEnabled(false);
                         exportBtn.setEnabled(false);
                         copyBtn.setEnabled(false);
+                        exportFileBtn.setEnabled(false);
                         return false;
                     }
                 }
@@ -497,6 +503,7 @@ public class createScenario extends JPanel {
                     viewBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
                     copyBtn.setEnabled(false);
+                    exportFileBtn.setEnabled(false);
                     return false;
                 }
 
@@ -513,6 +520,7 @@ public class createScenario extends JPanel {
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
+                exportFileBtn.setEnabled(false);
                 return false;
             } else if ((int) dtm.getValueAt(i, cols-1) < 0) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
@@ -520,6 +528,7 @@ public class createScenario extends JPanel {
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
+                exportFileBtn.setEnabled(false);
                 return false;
             }
         }
@@ -529,6 +538,7 @@ public class createScenario extends JPanel {
         viewBtn.setEnabled(true);
         exportBtn.setEnabled(true);
         copyBtn.setEnabled(true);
+        exportFileBtn.setEnabled(true);
 
         return true;
     }
@@ -721,6 +731,8 @@ public class createScenario extends JPanel {
                 fStream.write(csvData);
                 fStream.flush();
                 fStream.close();
+
+                JOptionPane.showMessageDialog(null, "Scenario exported as : " + selectedFile.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error exporting scenario to file.", "Error", JOptionPane.ERROR_MESSAGE);
