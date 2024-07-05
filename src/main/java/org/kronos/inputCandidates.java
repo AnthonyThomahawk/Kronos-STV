@@ -85,8 +85,7 @@ public class inputCandidates extends JPanel {
         table1.setRowSelectionAllowed(true);
         table1.getTableHeader().setReorderingAllowed(false);
 
-        table1.getColumnModel().getColumn(0).setPreferredWidth(5);
-        table1.getColumnModel().getColumn(1).setPreferredWidth(450);
+        table1.getColumnModel().getColumn(0).setMaxWidth(50);
 
         updateStatus();
 
@@ -356,7 +355,7 @@ public class inputCandidates extends JPanel {
         //======== this ========
 
         //---- createBtn ----
-        createBtn.setText("Create scenario");
+        createBtn.setText("New Scenario");
         createBtn.addActionListener(e -> createBtn(e));
 
         //======== scrollPane1 ========
@@ -368,7 +367,7 @@ public class inputCandidates extends JPanel {
         }
 
         //---- addBtn ----
-        addBtn.setText("Add candidate +");
+        addBtn.setText("Add +");
         addBtn.addActionListener(e -> addBtn(e));
 
         //---- label2 ----
@@ -376,11 +375,11 @@ public class inputCandidates extends JPanel {
         label2.setHorizontalAlignment(SwingConstants.LEFT);
 
         //---- remBtn ----
-        remBtn.setText("Remove candidate -");
+        remBtn.setText("Remove -");
         remBtn.addActionListener(e -> remBtn(e));
 
         //---- exportBtn ----
-        exportBtn.setText("Save election");
+        exportBtn.setText("Save");
         exportBtn.addActionListener(e -> exportBtn(e));
 
         //---- label3 ----
@@ -399,17 +398,16 @@ public class inputCandidates extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(electionNameBox, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup()
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(addBtn)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(remBtn)
-                                    .addGap(84, 84, 84)
-                                    .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE))
-                            .addGap(0, 1, Short.MAX_VALUE)))
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 338, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(addBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(remBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(exportBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                            .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -424,13 +422,11 @@ public class inputCandidates extends JPanel {
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(createBtn)
-                            .addComponent(exportBtn))
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(addBtn)
-                            .addComponent(remBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(addBtn)
+                        .addComponent(remBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(exportBtn)
+                        .addComponent(createBtn))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on

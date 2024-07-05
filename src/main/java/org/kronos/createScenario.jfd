@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space ::105:x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space u:::p, comp viewBtn:::p:115:p, space :::p, comp exportBtn:::p:115:p, space :::p, comp exportFileBtn:::p:115:p, space :::p, comp copyBtn:::p:90:p, space :::p, comp viewNotesBtn:::p:94:p}, comp scrollPane1::l:::x, seq l {comp label2:::p::p, space :::p, comp scenarioTitleTxt::::813:x, space :::p, comp voteCountTxt:::p:109:p}, comp label1::l:::x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p:30:p, space :p:12:p, par b {comp label2::b:p::p, comp voteCountTxt:::p::p, comp scenarioTitleTxt::b:p::p}, space :p:7:p, comp scrollPane1::::476:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp viewNotesBtn::b:p::p, comp copyBtn::b:p::p, comp exportFileBtn::b:p::p, comp exportBtn::b:p::p, comp viewBtn::b:p::p, comp spinner1::b:p::p, comp customSeats::b:p::p}, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp viewNotesBtn:::p::p, space :::p, comp exportBtn:::p::p, space :::p, comp exportFileBtn:::p::p, space :::p, comp copyBtn:::p::p, space ::296:x, comp customSeats:::p::p, space :::p, comp spinner1:::p::p, space :::p, comp viewBtn:::p:115:p}, comp scrollPane1::l:::x, seq l {comp label2:::p::p, space :::p, comp scenarioTitleTxt::::813:x, space :::p, comp voteCountTxt:::p:109:p}, comp label1::l:::x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p:30:p, space :p:12:p, par b {comp label2::b:p::p, comp voteCountTxt:::p::p, comp scenarioTitleTxt::b:p::p}, space :p:7:p, comp scrollPane1::::476:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp viewNotesBtn::b:p::p, comp exportBtn::b:p::p, comp viewBtn::b:p::p, comp spinner1::b:p::p, comp customSeats::b:p::p, comp exportFileBtn::b:p::p, comp copyBtn::b:p::p}, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -17,7 +17,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "viewBtn"
-				"text": "View results"
+				"text": "Evaluate"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "viewBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -27,7 +27,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JCheckBox" ) {
 				name: "customSeats"
-				"text": "Seats to be filled"
+				"text": "Seats"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "customSeats", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
@@ -41,7 +41,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "exportBtn"
-				"text": "Save scenario"
+				"text": "Save"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exportBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -75,7 +75,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "exportFileBtn"
-				"text": "Export to file"
+				"text": "Export"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exportFileBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {

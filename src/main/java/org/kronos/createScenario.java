@@ -56,6 +56,8 @@ public class createScenario extends JPanel {
             parseScenario(file);
 
         initTable();
+
+        viewBtn.setText("<html> <b> Evaluate </b> </html>");
     }
 
     private void parseElection(String electionFile) {
@@ -258,11 +260,8 @@ public class createScenario extends JPanel {
         table1.setRowSelectionAllowed(true);
         table1.getTableHeader().setReorderingAllowed(false);
 
-        table1.getColumnModel().getColumn(0).setPreferredWidth(5);
-        for (int i = 1; i < tCol.length - 1; i++) {
-            table1.getColumnModel().getColumn(i).setPreferredWidth(100);
-        }
-        table1.getColumnModel().getColumn(tCol.length-1).setPreferredWidth(25);
+        table1.getColumnModel().getColumn(0).setMaxWidth(50);
+        table1.getColumnModel().getColumn(tCol.length-1).setMaxWidth(100);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
@@ -778,7 +777,7 @@ public class createScenario extends JPanel {
         }
 
         //---- viewBtn ----
-        viewBtn.setText("View results");
+        viewBtn.setText("Evaluate");
         viewBtn.addActionListener(e -> viewBtn(e));
 
         //---- addBtn ----
@@ -786,7 +785,7 @@ public class createScenario extends JPanel {
         addBtn.addActionListener(e -> addBtn(e));
 
         //---- customSeats ----
-        customSeats.setText("Seats to be filled");
+        customSeats.setText("Seats");
         customSeats.addActionListener(e -> customSeats(e));
 
         //---- spinner1 ----
@@ -797,7 +796,7 @@ public class createScenario extends JPanel {
         label1.setVerticalAlignment(SwingConstants.TOP);
 
         //---- exportBtn ----
-        exportBtn.setText("Save scenario");
+        exportBtn.setText("Save");
         exportBtn.addActionListener(e -> exportBtn(e));
 
         //---- remBtn ----
@@ -822,7 +821,7 @@ public class createScenario extends JPanel {
         viewNotesBtn.addActionListener(e -> viewNotesBtn(e));
 
         //---- exportFileBtn ----
-        exportFileBtn.setText("Export to file");
+        exportFileBtn.setText("Export");
         exportFileBtn.addActionListener(e -> exportFileBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
@@ -836,20 +835,20 @@ public class createScenario extends JPanel {
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(viewNotesBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(exportBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(exportFileBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(copyBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 296, Short.MAX_VALUE)
                             .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(viewBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(exportBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(exportFileBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(copyBtn, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(viewNotesBtn, GroupLayout.PREFERRED_SIZE, 94, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(viewBtn, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
                         .addComponent(scrollPane1)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
@@ -877,12 +876,12 @@ public class createScenario extends JPanel {
                         .addComponent(addBtn)
                         .addComponent(remBtn)
                         .addComponent(viewNotesBtn)
-                        .addComponent(copyBtn)
-                        .addComponent(exportFileBtn)
                         .addComponent(exportBtn)
                         .addComponent(viewBtn)
                         .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(customSeats))
+                        .addComponent(customSeats)
+                        .addComponent(exportFileBtn)
+                        .addComponent(copyBtn))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
