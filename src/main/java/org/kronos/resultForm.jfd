@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::::388:x, seq t {space :0:158:x, comp viewAnalysisBtn:::p::p, space :::p, comp copyBtn:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::425:x, space :::p, par b {comp copyBtn::b:p::p, comp viewAnalysisBtn::b:p::p}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::::443:x, seq t {space :0:240:x, comp copyAnalysisBtn:::p::p, space :::p, comp copyBtn:::p::p}, seq l {comp label1:::p::p, space :0:400:x}, comp scrollPane2::l::443:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp scrollPane1:::p:169:p, space :p::p, comp label1:::p::p, space :::p, comp scrollPane2::::365:x, space :::p, par b {comp copyBtn::b:p::p, comp copyAnalysisBtn::b:p::p}, space :p:4:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -15,18 +15,28 @@ new FormModel {
 				} )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "viewAnalysisBtn"
-				"text": "View analysis"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "viewAnalysisBtn", true ) )
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "copyBtn"
-				"text": "Copy to clipboard"
+				"text": "Copy results"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "copyBtn", true ) )
 			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "textArea1"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "copyAnalysisBtn"
+				"text": "Copy analysis"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "copyAnalysisBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Analysis"
+			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 465 )
+			"location": new java.awt.Point( 5, 5 )
+			"size": new java.awt.Dimension( 455, 600 )
 		} )
 	}
 }
