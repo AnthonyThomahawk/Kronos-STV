@@ -44,6 +44,10 @@ public class resultForm extends JPanel {
         table1.setColumnSelectionAllowed(false);
         table1.getTableHeader().setReorderingAllowed(false);
 
+        table1.getColumnModel().getColumn(0).setPreferredWidth(5);
+        table1.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table1.getColumnModel().getColumn(2).setPreferredWidth(100);
+
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 
