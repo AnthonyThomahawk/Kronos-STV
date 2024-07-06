@@ -637,11 +637,9 @@ public class createScenario extends JPanel {
 
     private String getCSVString(String delim) {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
-        String data = "#";
-        for (int i = 0; i < dtm.getColumnCount(); i++) {
-            if (i == 0) {
-                data += delim;
-            } else if (i == 1) {
+        String data = "";
+        for (int i = 1; i < dtm.getColumnCount(); i++) {
+            if (i == 1) {
                 data += "1st Choice" + delim;
             } else if (i == 2) {
                 data += "2nd Choice" + delim;
@@ -656,9 +654,9 @@ public class createScenario extends JPanel {
         data += "\n";
 
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            for (int j = 0; j < dtm.getColumnCount(); j++) {
+            for (int j = 1; j < dtm.getColumnCount(); j++) {
                 String val;
-                if (j == 0 || j == dtm.getColumnCount()-1) {
+                if (j == dtm.getColumnCount()-1) {
                     val = Integer.toString((int)dtm.getValueAt(i,j));
                 } else {
                     val = (String) dtm.getValueAt(i,j);
@@ -730,7 +728,6 @@ public class createScenario extends JPanel {
         data += "# Election : " + electionTitle + "\n";
         data += "# Scenario : " + scenarioTitleTxt.getText() + "\n";
 
-        data += "# Notes : " + "\n";
         String[] lines = notes.split("\n");
         for (String line : lines) {
             data += "# " + line + "\n";
