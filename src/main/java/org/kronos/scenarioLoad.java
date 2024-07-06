@@ -140,8 +140,8 @@ public class scenarioLoad extends JPanel {
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 307, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(8, Short.MAX_VALUE))
+                    .addComponent(loadElectionBtn, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

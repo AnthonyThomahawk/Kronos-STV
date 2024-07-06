@@ -118,8 +118,8 @@ public class electionLoad extends JPanel {
                     .addContainerGap())
                 .addGroup(layout.createSequentialGroup()
                     .addGap(155, 155, 155)
-                    .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(154, Short.MAX_VALUE))
+                    .addComponent(loadElectionBtn, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                    .addGap(154, 154, 154))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()

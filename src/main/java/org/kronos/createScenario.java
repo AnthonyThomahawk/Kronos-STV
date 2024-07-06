@@ -710,9 +710,36 @@ public class createScenario extends JPanel {
         }
     }
 
-    private void exportFileBtn(ActionEvent e) {
-        String csvData = getCSVString(",");
+    private String getFullCSV(String delim) {
+        String data = getCSVString(delim);
 
+        data += "\n";
+
+        for (int i = 1; i<= candidateCount; i++) {
+            data += "Candidate " + i + delim;
+        }
+
+        data += "\n";
+
+        for (int i = 0; i < candidates.length; i++) {
+            data += candidates[i] + delim;
+        }
+
+        data += "\n\n";
+
+        data += "# Election : " + electionTitle + "\n";
+        data += "# Scenario : " + scenarioTitleTxt.getText() + "\n";
+
+        data += "# Notes : " + "\n";
+        String[] lines = notes.split("\n");
+        for (String line : lines) {
+            data += "# " + line + "\n";
+        }
+
+        return data;
+    }
+
+    private void exportFileBtn(ActionEvent e) {
         if (exportChooser == null) {
             exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
@@ -730,7 +757,7 @@ public class createScenario extends JPanel {
 
             try {
                 OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(selectedFile.toPath()), StandardCharsets.UTF_8);
-                fStream.write(csvData);
+                fStream.write(getFullCSV(","));
                 fStream.flush();
                 fStream.close();
 
@@ -864,8 +891,8 @@ public class createScenario extends JPanel {
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                    .addGap(12, 12, 12)
+                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label2)
                         .addComponent(voteCountTxt)
