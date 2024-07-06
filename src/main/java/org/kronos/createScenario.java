@@ -746,6 +746,7 @@ public class createScenario extends JPanel {
             exportChooser.setFileFilter(filter);
         }
 
+        exportChooser.setSelectedFile(new File(scenarioTitleTxt.getText() + ".csv"));
         int res = exportChooser.showSaveDialog(null);
 
         if (res == JFileChooser.APPROVE_OPTION) {
