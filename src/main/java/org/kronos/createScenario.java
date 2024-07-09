@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -57,6 +58,64 @@ public class createScenario extends JPanel {
             parseScenario(file);
 
         initTable();
+
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (table1.getCellEditor() != null) {
+                    table1.getCellEditor().stopCellEditing();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        scrollPane1.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (table1.getCellEditor() != null) {
+                    table1.getCellEditor().stopCellEditing();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
 
         viewBtn.setText("<html> <b> Evaluate </b> </html>");
     }
@@ -132,6 +191,39 @@ public class createScenario extends JPanel {
             cbGroup[i].setSelectedIndex(-1); // for some reason not all comboboxes had 0 as index and they need to be init with blank (-1)
             final int currentBox = i;
             AtomicInteger oldSel = new AtomicInteger(-1);
+            AtomicBoolean isCursorInside = new AtomicBoolean(false);
+
+            cbGroup[currentBox].addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (isCursorInside.get()) {
+                        if (table1.getCellEditor() != null) {
+                            table1.getCellEditor().stopCellEditing();
+                            isCursorInside.set(false);
+                        }
+                    }
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    isCursorInside.set(true);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    isCursorInside.set(false);
+                }
+            });
 
             cbGroup[currentBox].addItemListener(e -> { // CAUTION! use ITEM LISTENER instead of ACTION LISTENER to track combobox changes!
 
