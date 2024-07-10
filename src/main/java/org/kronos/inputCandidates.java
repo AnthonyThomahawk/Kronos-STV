@@ -269,6 +269,9 @@ public class inputCandidates extends JPanel {
     }
 
     private void remBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         int numRows = table1.getSelectedRows().length;
         if (numRows != 0) {
             candidateCount -= numRows;
