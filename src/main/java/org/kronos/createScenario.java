@@ -188,6 +188,14 @@ public class createScenario extends JPanel {
 
             cbGroup[i] = new JComboBox(opts);
 
+            // remove combobox button
+            Component[] components = cbGroup[i].getComponents();
+            for (Component component : components) {
+                if (component instanceof AbstractButton) {
+                    cbGroup[i].remove(component);
+                }
+            }
+
             cbGroup[i].setSelectedIndex(-1); // for some reason not all comboboxes had 0 as index and they need to be init with blank (-1)
             final int currentBox = i;
             AtomicInteger oldSel = new AtomicInteger(-1);
