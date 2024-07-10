@@ -216,9 +216,7 @@ public class createScenario extends JPanel {
                         }
                     }
 
-                    if (table1.getSelectedColumn() != 0) {
-                        remBtn.setEnabled(true);
-                    }
+                    remBtn.setEnabled(true);
                 }
 
                 @Override
@@ -552,6 +550,8 @@ public class createScenario extends JPanel {
         int cols = dtm.getColumnCount();
 
         voteCountTxt.setText("Total : " + getBallotCount());
+
+        remBtn.setEnabled(table1.getSelectedRows().length != 0);
 
         if (scenarioTitleTxt.getText().isEmpty()) {
             label1.setText("<html>" + "<b> Alert : </b>" +
