@@ -215,6 +215,10 @@ public class createScenario extends JPanel {
                             isCursorInside.set(false);
                         }
                     }
+
+                    if (table1.getSelectedColumn() != 0) {
+                        remBtn.setEnabled(true);
+                    }
                 }
 
                 @Override
@@ -717,6 +721,9 @@ public class createScenario extends JPanel {
     }
 
     private void remBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         int numRows = table1.getSelectedRows().length;
         if (numRows != 0) {
             ballotCount -= numRows;
@@ -837,6 +844,9 @@ public class createScenario extends JPanel {
     }
 
     private void exportFileBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         if (exportChooser == null) {
             exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
