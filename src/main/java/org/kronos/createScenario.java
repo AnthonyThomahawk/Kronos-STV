@@ -533,11 +533,17 @@ public class createScenario extends JPanel {
     }
 
     private void customSeats(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         spinner1.setEnabled(customSeats.isSelected());
         unsaved = true;
     }
 
     private void spinner1StateChanged(ChangeEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         if ((Integer)spinner1.getValue() < 1) {
             spinner1.setValue(1);
         }
@@ -922,7 +928,10 @@ public class createScenario extends JPanel {
 
         //---- customSeats ----
         customSeats.setText("Seats");
-        customSeats.addActionListener(e -> customSeats(e));
+        customSeats.addActionListener(e -> {
+			customSeats(e);
+			customSeats(e);
+		});
 
         //---- spinner1 ----
         spinner1.addChangeListener(e -> spinner1StateChanged(e));

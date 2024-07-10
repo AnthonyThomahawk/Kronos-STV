@@ -29,6 +29,7 @@ new FormModel {
 				name: "customSeats"
 				"text": "Seats"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "customSeats", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "customSeats", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
 				name: "spinner1"
