@@ -730,6 +730,11 @@ public class createScenario extends JPanel {
     }
 
     private void remBtn(ActionEvent e) {
+        int res = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove ?", "Confirmation needed", JOptionPane.YES_NO_OPTION);
+
+        if (res == JOptionPane.NO_OPTION)
+            return;
+
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 

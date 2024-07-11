@@ -48,6 +48,8 @@ public class inputCandidates extends JPanel {
     }
 
     private void initTable() {
+        createBtn.setText("<html> <b> New scenario </b> </html>");
+
         remBtn.setEnabled(false);
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {"1", ""}
