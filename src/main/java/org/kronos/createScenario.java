@@ -777,17 +777,23 @@ public class createScenario extends JPanel {
         for (int i = 0; i < dtm.getRowCount(); i++) {
             for (int j = 1; j < dtm.getColumnCount(); j++) {
                 String val;
+                boolean dFlag;
                 if (j == dtm.getColumnCount()-1) {
                     val = Integer.toString((int)dtm.getValueAt(i,j));
+                    dFlag = false;
                 } else {
                     val = (String) dtm.getValueAt(i,j);
+                    dFlag = true;
                 }
 
                 if (val == null) {
                     val = "";
                 }
 
-                data += val + delim;
+                data += val;
+
+                if (dFlag)
+                    data += delim;
             }
 
             data += "\n";
@@ -833,24 +839,31 @@ public class createScenario extends JPanel {
     }
 
     private String getFullCSV(String delim) {
-        String data = getCSVString(delim);
-
-        data += "\n";
-
+        String data = "";
         for (int i = 1; i<= candidateCount; i++) {
-            data += "Candidate " + i + delim;
+            data += "Candidate " + i;
+            if (i != candidateCount)
+                data += delim;
         }
 
         data += "\n";
 
         for (int i = 0; i < candidates.length; i++) {
-            data += candidates[i] + delim;
+            data += candidates[i];
+            if (i != candidates.length-1) {
+                data += delim;
+            }
         }
+
+        data += "\n\n";
+
+        data += getCSVString(delim);
 
         data += "\n\n";
 
         data += "# Election : " + electionTitle + "\n";
         data += "# Scenario : " + scenarioTitleTxt.getText() + "\n";
+        data += "# Seats : " + spinner1.getValue() + " " + customSeats.isSelected() + "\n";
 
         String[] lines = notes.split("\n");
         for (String line : lines) {

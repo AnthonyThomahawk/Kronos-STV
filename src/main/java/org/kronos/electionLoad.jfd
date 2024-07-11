@@ -17,7 +17,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "loadElectionBtn"
-				"text": "Load election"
+				"text": "Load scenario"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadElectionBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {

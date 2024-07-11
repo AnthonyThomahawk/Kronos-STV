@@ -104,7 +104,7 @@ public class electionLoad extends JPanel {
         }
 
         //---- loadElectionBtn ----
-        loadElectionBtn.setText("Load election");
+        loadElectionBtn.setText("Load scenario");
         loadElectionBtn.addActionListener(e -> loadElectionBtn(e));
 
         //---- label1 ----

@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::0:x, seq {comp label1:::p::p, space :0:0:x}}, space :::p}, seq l {space :p:155:p, comp loadElectionBtn:::p:111:p, space ::154:x}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1:::p:307:p, space :p::p, comp loadElectionBtn::::31:x, space :p:8:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::0:x, seq {par l {comp label1:::p::p, seq l {comp importBtn:::p::p, space :p:75:p, comp loadElectionBtn:::p:111:p}}, space :0:150:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1:::p:307:p, space :p:8:p, par b {comp importBtn::b:p::p, comp loadElectionBtn::b::31:x}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -24,6 +24,10 @@ new FormModel {
 				name: "label1"
 				"text": "Available scenarios : "
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "importBtn"
+				"text": "Import"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

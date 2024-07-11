@@ -98,6 +98,7 @@ public class scenarioLoad extends JPanel {
         list1 = new JList();
         loadElectionBtn = new JButton();
         label1 = new JLabel();
+        importBtn = new JButton();
 
         //======== this ========
 
@@ -122,6 +123,9 @@ public class scenarioLoad extends JPanel {
         label1.setText("Available scenarios : ");
         label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 3f));
 
+        //---- importBtn ----
+        importBtn.setText("Import");
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,13 +135,14 @@ public class scenarioLoad extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label1)
-                            .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(layout.createParallelGroup()
+                                .addComponent(label1)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(importBtn)
+                                    .addGap(75, 75, 75)
+                                    .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)))
+                            .addGap(0, 150, Short.MAX_VALUE)))
                     .addContainerGap())
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(155, 155, 155)
-                    .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(154, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
@@ -146,9 +151,11 @@ public class scenarioLoad extends JPanel {
                     .addComponent(label1)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 307, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(loadElectionBtn, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                    .addGap(8, 8, 8))
+                    .addGap(8, 8, 8)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(importBtn)
+                        .addComponent(loadElectionBtn, GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                    .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -159,5 +166,6 @@ public class scenarioLoad extends JPanel {
     private JList list1;
     private JButton loadElectionBtn;
     private JLabel label1;
+    private JButton importBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
