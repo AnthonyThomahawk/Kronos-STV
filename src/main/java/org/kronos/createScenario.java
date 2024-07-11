@@ -429,6 +429,9 @@ public class createScenario extends JPanel {
     }
 
     private void addBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         ballotCount++;
         Object[] row = new Object[candidateCount+2];
@@ -808,6 +811,9 @@ public class createScenario extends JPanel {
     }
 
     private void viewNotesBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
         String oldNotes = notes;
         scenarioNotes sc = new scenarioNotes(notes);
         JDialog d = new JDialog(Main.mainFrame, "Notes - " + scenarioTitleTxt.getText(), true);
@@ -884,6 +890,11 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void scenarioTitleTxtMouseClicked(MouseEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -956,6 +967,14 @@ public class createScenario extends JPanel {
 
         //---- label2 ----
         label2.setText("Scenario title :");
+
+        //---- scenarioTitleTxt ----
+        scenarioTitleTxt.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                scenarioTitleTxtMouseClicked(e);
+            }
+        });
 
         //---- copyBtn ----
         copyBtn.setText("Copy");

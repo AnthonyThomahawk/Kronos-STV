@@ -38,7 +38,6 @@ public class inputCandidates extends JPanel {
         candidateCount = 1;
         candidates = new String[]{};
         initComponents();
-        //initLocale();
         initTable();
     }
 
@@ -71,6 +70,44 @@ public class inputCandidates extends JPanel {
                 if (table1.getSelectedRows().length != 0) {
                     remBtn.setEnabled(true);
                 }
+            }
+        });
+
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (table1.getCellEditor() != null) {
+                    table1.getCellEditor().stopCellEditing();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        scrollPane1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.isEditing())
+                    table1.getCellEditor().stopCellEditing();
             }
         });
 
@@ -342,6 +379,11 @@ public class inputCandidates extends JPanel {
         JOptionPane.showMessageDialog(null, "Election has been saved as " + fileName + " !", "Save successful", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    private void electionNameBoxMouseClicked(MouseEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -387,6 +429,14 @@ public class inputCandidates extends JPanel {
 
         //---- label3 ----
         label3.setText("Election name : ");
+
+        //---- electionNameBox ----
+        electionNameBox.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                electionNameBoxMouseClicked(e);
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);

@@ -46,6 +46,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "electionNameBox"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "electionNameBoxMouseClicked", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
