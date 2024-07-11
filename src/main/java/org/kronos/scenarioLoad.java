@@ -28,6 +28,8 @@ public class scenarioLoad extends JPanel {
     public scenarioLoad() {
         initComponents();
         initList();
+
+        loadElectionBtn.setText("<html><b>Load</b><html>");
     }
 
     private File[] scanWorkDirForScenarios() throws IOException {
@@ -65,6 +67,11 @@ public class scenarioLoad extends JPanel {
 
     private void loadElectionBtn(ActionEvent e) {
         int selectedIndex = list1.getSelectedIndex();
+
+        if (selectedIndex == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a file to load from the list.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         JSONParser parser = new JSONParser();
         try {

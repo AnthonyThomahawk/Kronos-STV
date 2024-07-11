@@ -22,6 +22,8 @@ public class electionLoad extends JPanel {
         initComponents();
 
         initList();
+
+        loadElectionBtn.setText("<html><b>Load</b><html>");
     }
 
     private File[] scanWorkDirForElections() throws IOException {
@@ -59,6 +61,11 @@ public class electionLoad extends JPanel {
 
     private void loadElectionBtn(ActionEvent e) {
         int selectedIndex = list1.getSelectedIndex();
+
+        if (selectedIndex == -1) {
+            JOptionPane.showMessageDialog(null, "Please select a file to load from the list.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         mainForm.openCandidatesForm(electionFiles[selectedIndex], "Edit election");
     }
