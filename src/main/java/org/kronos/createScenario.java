@@ -6,6 +6,7 @@ package org.kronos;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
+import org.omg.CORBA.Environment;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -545,7 +546,11 @@ public class createScenario extends JPanel {
 
         try {
             String evalExport = getFullCSV(",");
-            evalExport += "\n\n" + electionResults.stvInput;
+            evalExport += System.lineSeparator() + System.lineSeparator();;
+
+            for (String s : electionResults.stvInput.split(System.lineSeparator())) {
+                evalExport += "\"" + s + "\"" + System.lineSeparator();
+            }
 
             String eEName = generateUniqueFileName(Main.getWorkDir(), scenarioTitleTxt.getText() + "_eval", ".csv");
             File f = new File(Main.getWorkDir(), eEName);
@@ -802,7 +807,7 @@ public class createScenario extends JPanel {
                 data += "Counts";
             }
         }
-        data += "\n";
+        data += System.lineSeparator();;
 
         for (int i = 0; i < dtm.getRowCount(); i++) {
             for (int j = 1; j < dtm.getColumnCount(); j++) {
@@ -826,7 +831,7 @@ public class createScenario extends JPanel {
                     data += delim;
             }
 
-            data += "\n";
+            data += System.lineSeparator();
         }
 
         return data;
@@ -843,8 +848,8 @@ public class createScenario extends JPanel {
 
         String data = getCSVString("\t");
 
-        data = "Election : " + electionTitle + "\n" + data;
-        data = "Scenario : " + scenarioTitleTxt.getText() + "\n" + data;
+        data = "Election : " + electionTitle + System.lineSeparator() + data;
+        data = "Scenario : " + scenarioTitleTxt.getText() + System.lineSeparator() + data;
 
         StringSelection selection = new StringSelection(data);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
@@ -876,7 +881,7 @@ public class createScenario extends JPanel {
                 data += delim;
         }
 
-        data += "\n";
+        data += System.lineSeparator();
 
         for (int i = 0; i < candidates.length; i++) {
             data += candidates[i];
@@ -885,19 +890,19 @@ public class createScenario extends JPanel {
             }
         }
 
-        data += "\n\n";
+        data += System.lineSeparator() + System.lineSeparator();
 
         data += getCSVString(delim);
 
-        data += "\n\n";
+        data += System.lineSeparator() + System.lineSeparator();
 
-        data += "# Election : " + electionTitle + "\n";
-        data += "# Scenario : " + scenarioTitleTxt.getText() + "\n";
-        data += "# Seats : " + spinner1.getValue() + " " + customSeats.isSelected() + "\n";
+        data += "\"Election : " + electionTitle + "\"" + System.lineSeparator();
+        data += "\"Scenario : " + scenarioTitleTxt.getText() + "\"" + System.lineSeparator();
+        data += "\"Seats : " + spinner1.getValue() + " " + customSeats.isSelected() + "\"" + System.lineSeparator();
 
-        String[] lines = notes.split("\n");
+        String[] lines = notes.split(System.lineSeparator());
         for (String line : lines) {
-            data += "# " + line + "\n";
+            data += "\"" + line + "\"" + System.lineSeparator();
         }
 
         return data;
