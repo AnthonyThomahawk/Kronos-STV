@@ -913,7 +913,16 @@ public class createScenario extends JPanel {
             table1.getCellEditor().stopCellEditing();
 
         if (exportChooser == null) {
-            exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            try {
+                FileInputStream in = new FileInputStream("settings.xml");
+                Properties saveProps = new Properties();
+                saveProps.loadFromXML(in);
+                String path = saveProps.getProperty("exportDir");
+                exportChooser = new JFileChooser(path);
+            } catch (Exception x) {
+                exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            }
+
             FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
             exportChooser.setFileFilter(filter);
         }
@@ -933,6 +942,12 @@ public class createScenario extends JPanel {
                 fStream.write(getFullCSV(","));
                 fStream.flush();
                 fStream.close();
+
+                FileInputStream in = new FileInputStream("settings.xml");
+                Properties saveProps = new Properties();
+                saveProps.loadFromXML(in);
+                saveProps.setProperty("exportDir", exportChooser.getCurrentDirectory().toString());
+                saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
 
                 JOptionPane.showMessageDialog(null, "Scenario exported as : " + selectedFile.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
 

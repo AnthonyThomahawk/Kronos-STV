@@ -7,6 +7,7 @@ package org.kronos;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -112,7 +113,9 @@ public class SettingsUI extends JPanel {
         }
 
         try {
+            FileInputStream in = new FileInputStream("settings.xml");
             Properties saveProps = new Properties();
+            saveProps.loadFromXML(in);
             saveProps.setProperty("workDir", textField1.getText());
             saveProps.setProperty("theme", theme);
             saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
