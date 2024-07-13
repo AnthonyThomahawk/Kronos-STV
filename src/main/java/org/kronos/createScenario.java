@@ -546,7 +546,7 @@ public class createScenario extends JPanel {
 
         try {
             String evalExport = getFullCSV(",");
-            evalExport += System.lineSeparator() + System.lineSeparator();;
+            evalExport += System.lineSeparator() + System.lineSeparator();
 
             for (String s : electionResults.stvInput.split(System.lineSeparator())) {
                 evalExport += "\"" + s + "\"" + System.lineSeparator();
