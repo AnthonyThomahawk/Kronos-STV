@@ -900,7 +900,7 @@ public class createScenario extends JPanel {
         data += "\"Scenario : " + scenarioTitleTxt.getText() + "\"" + System.lineSeparator();
         data += "\"Seats : " + spinner1.getValue() + " " + customSeats.isSelected() + "\"" + System.lineSeparator();
 
-        String[] lines = notes.split(System.lineSeparator());
+        String[] lines = notes.split("\n");
         for (String line : lines) {
             data += "\"" + line + "\"" + System.lineSeparator();
         }
