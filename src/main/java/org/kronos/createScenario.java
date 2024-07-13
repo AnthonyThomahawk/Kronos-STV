@@ -510,6 +510,20 @@ public class createScenario extends JPanel {
         return stvOutput;
     }
 
+    public static String generateUniqueFileName(String directory, String baseName, String extension) {
+        String newName = baseName + extension;
+        File file = new File(directory, newName);
+        int counter = 1;
+
+        while (file.exists()) {
+            newName = baseName + "_" + counter + extension;
+            file = new File(directory, newName);
+            counter++;
+        }
+
+        return newName;
+    }
+
     private void viewBtn(ActionEvent e) {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
@@ -528,6 +542,22 @@ public class createScenario extends JPanel {
         ballotsFile.delete();
 
         JDialog j = new JDialog(Main.mainFrame, "Results", true);
+
+        try {
+            String evalExport = getFullCSV(",");
+            evalExport += "\n\n" + electionResults.stvInput;
+
+            String eEName = generateUniqueFileName(Main.getWorkDir(), scenarioTitleTxt.getText() + "_eval", ".csv");
+            File f = new File(Main.getWorkDir(), eEName);
+            OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
+            fStream.write(evalExport);
+            fStream.flush();
+            fStream.close();
+
+        } catch (Exception x) {
+            System.out.println(x);
+        };
+
         resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults);
         j.setContentPane(x);
         j.pack();
