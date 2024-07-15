@@ -10,7 +10,7 @@ new FormModel {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "createBtn"
-				"text": "New Scenario"
+				"text": "<html><b>New Scenario</b></html>"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "createBtn", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {

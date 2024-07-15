@@ -402,7 +402,7 @@ public class inputCandidates extends JPanel {
         //======== this ========
 
         //---- createBtn ----
-        createBtn.setText("New Scenario");
+        createBtn.setText("<html><b>New Scenario</b></html>");
         createBtn.addActionListener(e -> createBtn(e));
 
         //======== scrollPane1 ========
@@ -481,7 +481,7 @@ public class inputCandidates extends JPanel {
                         .addComponent(addBtn)
                         .addComponent(remBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(exportBtn)
-                        .addComponent(createBtn))
+                        .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
