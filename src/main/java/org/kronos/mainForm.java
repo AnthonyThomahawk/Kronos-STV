@@ -5,6 +5,7 @@
 package org.kronos;
 
 import jdk.nashorn.internal.runtime.ECMAException;
+import jdk.nashorn.internal.scripts.JD;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -33,8 +34,8 @@ public class mainForm extends JPanel {
     public void setIcons() {
         String[] iconLocations;
 
-        String[] darkIcons = {"plusIconDark.png", "darkFolder.png", "darkFolder.png", "gearDark.png"};
-        String[] lightIcons = {"plusicon24.png", "icons8-folder-24.png", "icons8-folder-24.png", "gearLight.png"};
+        String[] darkIcons = {"plusIconDark.png", "plusIconDark.png", "darkFolder.png", "darkFolder.png", "gearDark.png"};
+        String[] lightIcons = {"plusicon24.png", "plusicon24.png", "icons8-folder-24.png", "icons8-folder-24.png", "gearLight.png"};
 
         if (Main.getTheme().equals("system")) {
             if (DarkModeDetector.isDarkMode()) {
@@ -49,7 +50,7 @@ public class mainForm extends JPanel {
             iconLocations = lightIcons;
         }
 
-        JButton[] buttons = {startElectionBtn, loadElectionBtn, loadScenarioBtn, settingsBtn};
+        JButton[] buttons = {newInstituteBtn, startElectionBtn, loadElectionBtn, loadScenarioBtn, settingsBtn};
 
         try {
             for (int i = 0; i < iconLocations.length; i++) {
@@ -101,6 +102,15 @@ public class mainForm extends JPanel {
         j.pack();
         j.setLocationRelativeTo(null);
         j.setVisible(true);
+    }
+
+    public static void openInstituteForm(String title) {
+        JDialog instituteDlg = new JDialog(Main.mainFrame, title, true);
+
+        instituteDlg.setContentPane(new createInstitute());
+        instituteDlg.pack();
+        instituteDlg.setLocationRelativeTo(null);
+        instituteDlg.setVisible(true);
     }
 
     public static void openCandidatesForm(File inFile, String title) {
@@ -181,6 +191,10 @@ public class mainForm extends JPanel {
         settings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
+    private void newInstituteBtn(ActionEvent e) {
+        openInstituteForm("New institute");
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -194,6 +208,9 @@ public class mainForm extends JPanel {
         label6 = new JLabel();
         label7 = new JLabel();
         settingsBtn = new JButton();
+        newInstituteBtn = new JButton();
+        label8 = new JLabel();
+        label9 = new JLabel();
 
         //======== this ========
 
@@ -242,6 +259,20 @@ public class mainForm extends JPanel {
         settingsBtn.setFont(settingsBtn.getFont().deriveFont(settingsBtn.getFont().getSize() + 11f));
         settingsBtn.addActionListener(e -> settingsBtn(e));
 
+        //---- newInstituteBtn ----
+        newInstituteBtn.setIcon(null);
+        newInstituteBtn.setFont(newInstituteBtn.getFont().deriveFont(newInstituteBtn.getFont().getStyle() | Font.BOLD, newInstituteBtn.getFont().getSize() + 15f));
+        newInstituteBtn.addActionListener(e -> newInstituteBtn(e));
+
+        //---- label8 ----
+        label8.setText("New institute");
+        label8.setFont(label8.getFont().deriveFont(label8.getFont().getSize() + 13f));
+
+        //---- label9 ----
+        label9.setText("<html> <p align=\"justify\"> Suppy a list of departments to form an institute.</p> </html>");
+        label9.setFont(label9.getFont().deriveFont(label9.getFont().getSize() + 3f));
+        label9.setVerticalAlignment(SwingConstants.TOP);
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -250,52 +281,63 @@ public class mainForm extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label5)
-                            .addGap(1, 1, 1))
+                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 338, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(label7)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(label4)
-                            .addGap(14, 14, 14))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE)))
-                    .addGap(41, 41, 41))
-                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup()
+                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label6, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(label4, GroupLayout.PREFERRED_SIZE, 324, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 285, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(newInstituteBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label8, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(label9, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE))
+                            .addGap(0, 0, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
-                .addGroup(layout.createSequentialGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap()
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(newInstituteBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label8, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label9, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
                         .addComponent(startElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label4, GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(label3))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label5, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(loadScenarioBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
                         .addComponent(label6, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label7)
-                    .addGap(13, 13, 13)
+                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(27, Short.MAX_VALUE))
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(362, Short.MAX_VALUE)
                     .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap())
         );
@@ -314,5 +356,8 @@ public class mainForm extends JPanel {
     private JLabel label6;
     private JLabel label7;
     private JButton settingsBtn;
+    private JButton newInstituteBtn;
+    private JLabel label8;
+    private JLabel label9;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

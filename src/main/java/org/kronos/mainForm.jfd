@@ -4,14 +4,14 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :p::p, par l {seq l {comp label5:::::x, space :1:1:p}, seq l {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:272:p}, comp label7::l:::x, seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label6:::p:286:p}, seq l {comp label4:::::x, space :14:14:p}, seq {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:285:p}}, space :p:41:p}, seq t {space :::x, comp settingsBtn:::p:40:p, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, par l {comp startElectionBtn:::p:46:p, comp label2:::p:46:p}, space :p::p, comp label4::::34:x, space :p::p, par b {comp loadElectionBtn::b:p:46:p, comp label3::b:::x}, space :p::p, comp label5::::36:x, space :p::p, par b {comp loadScenarioBtn::b:p:46:p, comp label6::b:p:40:p}, space :p::p, comp label7:::::x, space :p:13:p, comp settingsBtn:::p:37:p, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq l {comp label7:::p:338:p, space :::x, comp settingsBtn:::p:40:p}, seq {par l {comp label5::l:p:337:p, seq l {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:272:p}, seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label6:::p:286:p}, comp label4::l:p:324:p, seq l {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:285:p}, seq {comp newInstituteBtn:::p:46:p, space :::p, comp label8:::p:272:p}, comp label9::l:p:337:p}, space :0:0:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, par l {comp newInstituteBtn:::p:46:p, comp label8:::p:46:p}, space :::p, comp label9:::p:36:p, space :::p, par l {comp startElectionBtn:::p:46:p, comp label2:::p:46:p}, space :p::p, comp label4:::p:34:p, space :p::p, par b {comp loadElectionBtn::b:p:46:p, comp label3::b:p::p}, space :p::p, comp label5:::p:36:p, space :p::p, par b {comp loadScenarioBtn::b:p:46:p, comp label6::b:p:40:p}, space :p::p, comp label7:::p::p, space ::27:x}, seq t {space ::362:x, comp settingsBtn:::p:37:p, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "startElectionBtn"
 				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
+				"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "startElectionBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -22,12 +22,12 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
 				"text": "New election"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
+				"font": &SwingDerivedFont1 new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
 				"text": "Load election"
-				"font": &SwingDerivedFont0 new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
+				"font": &SwingDerivedFont2 new com.jformdesigner.model.SwingDerivedFont( null, 0, 13, false )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
@@ -39,7 +39,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label5"
 				"text": "<html> <p align=\"justify\"> Load an election to edit and create scenarios.</p> </html>"
-				"font": &SwingDerivedFont1 new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
+				"font": &SwingDerivedFont3 new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
 				"verticalAlignment": 1
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -50,12 +50,12 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label6"
 				"text": "Load scenario"
-				"font": #SwingDerivedFont0
+				"font": #SwingDerivedFont2
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label7"
 				"text": "<html> <p align=\"justify\"> Load a scenario to edit and analyze. </p> </html>"
-				"font": #SwingDerivedFont1
+				"font": #SwingDerivedFont3
 				"verticalAlignment": 1
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -63,9 +63,26 @@ new FormModel {
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 11, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "settingsBtn", true ) )
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "newInstituteBtn"
+				"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				"font": #SwingDerivedFont0
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "newInstituteBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "New institute"
+				"font": #SwingDerivedFont1
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label9"
+				"text": "<html> <p align=\"justify\"> Suppy a list of departments to form an institute.</p> </html>"
+				"font": #SwingDerivedFont3
+				"verticalAlignment": 1
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 385, 340 )
+			"size": new java.awt.Dimension( 395, 405 )
 		} )
 	}
 }
