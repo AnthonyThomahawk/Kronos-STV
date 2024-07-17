@@ -4,9 +4,6 @@
 
 package org.kronos;
 
-import jdk.nashorn.internal.runtime.ECMAException;
-import jdk.nashorn.internal.scripts.JD;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -14,8 +11,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -104,7 +99,7 @@ public class mainForm extends JPanel {
         j.setVisible(true);
     }
 
-    public static void openInstituteForm(String title) {
+    public static void openInstitutionForm(String title) {
         JDialog instituteDlg = new JDialog(Main.mainFrame, title, true);
 
         instituteDlg.setContentPane(new createInstitute());
@@ -192,7 +187,7 @@ public class mainForm extends JPanel {
     }
 
     private void newInstituteBtn(ActionEvent e) {
-        openInstituteForm("New institute");
+        openInstitutionForm("New institution");
     }
 
     private void initComponents() {
@@ -265,11 +260,11 @@ public class mainForm extends JPanel {
         newInstituteBtn.addActionListener(e -> newInstituteBtn(e));
 
         //---- label8 ----
-        label8.setText("New institute");
+        label8.setText("New institution");
         label8.setFont(label8.getFont().deriveFont(label8.getFont().getSize() + 13f));
 
         //---- label9 ----
-        label9.setText("<html> <p align=\"justify\"> Suppy a list of departments to form an institute.</p> </html>");
+        label9.setText("<html> <p align=\"justify\"> Suppy a list of departments to form an institution.</p> </html>");
         label9.setFont(label9.getFont().deriveFont(label9.getFont().getSize() + 3f));
         label9.setVerticalAlignment(SwingConstants.TOP);
 

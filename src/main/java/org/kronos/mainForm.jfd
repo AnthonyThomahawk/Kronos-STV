@@ -71,12 +71,12 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label8"
-				"text": "New institute"
+				"text": "New institution"
 				"font": #SwingDerivedFont1
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label9"
-				"text": "<html> <p align=\"justify\"> Suppy a list of departments to form an institute.</p> </html>"
+				"text": "<html> <p align=\"justify\"> Suppy a list of departments to form an institution.</p> </html>"
 				"font": #SwingDerivedFont3
 				"verticalAlignment": 1
 			} )
