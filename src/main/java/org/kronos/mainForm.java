@@ -113,7 +113,7 @@ public class mainForm extends JPanel {
         JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, title, true);
 
         if (inFile != null) inputCandidatesObj = new inputCandidates(inFile);
-        else inputCandidatesObj = new inputCandidates();
+        else inputCandidatesObj = new inputCandidates(false);
 
         inputCandidatesDlg.setContentPane(inputCandidatesObj);
         inputCandidatesDlg.pack();

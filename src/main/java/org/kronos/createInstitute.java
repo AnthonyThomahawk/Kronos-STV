@@ -4,7 +4,15 @@
 
 package org.kronos;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.awt.event.*;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
@@ -185,6 +193,60 @@ public class createInstitute extends JPanel {
         remBtn.setEnabled(table1.getSelectedRows().length != 0);
     }
 
+    public void saveChanges() {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        if (!updateStatus()) {
+            JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
+            return;
+        }
+
+        if (!Main.checkConfig())
+            return;
+
+        try {
+            String workDir = Main.getWorkDir();
+
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String filePath = workDir + fileSeperator + iName.getText() + ".institution";
+
+            JSONObject institution = new JSONObject();
+            institution.put("Name", iName.getText());
+            institution.put("Quota", dQuota.getValue());
+
+            JSONArray depts = new JSONArray();
+
+            DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                JSONArray dept = new JSONArray();
+
+                dept.add(dtm.getValueAt(i, 1)); // Department name
+                dept.add(dtm.getValueAt(i,2)); // Department strength
+
+                depts.add(dept);
+            }
+
+            institution.put("Departments", depts);
+
+            OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
+            file.write(institution.toJSONString());
+            file.close();
+
+            unsaved = false;
+
+            JOptionPane.showMessageDialog(null, "Institution '" + iName.getText() + "' has been saved!");
+
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(null, "Error saving institution", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void saveBtn(ActionEvent e) {
+        saveChanges();
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -238,6 +300,7 @@ public class createInstitute extends JPanel {
 
         //---- saveBtn ----
         saveBtn.setText("Save");
+        saveBtn.addActionListener(e -> saveBtn(e));
 
         //---- newElecBtn ----
         newElecBtn.setText("<html><b>New election</b></html>");

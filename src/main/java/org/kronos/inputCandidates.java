@@ -34,10 +34,13 @@ public class inputCandidates extends JPanel {
     public static int candidateCount = 1;
     public static String[] candidates = {};
     public static boolean unsaved = false;
-    public inputCandidates() {
+    private boolean departamental = false;
+
+    public inputCandidates(boolean b) {
         candidateCount = 1;
         candidates = new String[]{};
         initComponents();
+        departamental = b;
         initTable();
     }
 
@@ -51,6 +54,19 @@ public class inputCandidates extends JPanel {
         createBtn.setText("<html> <b> New scenario </b> </html>");
 
         remBtn.setEnabled(false);
+
+        Object[][] rows;
+        Object[] cols;
+
+        if (!departamental) {
+            rows = new Object[][] {{"1", ""}};
+            cols = new String[] {"#", "Candidate name"};
+        } else {
+            rows = new Object[][] {{"1", "", null}};
+            cols = new String[] {"#", "Candidate name", "Department"};
+        }
+
+
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {"1", ""}
         }, new String[] {

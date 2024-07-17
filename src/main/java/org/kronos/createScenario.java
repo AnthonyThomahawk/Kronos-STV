@@ -6,7 +6,6 @@ package org.kronos;
 
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
-import org.omg.CORBA.Environment;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -691,7 +690,7 @@ public class createScenario extends JPanel {
         return true;
     }
 
-    public String saveChanges() throws OpenDataException {
+    public void saveChanges() throws OpenDataException {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
@@ -701,7 +700,7 @@ public class createScenario extends JPanel {
         }
 
         if (!Main.checkConfig())
-            return null;
+            return;
 
         try {
             String workDir = Main.getWorkDir();
@@ -754,7 +753,6 @@ public class createScenario extends JPanel {
             JOptionPane.showMessageDialog(null, "Error saving scenario", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        return null;
     }
 
 
