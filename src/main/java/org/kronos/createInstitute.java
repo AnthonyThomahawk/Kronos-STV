@@ -36,7 +36,7 @@ public class createInstitute extends JPanel {
         columnTypes[2] = Integer.class;
 
         table1.setModel(new DefaultTableModel(new Object[][] {
-                {1, "", ""}
+                {1, "", null}
         }, new String[] {
                 "#", "Department name", "Strength"
         })
