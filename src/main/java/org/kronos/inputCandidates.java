@@ -35,8 +35,10 @@ public class inputCandidates extends JPanel {
     public static String[] candidates = {};
     public static boolean unsaved = false;
     private boolean departamental = false;
+    private String[] departmentNames;
+    private int[] departmentStrengths;
 
-    public inputCandidates(boolean b) {
+    public inputCandidates(boolean b, String dFile) {
         candidateCount = 1;
         candidates = new String[]{};
         initComponents();
@@ -67,11 +69,7 @@ public class inputCandidates extends JPanel {
         }
 
 
-        table1.setModel(new DefaultTableModel(new Object[][] {
-                {"1", ""}
-        }, new String[] {
-                "#", "Candidate name"
-        })
+        table1.setModel(new DefaultTableModel(rows, cols)
         {
 
             @Override
