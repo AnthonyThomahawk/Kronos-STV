@@ -171,12 +171,9 @@ public class inputCandidates extends JPanel {
 
         updateStatus();
 
-        table1.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                unsaved = true;
-                updateStatus();
-            }
+        table1.getModel().addTableModelListener(e -> {
+            unsaved = true;
+            updateStatus();
         });
 
         electionNameBox.getDocument().addDocumentListener(new DocumentListener() {
