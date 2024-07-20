@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import javax.management.openmbean.OpenDataException;
@@ -16,10 +17,9 @@ import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.EventObject;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -37,6 +38,8 @@ public class inputCandidates extends JPanel {
     private boolean departamental = false;
     private String[] departmentNames;
     private int[] departmentStrengths;
+    private int instituteQuota = -1;
+    private JComboBox[] departmentBoxes;
 
     public inputCandidates(boolean b, String dFile) {
         candidateCount = 1;
@@ -46,7 +49,7 @@ public class inputCandidates extends JPanel {
 
         if (b && dFile != null) {
             try {
-                initDepartments(dFile);
+                parseDepartments(dFile);
             } catch (Exception x){
                 System.out.print(x);
             }
@@ -61,7 +64,7 @@ public class inputCandidates extends JPanel {
         populateTableFromFile(inFile);
     }
 
-    private void initDepartments(String f) throws IOException, ParseException {
+    private void parseDepartments(String f) throws IOException, ParseException {
         File file = new File(f);
         JSONParser parser = new JSONParser();
         JSONObject depts = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(file.getAbsoluteFile().toPath()), StandardCharsets.UTF_8));
@@ -79,6 +82,18 @@ public class inputCandidates extends JPanel {
             departmentStrengths[i] = l.intValue();
             i++;
         }
+
+        instituteQuota = Integer.parseInt((String) depts.get("Quota"));
+    }
+
+    private JComboBox[] createDeptBoxes() {
+        JComboBox[] arr = new JComboBox[departmentNames.length];
+
+        for (int i = 0; i < departmentNames.length; i++) {
+            arr[i] = new JComboBox(departmentNames);
+        }
+
+        return arr;
     }
 
     private void initTable() {
@@ -97,15 +112,40 @@ public class inputCandidates extends JPanel {
             cols = new String[] {"#", "Candidate name", "Department"};
         }
 
+        if (departamental) {
+            departmentBoxes = createDeptBoxes();
+
+            table1 = new JTable() {
+                @Override
+                public TableCellEditor getCellEditor(int row, int column) {
+                    if (column == 2){
+                        return new DefaultCellEditor(departmentBoxes[row]);
+                    }
+                    return super.getCellEditor(row, column);
+                }
+            };
+
+            scrollPane1.setViewportView(table1);
+        }
+
 
         table1.setModel(new DefaultTableModel(rows, cols)
         {
-
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return Integer.class;
+                    case 1:
+                        return String.class;
+                    default:
+                        return Object.class;
+                }
+            }
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return columnIndex != 0;
             }
-
         });
 
         table1.addMouseListener(new MouseAdapter() {
@@ -161,6 +201,9 @@ public class inputCandidates extends JPanel {
         table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
+        if (departamental)
+            table1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+
         table1.setShowHorizontalLines(true);
         table1.setShowVerticalLines(true);
         table1.setColumnSelectionAllowed(false);
@@ -215,18 +258,6 @@ public class inputCandidates extends JPanel {
             JOptionPane.showMessageDialog(null, "This election file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
             mainForm.stopLoadingForm = true;
         }
-    }
-
-    private void initLocale() {
-        Locale currentLocale;
-
-        currentLocale = Locale.ENGLISH;
-
-        //currentLocale = new Locale("gr", "GR");
-
-        ResourceBundle messages = ResourceBundle.getBundle("messages", currentLocale, new UTF8Control());
-
-        createBtn.setText(messages.getString("create"));
     }
 
     private boolean updateStatus() {
