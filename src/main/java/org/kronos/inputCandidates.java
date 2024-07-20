@@ -4,10 +4,10 @@
 
 package org.kronos;
 
-import jdk.nashorn.internal.scripts.JO;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 import java.awt.event.*;
 import java.beans.*;
@@ -43,6 +43,15 @@ public class inputCandidates extends JPanel {
         candidates = new String[]{};
         initComponents();
         departamental = b;
+
+        if (b && dFile != null) {
+            try {
+                initDepartments(dFile);
+            } catch (Exception x){
+                System.out.print(x);
+            }
+        }
+
         initTable();
     }
 
@@ -50,6 +59,26 @@ public class inputCandidates extends JPanel {
         initComponents();
         initTable();
         populateTableFromFile(inFile);
+    }
+
+    private void initDepartments(String f) throws IOException, ParseException {
+        File file = new File(f);
+        JSONParser parser = new JSONParser();
+        JSONObject depts = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(file.getAbsoluteFile().toPath()), StandardCharsets.UTF_8));
+
+        JSONArray dArr = (JSONArray) depts.get("Departments");
+
+        departmentNames = new String[dArr.size()];
+        departmentStrengths = new int[dArr.size()];
+
+        int i = 0;
+        for (Object o : dArr) {
+            JSONArray dept = (JSONArray) o;
+            departmentNames[i] = (String) dept.get(0);
+            Long l = (long) dept.get(1);
+            departmentStrengths[i] = l.intValue();
+            i++;
+        }
     }
 
     private void initTable() {

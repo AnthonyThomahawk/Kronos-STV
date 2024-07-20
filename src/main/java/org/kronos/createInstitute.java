@@ -193,17 +193,17 @@ public class createInstitute extends JPanel {
         remBtn.setEnabled(table1.getSelectedRows().length != 0);
     }
 
-    public void saveChanges() {
+    public String saveChanges() {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
         if (!updateStatus()) {
             JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
-            return;
+            return null;
         }
 
         if (!Main.checkConfig())
-            return;
+            return null;
 
         try {
             String workDir = Main.getWorkDir();
@@ -236,15 +236,21 @@ public class createInstitute extends JPanel {
 
             unsaved = false;
 
-            JOptionPane.showMessageDialog(null, "Institution '" + iName.getText() + "' has been saved!");
+            return filePath;
 
         } catch (Exception x) {
             JOptionPane.showMessageDialog(null, "Error saving institution", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
     }
 
     private void saveBtn(ActionEvent e) {
         saveChanges();
+        JOptionPane.showMessageDialog(null, "Institution '" + iName.getText() + "' has been saved!");
+    }
+
+    private void newElecBtn(ActionEvent e) {
+        mainForm.openDeptCandidatesForm(saveChanges(), "New scenario");
     }
 
     private void initComponents() {
@@ -304,6 +310,7 @@ public class createInstitute extends JPanel {
 
         //---- newElecBtn ----
         newElecBtn.setText("<html><b>New election</b></html>");
+        newElecBtn.addActionListener(e -> newElecBtn(e));
 
         //---- label4 ----
         label4.setText("<html> <i> * Defines the max number of electable candidates for each department </i> </html>");

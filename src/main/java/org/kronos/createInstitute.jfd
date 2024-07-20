@@ -52,6 +52,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "newElecBtn"
 				"text": "<html><b>New election</b></html>"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "newElecBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"

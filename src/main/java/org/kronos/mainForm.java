@@ -134,6 +134,31 @@ public class mainForm extends JPanel {
             inputCandidatesDlg.dispose();
     }
 
+    public static void openDeptCandidatesForm(String dFile, String title) {
+        stopLoadingForm = false;
+        JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, title, true);
+
+        inputCandidatesObj = new inputCandidates(true, dFile);
+
+        inputCandidatesDlg.setContentPane(inputCandidatesObj);
+        inputCandidatesDlg.pack();
+        inputCandidatesDlg.setLocationRelativeTo(null);
+        inputCandidatesDlg.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+
+                safeClose(inputCandidatesDlg, inputCandidates.class, inputCandidatesObj);
+            }
+        });
+        inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        if (!stopLoadingForm)
+            inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
+        else
+            inputCandidatesDlg.dispose();
+    }
+
     public static void openScenarioForm(File inFile, String title) {
         stopLoadingForm = false;
         JDialog createBallotsDlg = new JDialog(Main.mainFrame, title, true);
