@@ -96,6 +96,25 @@ public class createInstitute extends JPanel {
                 updateStatus();
             }
         });
+
+        table1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.getSelectedRows().length != 0) {
+                    remBtn.setEnabled(true);
+                }
+            }
+        });
+
+        scrollPane1.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.isEditing())
+                    table1.getCellEditor().stopCellEditing();
+            }
+        });
     }
 
     private boolean updateStatus() {
@@ -109,7 +128,6 @@ public class createInstitute extends JPanel {
 
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
-        int cols = dtm.getColumnCount();
 
         for (int i = 0; i < rows; i++) {
             String dName = (String) dtm.getValueAt(i, 1);

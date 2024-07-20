@@ -118,7 +118,7 @@ public class inputCandidates extends JPanel {
             table1 = new JTable() {
                 @Override
                 public TableCellEditor getCellEditor(int row, int column) {
-                    if (column == 2){
+                    if (column == 2) {
                         return new DefaultCellEditor(departmentBoxes[row]);
                     }
                     return super.getCellEditor(row, column);
