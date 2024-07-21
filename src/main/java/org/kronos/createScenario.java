@@ -596,6 +596,11 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void deleteFile(String filename) {
+        File f = new File(filename);
+        f.delete();
+    }
+
     private String generateOutput(String inputFile) {
         STVpy stv = new STVpy();
         String stvOutput;
@@ -662,8 +667,10 @@ public class createScenario extends JPanel {
         else
             electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
 
-        File ballotsFile = new File("b1.csv");
-        ballotsFile.delete();
+       deleteFile("b1.csv");
+
+       if (departmental)
+           deleteFile("c1.csv");
 
         JDialog j = new JDialog(Main.mainFrame, "Results", true);
 
