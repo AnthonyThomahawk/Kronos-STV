@@ -9,7 +9,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-import java.awt.*;
 import java.awt.event.*;
 import java.beans.*;
 import javax.management.openmbean.OpenDataException;
@@ -26,10 +25,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.EventObject;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class inputCandidates extends JPanel {
     public static int candidateCount = 1;
@@ -39,7 +35,7 @@ public class inputCandidates extends JPanel {
     private String[] departmentNames;
     private int[] departmentStrengths;
     private int instituteQuota = -1;
-    private JComboBox[] departmentBoxes;
+    private ArrayList<JComboBox> departmentBoxes;
 
     public inputCandidates(boolean b, String dFile) {
         candidateCount = 1;
@@ -83,17 +79,23 @@ public class inputCandidates extends JPanel {
             i++;
         }
 
-        instituteQuota = Integer.parseInt((String) depts.get("Quota"));
+        Long quota = (long) depts.get("Quota");
+        instituteQuota = quota.intValue();
     }
 
-    private JComboBox[] createDeptBoxes() {
-        JComboBox[] arr = new JComboBox[departmentNames.length];
+    private ArrayList<JComboBox> createDeptBoxes(ArrayList<JComboBox> old, int size) {
+        ArrayList<JComboBox> list = new ArrayList<>();
 
-        for (int i = 0; i < departmentNames.length; i++) {
-            arr[i] = new JComboBox(departmentNames);
+        for (int i = 0; i < size; i++) {
+            if (old != null && i < old.size()) {
+                list.add(old.get(i));
+            } else {
+                list.add(new JComboBox(departmentNames));
+                list.get(i).setSelectedIndex(-1);
+            }
         }
 
-        return arr;
+        return list;
     }
 
     private void initTable() {
@@ -113,13 +115,13 @@ public class inputCandidates extends JPanel {
         }
 
         if (departamental) {
-            departmentBoxes = createDeptBoxes();
+            departmentBoxes = createDeptBoxes(null, 1);
 
             table1 = new JTable() {
                 @Override
                 public TableCellEditor getCellEditor(int row, int column) {
                     if (column == 2) {
-                        return new DefaultCellEditor(departmentBoxes[row]);
+                        return new DefaultCellEditor(departmentBoxes.get(row));
                     }
                     return super.getCellEditor(row, column);
                 }
@@ -339,6 +341,19 @@ public class inputCandidates extends JPanel {
             }
         }
 
+        // department check (if election is departmental)
+        if (departamental) {
+            for (int i = 0; i < rows; i++) {
+                if (departmentBoxes.get(i).getSelectedIndex() == -1) {
+                    label2.setText("<html>" + "<b> Alert : </b>" +
+                            "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " is not assigned to a department.</b>" +"</html>");
+                    createBtn.setEnabled(false);
+                    exportBtn.setEnabled(false);
+                    return false;
+                }
+            }
+        }
+
         label2.setText("<html><b> Status : </b><br> <b style=\"color:GREEN;\">OK</b></html>");
         createBtn.setEnabled(true);
         exportBtn.setEnabled(true);
@@ -369,7 +384,9 @@ public class inputCandidates extends JPanel {
     private void addBtn(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         candidateCount++;
-        model.addRow(new Object[]{candidateCount, ""});
+        if (departamental)
+            departmentBoxes = createDeptBoxes(departmentBoxes, model.getRowCount() + 1);
+        model.addRow(new Object[]{candidateCount, "", null});
         table1.requestFocus();
         table1.editCellAt(candidateCount-1, 1);
     }
@@ -387,7 +404,10 @@ public class inputCandidates extends JPanel {
             candidateCount -= numRows;
             DefaultTableModel m = (DefaultTableModel) table1.getModel();
             for (int i = 0; i < numRows; i++) {
-                m.removeRow(table1.getSelectedRow());
+                int r = table1.getSelectedRow();
+                if (departamental)
+                    departmentBoxes.remove(r);
+                m.removeRow(r);
             }
             for (int i = 0; i < m.getRowCount(); i++) {
                 m.setValueAt(i+1, i, 0);
