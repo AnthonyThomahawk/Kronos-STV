@@ -51,6 +51,7 @@ public class createScenario extends JPanel {
     private int instituteQuota = -1;
     private String[] departmentNames;
     private int[] departmentStrengths;
+    private int[] candidateDepartments;
 
     public createScenario(String file, boolean scenario) {
         initComponents();
@@ -154,9 +155,24 @@ public class createScenario extends JPanel {
                     departmentStrengths[i] = dS.intValue();
                 }
 
+                JSONArray cDepts = (JSONArray) election.get("CandidateDepartments");
+                candidateDepartments = new int[cDepts.size()];
+
+                for (int i = 0; i < cDepts.size(); i++) {
+                    Long x = (long) cDepts.get(i);
+                    candidateDepartments[i] = x.intValue();
+                }
+
             } else {
                 departmental = false;
             }
+
+            if (departmental) {
+                label3.setText("<html> <b>Institution : </b>" + instituteName + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<html> <b>Election :  </b>" + electionTitle + "</html>");
+            } else {
+                label3.setText("<html> (Independent election) <b>Election : </b>" + electionTitle + "</html>");
+            }
+
         } catch (Exception ignored) {}
     }
 
@@ -217,8 +233,22 @@ public class createScenario extends JPanel {
                     departmentStrengths[i] = dS.intValue();
                 }
 
+                JSONArray cDepts = (JSONArray) scenario.get("CandidateDepartments");
+                candidateDepartments = new int[cDepts.size()];
+
+                for (int i = 0; i < cDepts.size(); i++) {
+                    Long x = (long) cDepts.get(i);
+                    candidateDepartments[i] = x.intValue();
+                }
+
             } else {
                 departmental = false;
+            }
+
+            if (departmental) {
+                label3.setText("<html> <b>Institution : </b>" + instituteName + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<html> <b>Election :  </b>" + electionTitle + "</html>");
+            } else {
+                label3.setText("<html> (Independent election) <b>Election : </b>" + electionTitle + "</html>");
             }
 
         } catch (Exception e) {
@@ -541,6 +571,31 @@ public class createScenario extends JPanel {
         }
     }
 
+    private void generateConstituencyFile(String filename) {
+        try {
+            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+
+            for (int i = 0; i < departmentNames.length; i++) {
+                String line = departmentNames[i] + "," + departmentStrengths[i];
+
+                for (int j = 0; j < candidates.length; j++) {
+                    if (i == candidateDepartments[j]) {
+                        line += ",";
+                        line += candidates[j];
+                    }
+                }
+
+                out.println(line);
+            }
+
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     private String generateOutput(String inputFile) {
         STVpy stv = new STVpy();
         String stvOutput;
@@ -549,6 +604,22 @@ public class createScenario extends JPanel {
                 stvOutput = stv.callSTV(inputFile, (Integer)spinner1.getValue());
             } else {
                 stvOutput = stv.callSTV(inputFile);
+            }
+        } catch (Exception x) {
+            return null;
+        }
+
+        return stvOutput;
+    }
+
+    private String generateOutput(String ballotsFile, String constituenciesFile) {
+        STVpy stv = new STVpy();
+        String stvOutput;
+        try {
+            if (customSeats.isSelected()) {
+                stvOutput = stv.callSTV(ballotsFile, (Integer)spinner1.getValue(), constituenciesFile, instituteQuota);
+            } else {
+                stvOutput = stv.callSTV(ballotsFile, constituenciesFile, instituteQuota);
             }
         } catch (Exception x) {
             return null;
@@ -583,7 +654,13 @@ public class createScenario extends JPanel {
 
         generateBallotFile("b1.csv");
 
-        electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
+        if (departmental)
+            generateConstituencyFile("c1.csv");
+
+        if (departmental)
+            electionResults = new STVResults(generateOutput("b1.csv", "c1.csv"), ballotCount);
+        else
+            electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
 
         File ballotsFile = new File("b1.csv");
         ballotsFile.delete();
@@ -803,6 +880,14 @@ public class createScenario extends JPanel {
                 }
 
                 scenario.put("Departments", depts);
+
+                JSONArray cDepts = new JSONArray();
+
+                for (int candidateDepartment : candidateDepartments) {
+                    cDepts.add(candidateDepartment);
+                }
+
+                scenario.put("CandidateDepartments", cDepts);
             }
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
@@ -1042,6 +1127,7 @@ public class createScenario extends JPanel {
         copyBtn = new JButton();
         viewNotesBtn = new JButton();
         exportFileBtn = new JButton();
+        label3 = new JLabel();
 
         //======== this ========
 
@@ -1117,6 +1203,12 @@ public class createScenario extends JPanel {
         exportFileBtn.setText("Export");
         exportFileBtn.addActionListener(e -> exportFileBtn(e));
 
+        //---- label3 ----
+        label3.setText("text");
+        label3.setVerticalAlignment(SwingConstants.BOTTOM);
+        label3.setHorizontalAlignment(SwingConstants.RIGHT);
+        label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 3f));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -1146,24 +1238,34 @@ public class createScenario extends JPanel {
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label2)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(scenarioTitleTxt, GroupLayout.DEFAULT_SIZE, 813, Short.MAX_VALUE)
+                            .addComponent(scenarioTitleTxt, GroupLayout.DEFAULT_SIZE, 928, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label1, GroupLayout.PREFERRED_SIZE, 504, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(label3, GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 109, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(label1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(voteCountTxt, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(label1, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 2, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(0, 1, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(voteCountTxt)
+                                .addComponent(label3, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)))
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label2)
-                        .addComponent(voteCountTxt)
                         .addComponent(scenarioTitleTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGap(7, 7, 7)
-                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
@@ -1197,5 +1299,6 @@ public class createScenario extends JPanel {
     private JButton copyBtn;
     private JButton viewNotesBtn;
     private JButton exportFileBtn;
+    private JLabel label3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

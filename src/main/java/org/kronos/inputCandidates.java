@@ -454,6 +454,14 @@ public class inputCandidates extends JPanel {
                     depts.add(d);
                 }
                 election.put("Departments", depts);
+
+                JSONArray cDepts = new JSONArray();
+
+                for (int i = 0; i < departmentBoxes.size(); i++) {
+                   cDepts.add(departmentBoxes.get(i).getSelectedIndex());
+                }
+
+                election.put("CandidateDepartments", cDepts);
             }
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);

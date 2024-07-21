@@ -11,12 +11,12 @@ public class STVpy {
         CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG");
         return py.run();
     }
-    public String callSTV(String ballotFile, String constituencyFile) throws Exception {
-        CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG", "-c", constituencyFile);
+    public String callSTV(String ballotFile, String constituencyFile, int quota) throws Exception {
+        CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG", "-c", constituencyFile, "-q", Integer.toString(quota));
         return py.run();
     }
-    public String callSTV(String ballotFile, int seats, String constituencyFile) throws Exception {
-        CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG", "-s", Integer.toString(seats), "-c", constituencyFile);
+    public String callSTV(String ballotFile, int seats, String constituencyFile, int quota) throws Exception {
+        CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG", "-s", Integer.toString(seats), "-c", constituencyFile, "-q", Integer.toString(quota));
         return py.run();
     }
 }
