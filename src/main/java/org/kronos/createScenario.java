@@ -46,6 +46,11 @@ public class createScenario extends JPanel {
     private int candidateCount;
     private String notes = "";
     private static JFileChooser exportChooser;
+    private boolean departmental = false;
+    private String instituteName = "";
+    private int instituteQuota = -1;
+    private String[] departmentNames;
+    private int[] departmentStrengths;
 
     public createScenario(String file, boolean scenario) {
         initComponents();
@@ -131,6 +136,27 @@ public class createScenario extends JPanel {
             jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
             candidates = cList.toArray(new String[0]);
             candidateCount = candidates.length;
+
+            if (election.containsKey("InstituteName")) {
+                departmental = true;
+                instituteName = (String) election.get("InstituteName");
+                Long l = (long) election.get("InstituteQuota");
+                instituteQuota = l.intValue();
+                JSONArray depts = (JSONArray) election.get("Departments");
+
+                departmentNames = new String[depts.size()];
+                departmentStrengths = new int[depts.size()];
+
+                for (int i = 0; i < depts.size(); i++) {
+                    JSONArray dept = (JSONArray) depts.get(i);
+                    departmentNames[i] = (String) dept.get(0);
+                    Long dQ = (long) dept.get(1);
+                    departmentStrengths[i] = dQ.intValue();
+                }
+
+            } else {
+                departmental = false;
+            }
         } catch (Exception ignored) {}
     }
 
