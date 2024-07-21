@@ -577,11 +577,11 @@ public class createScenario extends JPanel {
             PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
 
             for (int i = 0; i < departmentNames.length; i++) {
-                String line = departmentNames[i] + "," + departmentStrengths[i];
+                String line = departmentNames[i] + ", " + departmentStrengths[i];
 
                 for (int j = 0; j < candidates.length; j++) {
                     if (i == candidateDepartments[j]) {
-                        line += ",";
+                        line += ", ";
                         line += candidates[j];
                     }
                 }
