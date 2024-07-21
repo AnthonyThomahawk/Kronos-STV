@@ -150,8 +150,8 @@ public class createScenario extends JPanel {
                 for (int i = 0; i < depts.size(); i++) {
                     JSONArray dept = (JSONArray) depts.get(i);
                     departmentNames[i] = (String) dept.get(0);
-                    Long dQ = (long) dept.get(1);
-                    departmentStrengths[i] = dQ.intValue();
+                    Long dS = (long) dept.get(1);
+                    departmentStrengths[i] = dS.intValue();
                 }
 
             } else {
@@ -199,6 +199,27 @@ public class createScenario extends JPanel {
             notes = (String) scenario.get("Notes");
 
             scenarioTitleTxt.setText((String) scenario.get("ScenarioTitle"));
+
+            if (scenario.containsKey("InstituteName")) {
+                departmental = true;
+                instituteName = (String) scenario.get("InstituteName");
+                Long l = (long) scenario.get("InstituteQuota");
+                instituteQuota = l.intValue();
+                JSONArray depts = (JSONArray) scenario.get("Departments");
+
+                departmentNames = new String[depts.size()];
+                departmentStrengths = new int[depts.size()];
+
+                for (int i = 0; i < depts.size(); i++) {
+                    JSONArray dept = (JSONArray) depts.get(i);
+                    departmentNames[i] = (String) dept.get(0);
+                    Long dS = (long) dept.get(1);
+                    departmentStrengths[i] = dS.intValue();
+                }
+
+            } else {
+                departmental = false;
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -767,6 +788,22 @@ public class createScenario extends JPanel {
             scenario.put("Seats", spinner1.getValue());
             scenario.put("EnforceSeats", customSeats.isSelected());
             scenario.put("Notes", notes);
+
+            if (departmental) {
+                scenario.put("InstituteName", instituteName);
+                scenario.put("InstituteQuota", instituteQuota);
+
+                JSONArray depts = new JSONArray();
+
+                for (int i = 0; i < departmentNames.length; i++) {
+                    JSONArray dept = new JSONArray();
+                    dept.add(departmentNames[i]);
+                    dept.add(departmentStrengths[i]);
+                    depts.add(dept);
+                }
+
+                scenario.put("Departments", depts);
+            }
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
             file.write(scenario.toJSONString());
