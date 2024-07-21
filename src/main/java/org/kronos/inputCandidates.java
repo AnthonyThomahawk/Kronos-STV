@@ -31,17 +31,18 @@ public class inputCandidates extends JPanel {
     public static int candidateCount = 1;
     public static String[] candidates = {};
     public static boolean unsaved = false;
-    private boolean departamental = false;
+    private boolean departmental = false;
     private String[] departmentNames;
     private int[] departmentStrengths;
     private int instituteQuota = -1;
+    private String instituteName = "";
     private ArrayList<JComboBox> departmentBoxes;
 
     public inputCandidates(boolean b, String dFile) {
         candidateCount = 1;
         candidates = new String[]{};
         initComponents();
-        departamental = b;
+        departmental = b;
 
         if (b && dFile != null) {
             try {
@@ -81,6 +82,8 @@ public class inputCandidates extends JPanel {
 
         Long quota = (long) depts.get("Quota");
         instituteQuota = quota.intValue();
+
+        instituteName = (String) depts.get("Name");
     }
 
     private ArrayList<JComboBox> createDeptBoxes(ArrayList<JComboBox> old, int size) {
@@ -106,7 +109,7 @@ public class inputCandidates extends JPanel {
         Object[][] rows;
         Object[] cols;
 
-        if (!departamental) {
+        if (!departmental) {
             rows = new Object[][] {{"1", ""}};
             cols = new String[] {"#", "Candidate name"};
         } else {
@@ -114,7 +117,7 @@ public class inputCandidates extends JPanel {
             cols = new String[] {"#", "Candidate name", "Department"};
         }
 
-        if (departamental) {
+        if (departmental) {
             departmentBoxes = createDeptBoxes(null, 1);
 
             table1 = new JTable() {
@@ -203,7 +206,7 @@ public class inputCandidates extends JPanel {
         table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
-        if (departamental)
+        if (departmental)
             table1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
 
         table1.setShowHorizontalLines(true);
@@ -342,7 +345,7 @@ public class inputCandidates extends JPanel {
         }
 
         // department check (if election is departmental)
-        if (departamental) {
+        if (departmental) {
             for (int i = 0; i < rows; i++) {
                 if (departmentBoxes.get(i).getSelectedIndex() == -1) {
                     label2.setText("<html>" + "<b> Alert : </b>" +
@@ -384,7 +387,7 @@ public class inputCandidates extends JPanel {
     private void addBtn(ActionEvent e) {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         candidateCount++;
-        if (departamental)
+        if (departmental)
             departmentBoxes = createDeptBoxes(departmentBoxes, model.getRowCount() + 1);
         model.addRow(new Object[]{candidateCount, "", null});
         table1.requestFocus();
@@ -405,7 +408,7 @@ public class inputCandidates extends JPanel {
             DefaultTableModel m = (DefaultTableModel) table1.getModel();
             for (int i = 0; i < numRows; i++) {
                 int r = table1.getSelectedRow();
-                if (departamental)
+                if (departmental)
                     departmentBoxes.remove(r);
                 m.removeRow(r);
             }
@@ -439,6 +442,19 @@ public class inputCandidates extends JPanel {
             JSONArray candidates = new JSONArray();
             candidates.addAll(Arrays.asList(extractDataToString()));
             election.put("Candidates", candidates);
+
+            if (departmental) {
+                election.put("InstituteName", instituteName);
+                election.put("InstituteQuota", instituteQuota);
+                JSONArray depts = new JSONArray();
+                for (int i = 0; i < departmentNames.length; i++) {
+                    JSONArray d = new JSONArray();
+                    d.add(departmentNames[i]);
+                    d.add(departmentStrengths[i]);
+                    depts.add(d);
+                }
+                election.put("Departments", depts);
+            }
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
 
