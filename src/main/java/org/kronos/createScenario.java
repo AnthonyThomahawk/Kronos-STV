@@ -456,13 +456,9 @@ public class createScenario extends JPanel {
 
         updateStatus();
 
-        table1.getModel().addTableModelListener(new TableModelListener() {
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                unsaved = true;
-                //loadedFileTxt.setText("Unsaved scenario");
-                updateStatus();
-            }
+        table1.getModel().addTableModelListener(e -> {
+            unsaved = true;
+            updateStatus();
         });
 
         scenarioTitleTxt.getDocument().addDocumentListener(new DocumentListener() {
