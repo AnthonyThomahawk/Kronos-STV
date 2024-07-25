@@ -88,8 +88,9 @@ public class instituteLoad extends JPanel {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
-        list1 = new JList();
         loadInstituteBtn = new JButton();
+        scrollPane1 = new JScrollPane();
+        list1 = new JList();
 
         //======== this ========
 
@@ -97,17 +98,22 @@ public class instituteLoad extends JPanel {
         label1.setText("Available institutions : ");
         label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 3f));
 
-        //---- list1 ----
-        list1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                list1MouseClicked(e);
-            }
-        });
-
         //---- loadInstituteBtn ----
         loadInstituteBtn.setText("Load institution");
         loadInstituteBtn.addActionListener(e -> loadInstituteBtn(e));
+
+        //======== scrollPane1 ========
+        {
+
+            //---- list1 ----
+            list1.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    list1MouseClicked(e);
+                }
+            });
+            scrollPane1.setViewportView(list1);
+        }
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -116,15 +122,18 @@ public class instituteLoad extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(label1))
+                            .addGroup(layout.createParallelGroup()
+                                .addGroup(layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(label1))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(150, 150, 150)
+                                    .addComponent(loadInstituteBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)))
+                            .addGap(0, 153, Short.MAX_VALUE))
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(150, 150, 150)
-                            .addComponent(loadInstituteBtn, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
                             .addContainerGap()
-                            .addComponent(list1, GroupLayout.PREFERRED_SIZE, 406, GroupLayout.PREFERRED_SIZE)))
-                    .addContainerGap(8, Short.MAX_VALUE))
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)))
+                    .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
@@ -132,7 +141,7 @@ public class instituteLoad extends JPanel {
                     .addGap(7, 7, 7)
                     .addComponent(label1)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(list1, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(loadInstituteBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(9, Short.MAX_VALUE))
@@ -143,7 +152,8 @@ public class instituteLoad extends JPanel {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
     private JLabel label1;
-    private JList list1;
     private JButton loadInstituteBtn;
+    private JScrollPane scrollPane1;
+    private JList list1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

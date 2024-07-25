@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {par l {seq {space :::p, comp label1:::p::p}, seq l {space :p:150:p, comp loadInstituteBtn:::p:111:p}, seq l {space :::p, comp list1:::p:406:p}}, space ::8:x}}"
-			"$verticalGroup": "par l {seq l {space :p:7:p, comp label1:::p::p, space :::p, comp list1:::p:305:p, space :::p, comp loadInstituteBtn:::p:31:p, space ::9:x}}"
+			"$horizontalGroup": "par l {seq {par l {seq {par l {seq {space :::p, comp label1:::p::p}, seq l {space :p:150:p, comp loadInstituteBtn:::p:111:p}}, space :0:153:x}, seq l {space :::p, comp scrollPane1::::408:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p:7:p, comp label1:::p::p, space :::p, comp scrollPane1:::p:305:p, space :::p, comp loadInstituteBtn:::p:31:p, space ::9:x}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -13,14 +13,17 @@ new FormModel {
 				"text": "Available institutions : "
 				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
 			} )
-			add( new FormComponent( "javax.swing.JList" ) {
-				name: "list1"
-				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "list1MouseClicked", true ) )
-			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "loadInstituteBtn"
 				"text": "Load institution"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadInstituteBtn", true ) )
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JList" ) {
+					name: "list1"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "list1MouseClicked", true ) )
+				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
