@@ -87,7 +87,24 @@ public class mainForm extends JPanel {
     }
 
     private void startElectionBtn(ActionEvent e) {
-        openCandidatesForm(null, "New election");
+        String[] opts = {"Institutional", "Non-Institutional (independent)"};
+
+        int sel = JOptionPane.showOptionDialog(null, "Select election type.", "Election type", 0, 3, null, opts, opts[0]);
+
+        if (sel == 0) {
+            stopLoadingForm = false;
+            JDialog x = new JDialog(Main.mainFrame, "Load institution", true);
+            instituteLoad iL = new instituteLoad();
+            x.setContentPane(iL);
+            x.pack();
+            x.setLocationRelativeTo(null);
+            if (!stopLoadingForm)
+                x.setVisible(true);
+            else
+                x.dispose();
+        } else {
+            openCandidatesForm(null, "New election");
+        }
     }
 
     private void loadElectionBtn(ActionEvent e) {
