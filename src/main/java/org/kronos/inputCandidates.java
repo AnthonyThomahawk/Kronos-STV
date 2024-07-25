@@ -37,6 +37,7 @@ public class inputCandidates extends JPanel {
     private int instituteQuota = -1;
     private String instituteName = "";
     private ArrayList<JComboBox> departmentBoxes;
+    private int[] candidateDepartments;
 
     public inputCandidates(boolean b, String dFile) {
         candidateCount = 1;
@@ -57,6 +58,15 @@ public class inputCandidates extends JPanel {
 
     public inputCandidates(File inFile) {
         initComponents();
+
+        try {
+            JSONParser parser = new JSONParser();
+            JSONObject election = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(inFile.getAbsoluteFile().toPath()), StandardCharsets.UTF_8));
+
+            departmental = election.containsKey("InstituteName");
+        } catch (Exception ignored) {}
+
+
         initTable();
         populateTableFromFile(inFile);
     }
@@ -93,7 +103,11 @@ public class inputCandidates extends JPanel {
             if (old != null && i < old.size()) {
                 list.add(old.get(i));
             } else {
-                list.add(new JComboBox(departmentNames));
+                if (departmentNames == null) {
+                    list.add(new JComboBox(new String[]{"NULL"}));
+                } else {
+                    list.add(new JComboBox(departmentNames));
+                }
                 list.get(i).setSelectedIndex(-1);
             }
         }
@@ -257,6 +271,39 @@ public class inputCandidates extends JPanel {
                 candidateCount++;
                 model.addRow(new Object[]{candidateCount, o});
             }
+
+            if (departmental) {
+                instituteName = (String) election.get("InstituteName");
+                Long l = (long) election.get("InstituteQuota");
+                instituteQuota = l.intValue();
+                JSONArray depts = (JSONArray) election.get("Departments");
+
+                departmentNames = new String[depts.size()];
+                departmentStrengths = new int[depts.size()];
+
+                for (int i = 0; i < depts.size(); i++) {
+                    JSONArray dept = (JSONArray) depts.get(i);
+                    departmentNames[i] = (String) dept.get(0);
+                    Long dS = (long) dept.get(1);
+                    departmentStrengths[i] = dS.intValue();
+                }
+
+                JSONArray cDepts = (JSONArray) election.get("CandidateDepartments");
+                candidateDepartments = new int[cDepts.size()];
+
+                for (int i = 0; i < cDepts.size(); i++) {
+                    Long x = (long) cDepts.get(i);
+                    candidateDepartments[i] = x.intValue();
+                }
+
+                departmentBoxes = createDeptBoxes(null, candidateDepartments.length);
+
+                for (int i = 0; i < departmentBoxes.size(); i++) {
+                    departmentBoxes.get(i).setSelectedIndex(candidateDepartments[i]);
+                    model.setValueAt(departmentNames[candidateDepartments[i]], i, 2);
+                }
+            }
+
 
             unsaved = false;
         } catch (Exception e) {
