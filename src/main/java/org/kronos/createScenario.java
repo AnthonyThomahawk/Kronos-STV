@@ -73,7 +73,7 @@ public class createScenario extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (table1.getCellEditor() != null) {
+                if (table1.isEditing()) {
                     table1.getCellEditor().stopCellEditing();
                 }
             }
@@ -102,7 +102,7 @@ public class createScenario extends JPanel {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (table1.getCellEditor() != null) {
+                if (table1.isEditing()) {
                     table1.getCellEditor().stopCellEditing();
                 }
             }
@@ -121,6 +121,20 @@ public class createScenario extends JPanel {
             public void mouseExited(MouseEvent e) {
 
             }
+        });
+
+        ((JSpinner.DefaultEditor)spinner1.getEditor()).getTextField().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.isEditing())
+                    table1.getCellEditor().stopCellEditing();
+            }
+        });
+
+        spinner1.addChangeListener(e -> {
+            if (table1.isEditing())
+                table1.getCellEditor().stopCellEditing();
         });
 
         viewBtn.setText("<html> <b> Evaluate </b> </html>");

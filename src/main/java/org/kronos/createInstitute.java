@@ -77,6 +77,38 @@ public class createInstitute extends JPanel {
 
         updateStatus();
 
+        iName.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.isEditing())
+                    table1.getCellEditor().stopCellEditing();
+            }
+        });
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.isEditing())
+                    table1.getCellEditor().stopCellEditing();
+            }
+        });
+
+        ((JSpinner.DefaultEditor)dQuota.getEditor()).getTextField().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (table1.isEditing())
+                    table1.getCellEditor().stopCellEditing();
+            }
+        });
+
+        dQuota.addChangeListener(e -> {
+            if (table1.isEditing())
+                table1.getCellEditor().stopCellEditing();
+        });
+
         iName.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 updateStatus();
@@ -115,6 +147,8 @@ public class createInstitute extends JPanel {
                     table1.getCellEditor().stopCellEditing();
             }
         });
+
+
     }
 
     private boolean updateStatus() {
