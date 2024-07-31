@@ -17,10 +17,7 @@ public class CallPython {
         scriptPath = script;
         extraArgs = exargs;
     }
-    // only use this when sure that the interpreter will work
-    public void setCustomInterp(String path) {
-        interpreterPath = path;
-    }
+
     // run script and return result as String
     public String run() throws Exception {
         if (interpreterPath.isEmpty()) {
