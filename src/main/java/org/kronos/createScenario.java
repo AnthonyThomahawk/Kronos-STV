@@ -170,7 +170,7 @@ public class createScenario extends JPanel {
             if (departmental) {
                 label3.setText("<html> <b>Institution : </b>" + instituteName + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<html> <b>Election :  </b>" + electionTitle + "</html>");
             } else {
-                label3.setText("<html> (Independent election) <b>Election : </b>" + electionTitle + "</html>");
+                label3.setText("<html> (Independent) <b>Election : </b>" + electionTitle + "</html>");
             }
 
         } catch (Exception ignored) {}
@@ -248,7 +248,7 @@ public class createScenario extends JPanel {
             if (departmental) {
                 label3.setText("<html> <b>Institution : </b>" + instituteName + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<html> <b>Election :  </b>" + electionTitle + "</html>");
             } else {
-                label3.setText("<html> (Independent election) <b>Election : </b>" + electionTitle + "</html>");
+                label3.setText("<html> (Independent) <b>Election : </b>" + electionTitle + "</html>");
             }
 
         } catch (Exception e) {
