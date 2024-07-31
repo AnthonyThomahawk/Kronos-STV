@@ -684,6 +684,7 @@ public class createScenario extends JPanel {
                Main.checkSTV();
 
                JOptionPane.showMessageDialog(null, "Automatic repair completed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+               viewBtn(null);
            }
 
            return;
