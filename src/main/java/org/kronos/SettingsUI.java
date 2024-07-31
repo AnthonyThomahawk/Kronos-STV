@@ -169,7 +169,7 @@ public class SettingsUI extends JPanel {
                 File[] kronosFiles = wDir.listFiles();
                 if (kronosFiles != null) {
                     for (File f : kronosFiles) {
-                        if (f.getAbsolutePath().endsWith(".scenario") || f.getAbsolutePath().endsWith(".election"))
+                        if (f.getAbsolutePath().endsWith(".scenario") || f.getAbsolutePath().endsWith(".election") || f.getAbsolutePath().endsWith(".institution"))
                             f.delete();
                     }
                 }
