@@ -658,17 +658,38 @@ public class createScenario extends JPanel {
         if (departmental)
             generateConstituencyFile("c1.csv");
 
-        if (departmental)
-            electionResults = new STVResults(generateOutput("b1.csv", "c1.csv"), ballotCount);
-        else
-            electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
+        boolean failed = false;
+
+        try {
+            if (departmental)
+                electionResults = new STVResults(generateOutput("b1.csv", "c1.csv"), ballotCount);
+            else
+                electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
+        } catch (Exception x) {
+            failed = true;
+        }
 
        deleteFile("b1.csv");
 
        if (departmental)
            deleteFile("c1.csv");
 
-        JDialog j = new JDialog(Main.mainFrame, "Results", true);
+       if (failed) {
+           String[] opts = new String[]{"Attempt auto-repair", "Cancel"};
+           int sel = JOptionPane.showOptionDialog(null, "An error has occurred while evaluating the scenario.\nBackend components may be corrupted.\nDo you want to attempt to automatically repair Kronos?", "Backend component error", 0, JOptionPane.ERROR_MESSAGE, null, opts, opts[0]);
+
+           if (sel == 0) {
+               deleteFile("stv.py");
+               deleteFile("loader.py");
+               Main.checkSTV();
+
+               JOptionPane.showMessageDialog(null, "Automatic repair completed.", "Success", JOptionPane.INFORMATION_MESSAGE);
+           }
+
+           return;
+       }
+
+       JDialog j = new JDialog(Main.mainFrame, "Results", true);
 
         try {
             String evalExport = getFullCSV(",");
@@ -687,13 +708,13 @@ public class createScenario extends JPanel {
 
         } catch (Exception x) {
             System.out.println(x);
-        };
+    };
 
-        resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults);
-        j.setContentPane(x);
-        j.pack();
-        j.setLocationRelativeTo(null);
-        j.setVisible(true);
+    resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults);
+    j.setContentPane(x);
+    j.pack();
+    j.setLocationRelativeTo(null);
+    j.setVisible(true);
     }
 
     private void customSeats(ActionEvent e) {

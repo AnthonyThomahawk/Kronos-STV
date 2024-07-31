@@ -74,7 +74,7 @@ public class Main {
         return null;
     }
 
-    private static void checkSTV() {
+    public static void checkSTV() {
         File l = new File("loader.py");
         if (!l.exists()) {
             InputStream loader = Main.class.getClassLoader().getResourceAsStream("loader.py");
