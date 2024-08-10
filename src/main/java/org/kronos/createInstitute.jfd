@@ -28,7 +28,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
-				"text": "Departmental quota : "
+				"text": "Ward quota : "
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
 				name: "dQuota"
@@ -56,7 +56,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
-				"text": "<html> <i> * Defines the max number of electable candidates for each department </i> </html>"
+				"text": "<html> <i> * Defines the max number of electable candidates per ward </i> </html>"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 0 )

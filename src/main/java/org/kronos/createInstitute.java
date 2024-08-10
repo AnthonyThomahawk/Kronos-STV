@@ -46,7 +46,7 @@ public class createInstitute extends JPanel {
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {1, "", null}
         }, new String[] {
-                "#", "Department name", "Strength"
+                "#", "Ward name (University department or Municipal district", "Ward size"
         })
         {
             @Override
@@ -167,7 +167,7 @@ public class createInstitute extends JPanel {
             String dName = (String) dtm.getValueAt(i, 1);
             if (dName.isEmpty()) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">Department #" + (i+1) +" does not have a name.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">Ward #" + (i+1) +" does not have a name.</b>" +"</html>");
 
                 saveBtn.setEnabled(false);
                 newElecBtn.setEnabled(false);
@@ -181,7 +181,7 @@ public class createInstitute extends JPanel {
 
             if (dStrength == null) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">Department #" + (i+1) +" does not have a strength number.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">Ward #" + (i+1) +" does not have a strength number.</b>" +"</html>");
 
                 saveBtn.setEnabled(false);
                 newElecBtn.setEnabled(false);
@@ -343,7 +343,7 @@ public class createInstitute extends JPanel {
         }
 
         //---- label3 ----
-        label3.setText("Departmental quota : ");
+        label3.setText("Ward quota : ");
 
         //---- dQuota ----
         dQuota.addChangeListener(e -> dQuotaStateChanged(e));
@@ -365,7 +365,7 @@ public class createInstitute extends JPanel {
         newElecBtn.addActionListener(e -> newElecBtn(e));
 
         //---- label4 ----
-        label4.setText("<html> <i> * Defines the max number of electable candidates for each department </i> </html>");
+        label4.setText("<html> <i> * Defines the max number of electable candidates per ward </i> </html>");
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
