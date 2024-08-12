@@ -87,7 +87,7 @@ public class mainForm extends JPanel {
     }
 
     private void startElectionBtn(ActionEvent e) {
-        String[] opts = {"Institutional", "Non-Institutional (independent)"};
+        String[] opts = {"for Institution (per ward quota)", "General election"};
 
         int sel = JOptionPane.showOptionDialog(null, "Select election type.", "Election type", 0, 3, null, opts, opts[0]);
 
