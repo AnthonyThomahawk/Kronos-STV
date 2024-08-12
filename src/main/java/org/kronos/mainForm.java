@@ -102,7 +102,7 @@ public class mainForm extends JPanel {
                 x.setVisible(true);
             else
                 x.dispose();
-        } else {
+        } else if (sel == 1) {
             openCandidatesForm(null, "New election");
         }
     }
