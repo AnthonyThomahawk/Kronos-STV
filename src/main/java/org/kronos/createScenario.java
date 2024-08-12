@@ -759,6 +759,16 @@ public class createScenario extends JPanel {
 
         remBtn.setEnabled(table1.getSelectedRows().length != 0);
 
+        if (getBallotCount() == 0) {
+            label1.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">Total ballot count cannot be 0.</b>" +"</html>");
+            viewBtn.setEnabled(false);
+            exportBtn.setEnabled(false);
+            copyBtn.setEnabled(false);
+            exportFileBtn.setEnabled(false);
+            return false;
+        }
+
         if (scenarioTitleTxt.getText().isEmpty()) {
             label1.setText("<html>" + "<b> Alert : </b>" +
                     "<br> <b style=\"color:RED;\">Scenario must have a title.</b>" +"</html>");
