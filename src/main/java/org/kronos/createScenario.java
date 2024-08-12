@@ -675,11 +675,16 @@ public class createScenario extends JPanel {
         boolean failed = false;
 
         try {
+            String output;
+
             if (departmental)
-                electionResults = new STVResults(generateOutput("b1.csv", "c1.csv"), ballotCount);
+                output = generateOutput("b1.csv", "c1.csv");
             else
-                electionResults = new STVResults(generateOutput("b1.csv"), ballotCount);
+                output = generateOutput("b1.csv");
+
+            electionResults = new STVResults(output, ballotCount);
         } catch (Exception x) {
+            System.out.println(x);
             failed = true;
         }
 
@@ -805,7 +810,7 @@ public class createScenario extends JPanel {
                 if (j == 1) {
                     if (dtm.getValueAt(i,j) == null) {
                         label1.setText("<html>" + "<b> Alert : </b>" +
-                                "<br> <b style=\"color:RED;\"># " + (i+1) + " does not have a first choice.</b>" +"</html>");
+                                "<br> <b style=\"color:RED;\">#" + (i+1) + ": does not have a first choice.</b>" +"</html>");
                         viewBtn.setEnabled(false);
                         exportBtn.setEnabled(false);
                         copyBtn.setEnabled(false);
@@ -819,7 +824,7 @@ public class createScenario extends JPanel {
                 // null found AND current element not null, so the ballot skips choices
                 if (dtm.getValueAt(i,j) != null && endOnNull) {
                     label1.setText("<html>" + "<b> Alert : </b>" +
-                            "<br> <b style=\"color:RED;\"># " + (i+1) + " skips choices.</b>" +"</html>");
+                            "<br> <b style=\"color:RED;\">#" + (i+1) + ": skips choices.</b>" +"</html>");
                     viewBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
                     copyBtn.setEnabled(false);
@@ -836,7 +841,7 @@ public class createScenario extends JPanel {
         for (int i = 0; i < rows; i++) {
             if (dtm.getValueAt(i, cols-1) == null) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\"># of votes " + (i+1) + " is empty.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">#" + (i+1) + ": Count is empty.</b>" +"</html>");
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
@@ -844,7 +849,7 @@ public class createScenario extends JPanel {
                 return false;
             } else if ((int) dtm.getValueAt(i, cols-1) < 0) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\"># of votes " + (i+1) + " cannot be negative.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">#" + (i+1) + ": Count must not be negative.</b>" +"</html>");
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
