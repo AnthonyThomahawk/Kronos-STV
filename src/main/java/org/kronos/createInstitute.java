@@ -365,7 +365,7 @@ public class createInstitute extends JPanel {
         newElecBtn.addActionListener(e -> newElecBtn(e));
 
         //---- label4 ----
-        label4.setText("<html> <i> * Defines the max number of electable candidates per ward </i> </html>");
+        label4.setText("<html> <i> * max number of electable candidates per ward </i> </html>");
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
