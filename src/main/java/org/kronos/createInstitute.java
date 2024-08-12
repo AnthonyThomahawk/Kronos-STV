@@ -46,7 +46,7 @@ public class createInstitute extends JPanel {
         table1.setModel(new DefaultTableModel(new Object[][] {
                 {1, "", null}
         }, new String[] {
-                "#", "Ward name (University department or Municipal district", "Ward size"
+                "#", "Ward name (University department or Municipal district)", "Ward size"
         })
         {
             @Override

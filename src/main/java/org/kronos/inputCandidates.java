@@ -128,7 +128,7 @@ public class inputCandidates extends JPanel {
             cols = new String[] {"#", "Candidate name"};
         } else {
             rows = new Object[][] {{"1", "", null}};
-            cols = new String[] {"#", "Candidate name", "Department"};
+            cols = new String[] {"#", "Candidate name", "Ward"};
         }
 
         if (departmental) {
