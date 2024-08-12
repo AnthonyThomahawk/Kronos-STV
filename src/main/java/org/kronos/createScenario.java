@@ -674,6 +674,8 @@ public class createScenario extends JPanel {
 
         boolean failed = false;
 
+        Main.checkSTV();
+
         try {
             String output;
 
