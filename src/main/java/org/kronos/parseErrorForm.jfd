@@ -1,0 +1,45 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {par l {seq t {space :::p, comp scrollPane1:::::x}, seq {par l {seq l {space :::p, comp label2:::p:388:p}, seq l {space :p:76:p, comp repairBtn:::p::p, space s:::p, comp cancelBtn:::p::p}, seq l {space :::p, comp label3:::p:388:p}}, space :0:0:x}}, space :::p}, seq l {space :p:140:p, comp label1:::p::p, space :::x}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp label1:::p::p, space :::p, comp label2:::p:48:p, space :::p, comp scrollPane1:::p:215:p, space u:::p, comp label3:::p::p, space ::33:x, par b {comp cancelBtn::b:p::p, comp repairBtn::b:p::p}, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "textArea1"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Parsing error"
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 6, false )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "<html>An error has occured when parsing the results of the election evaluation. Here is the output of the python backend (for debugging purposes) : </html>"
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "repairBtn"
+				"text": "<html><b>Attempt auto-repair</b></html>"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "repairBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "cancelBtn"
+				"text": "Cancel"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "<html>Backend components may be corrupted. Do you want to attempt to automatically repair them?</html>"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 20 )
+			"size": new java.awt.Dimension( 400, 395 )
+		} )
+	}
+}

@@ -4,6 +4,7 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 
@@ -52,6 +53,7 @@ public class createScenario extends JPanel {
     private String[] departmentNames;
     private int[] departmentStrengths;
     private int[] candidateDepartments;
+    public static JDialog fe;
 
     public createScenario(String file, boolean scenario) {
         initComponents();
@@ -676,9 +678,9 @@ public class createScenario extends JPanel {
 
         Main.checkSTV();
 
-        try {
-            String output;
+        String output = "";
 
+        try {
             if (departmental)
                 output = generateOutput("b1.csv", "c1.csv");
             else
@@ -696,18 +698,12 @@ public class createScenario extends JPanel {
            deleteFile("c1.csv");
 
        if (failed) {
-           String[] opts = new String[]{"Attempt auto-repair", "Cancel"};
-           int sel = JOptionPane.showOptionDialog(null, "An error has occurred while evaluating the scenario.\nBackend components may be corrupted.\nDo you want to attempt to automatically repair Kronos?", "Backend component error", 0, JOptionPane.ERROR_MESSAGE, null, opts, opts[0]);
-
-           if (sel == 0) {
-               deleteFile("stv.py");
-               deleteFile("loader.py");
-               Main.checkSTV();
-
-               JOptionPane.showMessageDialog(null, "Automatic repair completed.", "Success", JOptionPane.INFORMATION_MESSAGE);
-               viewBtn(null);
-           }
-
+           parseErrorForm f = new parseErrorForm(output);
+           fe = new JDialog(Main.mainFrame, "Error", true);
+           fe.setContentPane(f);
+           fe.pack();
+           fe.setLocationRelativeTo(null);
+           fe.setVisible(true);
            return;
        }
 
