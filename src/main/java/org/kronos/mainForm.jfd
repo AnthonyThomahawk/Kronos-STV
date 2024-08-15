@@ -76,7 +76,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label9"
-				"text": "<html> <p align=\"justify\"> Suppy a list of wards to form an institution.</p> </html>"
+				"text": "<html> <p align=\"justify\"> Supply Wards for elections with ward quotas.</p> </html>"
 				"font": #SwingDerivedFont3
 				"verticalAlignment": 1
 			} )

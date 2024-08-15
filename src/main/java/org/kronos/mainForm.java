@@ -306,7 +306,7 @@ public class mainForm extends JPanel {
         label8.setFont(label8.getFont().deriveFont(label8.getFont().getSize() + 13f));
 
         //---- label9 ----
-        label9.setText("<html> <p align=\"justify\"> Suppy a list of wards to form an institution.</p> </html>");
+        label9.setText("<html> <p align=\"justify\"> Supply Wards for elections with ward quotas.</p> </html>");
         label9.setFont(label9.getFont().deriveFont(label9.getFont().getSize() + 3f));
         label9.setVerticalAlignment(SwingConstants.TOP);
 
