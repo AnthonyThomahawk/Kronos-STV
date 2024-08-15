@@ -402,6 +402,20 @@ public class inputCandidates extends JPanel {
                     return false;
                 }
             }
+
+            ArrayList<String> departmentNamesCopy = new ArrayList<>(Arrays.asList(departmentNames));
+
+            for (int i = 0; i < rows; i++) {
+                departmentNamesCopy.remove(departmentNames[departmentBoxes.get(i).getSelectedIndex()]);
+            }
+
+            if (!departmentNamesCopy.isEmpty()) {
+                label2.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\">All wards must have at least one candidate assigned to them.</b>" +"</html>");
+                createBtn.setEnabled(false);
+                exportBtn.setEnabled(false);
+                return false;
+            }
         }
 
         label2.setText("<html><b> Status : </b><br> <b style=\"color:GREEN;\">OK</b></html>");
