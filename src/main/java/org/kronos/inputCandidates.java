@@ -411,7 +411,7 @@ public class inputCandidates extends JPanel {
 
             if (!unassignedDepartments.isEmpty()) {
                 label2.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">Ward " + unassignedDepartments.get(0) + " is not assigned to any candidate.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">Ward \"" + unassignedDepartments.get(0) + "\" is not assigned to any candidate.</b>" +"</html>");
                 createBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 return false;
