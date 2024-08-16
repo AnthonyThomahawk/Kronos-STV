@@ -403,15 +403,15 @@ public class inputCandidates extends JPanel {
                 }
             }
 
-            ArrayList<String> departmentNamesCopy = new ArrayList<>(Arrays.asList(departmentNames));
+            ArrayList<String> unassignedDepartments = new ArrayList<>(Arrays.asList(departmentNames));
 
             for (int i = 0; i < rows; i++) {
-                departmentNamesCopy.remove(departmentNames[departmentBoxes.get(i).getSelectedIndex()]);
+                unassignedDepartments.remove(departmentNames[departmentBoxes.get(i).getSelectedIndex()]);
             }
 
-            if (!departmentNamesCopy.isEmpty()) {
+            if (!unassignedDepartments.isEmpty()) {
                 label2.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">All wards must have at least one candidate assigned to them.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">Ward " + unassignedDepartments.get(0) + " is not assigned to any candidate.</b>" +"</html>");
                 createBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 return false;
@@ -637,8 +637,8 @@ public class inputCandidates extends JPanel {
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
                             .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 338, Short.MAX_VALUE)))
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 173, Short.MAX_VALUE)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
