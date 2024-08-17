@@ -6,8 +6,13 @@ package org.kronos;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
@@ -28,12 +33,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class createInstitute extends JPanel {
     private int dLength = 1;
+    private String editFile = "";
     private boolean unsaved;
 
-    public createInstitute() {
+    public createInstitute(String file2Edit) {
         initComponents();
         dQuota.setValue(2);
         remBtn.setEnabled(false);
+        editFile = file2Edit;
         initTable();
     }
 
@@ -148,7 +155,61 @@ public class createInstitute extends JPanel {
             }
         });
 
+        if (editFile != null && !editFile.isEmpty())
+        {
+            try {
+                loadFileForEditing(editFile);
+                iName.setEnabled(false);
+                newElecBtn.setText("<html><b>Save and return to election</b></html>");
+            } catch (Exception ignored){}
+        }
+    }
 
+    private void loadFileForEditing(String filePath) throws IOException, ParseException {
+        String[] departmentNames;
+        int[] departmentStrengths;
+        int instituteQuota = -1;
+        String instituteName = "";
+
+        File file = new File(filePath);
+        JSONParser parser = new JSONParser();
+        JSONObject depts = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(file.getAbsoluteFile().toPath()), StandardCharsets.UTF_8));
+
+        JSONArray dArr = (JSONArray) depts.get("Departments");
+
+        departmentNames = new String[dArr.size()];
+        departmentStrengths = new int[dArr.size()];
+
+        int i = 0;
+        for (Object o : dArr) {
+            JSONArray dept = (JSONArray) o;
+            departmentNames[i] = (String) dept.get(0);
+            Long l = (long) dept.get(1);
+            departmentStrengths[i] = l.intValue();
+            i++;
+        }
+
+        Long quota = (long) depts.get("Quota");
+        instituteQuota = quota.intValue();
+
+        instituteName = (String) depts.get("Name");
+
+        iName.setText(instituteName);
+        dQuota.setValue(instituteQuota);
+
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+
+        dtm.removeRow(0);
+
+        dLength = 0;
+        for (i = 0; i < departmentNames.length; i++) {
+            Object[] row = new Object[3];
+            dLength++;
+            row[0] = dLength;
+            row[1] = departmentNames[i];
+            row[2] = departmentStrengths[i];
+            dtm.addRow(row);
+        }
     }
 
     private boolean updateStatus() {
@@ -302,6 +363,12 @@ public class createInstitute extends JPanel {
     }
 
     private void newElecBtn(ActionEvent e) {
+        if (editFile != null) {
+            saveChanges();
+            mainForm.instituteDlg.dispose();
+            return;
+        }
+
         mainForm.openDeptCandidatesForm(saveChanges(), "New scenario");
     }
 
@@ -374,17 +441,15 @@ public class createInstitute extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(scrollPane1)
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(newElecBtn, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(saveBtn)
-                            .addGap(0, 0, Short.MAX_VALUE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
+                            .addComponent(newElecBtn, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
                             .addGap(5, 5, 5)
                             .addGroup(layout.createParallelGroup()
@@ -420,7 +485,7 @@ public class createInstitute extends JPanel {
                         .addComponent(label4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 445, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                    .addGap(8, 8, 8)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
                         .addComponent(remBtn)

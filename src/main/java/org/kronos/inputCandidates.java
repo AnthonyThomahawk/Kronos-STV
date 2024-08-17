@@ -124,6 +124,7 @@ public class inputCandidates extends JPanel {
         Object[] cols;
 
         if (!departmental) {
+            editWardsBtn.setVisible(false);
             rows = new Object[][] {{"1", ""}};
             cols = new String[] {"#", "Candidate name"};
         } else {
@@ -562,6 +563,47 @@ public class inputCandidates extends JPanel {
             table1.getCellEditor().stopCellEditing();
     }
 
+    private void refreshDepartments() {
+        DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
+        String[] candidates = new String[dtm.getRowCount()];
+        String[] oldDepts = new String[dtm.getRowCount()];
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            candidates[i] = (String) dtm.getValueAt(i, 1);
+            oldDepts[i] = (String) dtm.getValueAt(i, 2);
+        }
+
+        departmentBoxes = createDeptBoxes(null, candidates.length);
+
+        for (int i = 0; i < candidates.length; i++) {
+            if (!Arrays.asList(departmentNames).contains(oldDepts[i])) {
+                departmentBoxes.get(i).setSelectedIndex(-1);
+                dtm.setValueAt(null, i, 2);
+            } else {
+                departmentBoxes.get(i).setSelectedIndex(Arrays.asList(departmentNames).indexOf(oldDepts[i]));
+                dtm.setValueAt(oldDepts[i], i, 2);
+            }
+        }
+    }
+
+    private void editWardsBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        try {
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String workDir = Main.getWorkDir();
+            String filePath = workDir + fileSeperator + instituteName  + ".institution";
+            if (!new File(filePath).exists()) {
+                JOptionPane.showMessageDialog(null, "The institution file \"" + instituteName + ".institution\" does not exist.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            mainForm.openInstitutionForm("Edit institution - " + instituteName, filePath);
+            parseDepartments(filePath);
+            refreshDepartments();
+        } catch (Exception ignored) {}
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -574,6 +616,7 @@ public class inputCandidates extends JPanel {
         exportBtn = new JButton();
         label3 = new JLabel();
         electionNameBox = new JTextField();
+        editWardsBtn = new JButton();
 
         //======== this ========
 
@@ -616,6 +659,10 @@ public class inputCandidates extends JPanel {
             }
         });
 
+        //---- editWardsBtn ----
+        editWardsBtn.setText("<html><b>Edit wards</b> (for current institution)</html>");
+        editWardsBtn.addActionListener(e -> editWardsBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -623,29 +670,32 @@ public class inputCandidates extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 573, Short.MAX_VALUE)
+                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING)
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(label3)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(electionNameBox, GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE))
+                            .addComponent(electionNameBox))
                         .addGroup(layout.createSequentialGroup()
                             .addComponent(addBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(remBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(exportBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 173, Short.MAX_VALUE)))
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 359, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(editWardsBtn)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editWardsBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label3)
@@ -674,5 +724,6 @@ public class inputCandidates extends JPanel {
     private JButton exportBtn;
     private JLabel label3;
     private JTextField electionNameBox;
+    private JButton editWardsBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

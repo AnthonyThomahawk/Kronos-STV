@@ -488,6 +488,8 @@ public class createScenario extends JPanel {
                 updateStatus();
             }
         });
+
+        unsaved = false;
     }
 
     private void populateTableFromFile() {

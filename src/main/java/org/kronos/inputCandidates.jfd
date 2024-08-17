@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::573:x, seq {comp label3:::p::p, space :::p, comp electionNameBox::::483:x}, seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp exportBtn:::p::p, space ::211:x, comp createBtn:::p:125:p}, seq l {comp label2:::p:400:p, space :0:173:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp label2:::p:46:p, space :::p, par b {comp label3::b:p::p, comp electionNameBox::b:p::p}, space :::p, comp scrollPane1:::p:492:p, space :::p, par b {comp addBtn::b:p::p, comp remBtn::b:::x, comp exportBtn::b:p::p, comp createBtn::b:p::p}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :p::p, par l {comp scrollPane1::t:::x, seq {comp label3:::p::p, space :::p, comp electionNameBox:::::x}, seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp exportBtn:::p::p, space :::x, comp createBtn:::p:125:p}, seq l {comp label2:::p:359:p, space :p::p, comp editWardsBtn:::::x}}, space :p::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par t {comp label2:::p:46:p, comp editWardsBtn:::p::p}, space :::p, par b {comp label3::b:p::p, comp electionNameBox::b:p::p}, space :::p, comp scrollPane1:::p:492:p, space :::p, par b {comp addBtn::b:p::p, comp remBtn::b:::x, comp exportBtn::b:p::p, comp createBtn::b:p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -48,9 +48,14 @@ new FormModel {
 				name: "electionNameBox"
 				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "electionNameBoxMouseClicked", true ) )
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "editWardsBtn"
+				"text": "<html><b>Edit wards</b> (for current institution)</html>"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "editWardsBtn", true ) )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 585, 615 )
+			"size": new java.awt.Dimension( 600, 615 )
 		} )
 	}
 }

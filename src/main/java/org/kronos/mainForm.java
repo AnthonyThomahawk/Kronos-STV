@@ -21,6 +21,7 @@ import javax.swing.GroupLayout;
 public class mainForm extends JPanel {
     public static boolean stopLoadingForm;
     public static inputCandidates inputCandidatesObj;
+    public static JDialog instituteDlg;
     public mainForm() {
         initComponents();
         setIcons();
@@ -116,10 +117,10 @@ public class mainForm extends JPanel {
         j.setVisible(true);
     }
 
-    public static void openInstitutionForm(String title) {
-        JDialog instituteDlg = new JDialog(Main.mainFrame, title, true);
+    public static void openInstitutionForm(String title, String f2e) {
+        instituteDlg = new JDialog(Main.mainFrame, title, true);
 
-        instituteDlg.setContentPane(new createInstitute());
+        instituteDlg.setContentPane(new createInstitute(f2e));
         instituteDlg.pack();
         instituteDlg.setLocationRelativeTo(null);
         instituteDlg.setVisible(true);
@@ -176,6 +177,8 @@ public class mainForm extends JPanel {
             inputCandidatesDlg.dispose();
     }
 
+
+
     public static void openScenarioForm(File inFile, String title) {
         stopLoadingForm = false;
         JDialog createBallotsDlg = new JDialog(Main.mainFrame, title, true);
@@ -229,7 +232,7 @@ public class mainForm extends JPanel {
     }
 
     private void newInstituteBtn(ActionEvent e) {
-        openInstitutionForm("New institution");
+        openInstitutionForm("New institution", null);
     }
 
     private void initComponents() {
