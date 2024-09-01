@@ -113,9 +113,11 @@ public class SettingsUI extends JPanel {
         }
 
         try {
-            FileInputStream in = new FileInputStream("settings.xml");
             Properties saveProps = new Properties();
-            saveProps.loadFromXML(in);
+            if (new File("settings.xml").exists()) {
+                FileInputStream in = new FileInputStream("settings.xml");
+                saveProps.loadFromXML(in);
+            }
             saveProps.setProperty("workDir", textField1.getText());
             saveProps.setProperty("theme", theme);
             saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
