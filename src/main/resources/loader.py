@@ -1,11 +1,9 @@
 #
 # Python utf-8 script loader
-# Copyright 2024 Anthony T.
+# 2024 Anthony T.
 #
 """
-Calls a target script with a redirected stdin where the contents of an input file is read into as utf-8 text. 
-Input file name is parsed from the commandline, the switch is removed and the rest of the commadline (if any) is passed to the target script for any further processing.
-stdout is set to utf-8 so target output is also utf-8. No changes are required to original target script.
+Ensure that a target script always outputs with UTF-8 Encoding, no matter the terminal.
 """
 
 import sys
