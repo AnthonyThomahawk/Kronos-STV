@@ -4,6 +4,7 @@
 
 package org.kronos;
 
+import javafx.stage.FileChooser;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 
 /**
  * @author Worker
@@ -91,6 +95,26 @@ public class scenarioLoad extends JPanel {
         }
     }
 
+    private void importBtn(ActionEvent e) {
+        JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
+        fc.setFileFilter(filter);
+
+        int res = fc.showOpenDialog(null);
+
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File f = fc.getSelectedFile();
+            try {
+                String workDir = Main.getWorkDir();
+                Zip.decompressFiles(f.getAbsolutePath(), workDir);
+                initList();
+                JOptionPane.showMessageDialog(null, "Imported successfully!", "Info", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception x) {
+                System.out.println(x);
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -125,6 +149,7 @@ public class scenarioLoad extends JPanel {
 
         //---- importBtn ----
         importBtn.setText("Import");
+        importBtn.addActionListener(e -> importBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);

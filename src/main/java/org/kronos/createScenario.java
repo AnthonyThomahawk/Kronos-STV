@@ -7,6 +7,7 @@ package org.kronos;
 import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
+import org.omg.CORBA.Environment;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -868,7 +869,7 @@ public class createScenario extends JPanel {
         return true;
     }
 
-    public void saveChanges() throws OpenDataException {
+    public String saveChanges() throws OpenDataException {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
@@ -878,7 +879,7 @@ public class createScenario extends JPanel {
         }
 
         if (!Main.checkConfig())
-            return;
+            return null;
 
         try {
             String workDir = Main.getWorkDir();
@@ -950,9 +951,11 @@ public class createScenario extends JPanel {
 
             unsaved = false;
 
-            JOptionPane.showMessageDialog(null, "Scenario '" + scenarioTitleTxt.getText() + "' has been saved!");
+            return filePath;
         } catch (Exception x) {
+            System.out.println(x);
             JOptionPane.showMessageDialog(null, "Error saving scenario", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
 
     }
@@ -960,7 +963,8 @@ public class createScenario extends JPanel {
 
     private void exportBtn(ActionEvent e) {
         try {
-            saveChanges();
+            String x = saveChanges();
+            JOptionPane.showMessageDialog(null, "Scenario '" + x + "' has been saved!");
         } catch (Exception ignored) {}
     }
 
@@ -1112,6 +1116,15 @@ public class createScenario extends JPanel {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
+        String scenarioFile = "";
+        try {
+            scenarioFile = saveChanges();
+        } catch (Exception z) {
+            System.out.println(z);
+            return;
+        }
+
+
         if (exportChooser == null) {
             try {
                 FileInputStream in = new FileInputStream("settings.xml");
@@ -1123,35 +1136,73 @@ public class createScenario extends JPanel {
                 exportChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
             }
 
-            FileFilter filter = new FileNameExtensionFilter("CSV File","csv");
+            FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
             exportChooser.setFileFilter(filter);
         }
 
-        exportChooser.setSelectedFile(new File(scenarioTitleTxt.getText() + ".csv"));
+        exportChooser.setSelectedFile(new File(scenarioTitleTxt.getText() + ".KRONOS"));
         int res = exportChooser.showSaveDialog(null);
 
         if (res == JFileChooser.APPROVE_OPTION) {
             File selectedFile = exportChooser.getSelectedFile();
 
-            if(!exportChooser.getSelectedFile().getAbsolutePath().endsWith(".csv")){
-                selectedFile = new File(exportChooser.getSelectedFile() + ".csv");
+            if(!exportChooser.getSelectedFile().getAbsolutePath().endsWith(".KRONOS")){
+                selectedFile = new File(exportChooser.getSelectedFile() + ".KRONOS");
             }
 
             try {
-                OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(selectedFile.toPath()), StandardCharsets.UTF_8);
-                fStream.write(getFullCSV(","));
-                fStream.flush();
-                fStream.close();
+                ArrayList<String> files = new ArrayList<>();
+                String workDir = Main.getWorkDir();
+                String fileSeperator = FileSystems.getDefault().getSeparator();
+                files.add(scenarioFile);
 
-                FileInputStream in = new FileInputStream("settings.xml");
-                Properties saveProps = new Properties();
-                saveProps.loadFromXML(in);
-                saveProps.setProperty("exportDir", exportChooser.getCurrentDirectory().toString());
-                saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
+                String electionFile = workDir + fileSeperator + electionTitle + ".election";
 
-                JOptionPane.showMessageDialog(null, "Scenario exported as : " + selectedFile.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
+                if (new File(electionFile).exists() && new File(electionFile).isFile()) {
+                    files.add(electionFile);
+                } else {
+                    JOptionPane.showMessageDialog(null, "The election file : " + electionFile + " for this scenario was not found. The file will be omitted.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+
+                if (!instituteName.isEmpty()) {
+                    String institutionFile = workDir + fileSeperator + instituteName + ".institution";
+
+                    if (new File(institutionFile).exists() && new File(institutionFile).isFile()) {
+                        files.add(institutionFile);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "The institute file : " + electionFile + " for this scenario was not found. The file will be omitted.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+
+                Zip.compressFiles(files, selectedFile.getPath());
+
+                String msg = "<html>Export completed<br>Files included in export <b>" + selectedFile.getName() + "</b> are :<br>";
+
+                for (String f : files) {
+                    msg += "<b>" + new File(f).getName() + "</b><br>";
+                }
+
+                msg += "</html>";
+
+                JOptionPane.showMessageDialog(null,  msg, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+
+//                OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(selectedFile.toPath()), StandardCharsets.UTF_8);
+//                fStream.write(getFullCSV(","));
+//                fStream.flush();
+//                fStream.close();
+//
+//                FileInputStream in = new FileInputStream("settings.xml");
+//                Properties saveProps = new Properties();
+//                saveProps.loadFromXML(in);
+//                saveProps.setProperty("exportDir", exportChooser.getCurrentDirectory().toString());
+//                saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
+//
+//                JOptionPane.showMessageDialog(null, "Scenario exported as : " + selectedFile.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (Exception ex) {
+                System.out.println(ex);
                 JOptionPane.showMessageDialog(null, "Error exporting scenario to file.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 

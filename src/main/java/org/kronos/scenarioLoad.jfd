@@ -28,6 +28,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "importBtn"
 				"text": "Import"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "importBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
