@@ -106,9 +106,15 @@ public class scenarioLoad extends JPanel {
             File f = fc.getSelectedFile();
             try {
                 String workDir = Main.getWorkDir();
-                Zip.decompressFiles(f.getAbsolutePath(), workDir);
+                ArrayList<File> files =  Zip.decompressFiles(f.getAbsolutePath(), workDir);
                 initList();
-                JOptionPane.showMessageDialog(null, "Imported successfully!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                String msg = "<html>Imported from : " + f.getPath() + "<br>";
+                msg += "Files imported : <br>";
+                for (File z : files) {
+                    msg += "<b>" + z.getName() + "</b><br>";
+                }
+                msg += "</html>";
+                JOptionPane.showMessageDialog(null, msg, "Info", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception x) {
                 System.out.println(x);
             }

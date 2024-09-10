@@ -45,7 +45,8 @@ public class Zip {
         return destFile;
     }
 
-    public static void decompressFiles(String zipFile, String destDir) throws IOException {
+    public static ArrayList<File> decompressFiles(String zipFile, String destDir) throws IOException {
+        ArrayList<File> decompressedFiles = new ArrayList<>();
         File dDir = new File(destDir);
         byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFile)));
@@ -64,6 +65,7 @@ public class Zip {
                 }
 
                 // write file content
+                decompressedFiles.add(newFile);
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;
                 while ((len = zis.read(buffer)) > 0) {
@@ -76,5 +78,6 @@ public class Zip {
 
         zis.closeEntry();
         zis.close();
+        return decompressedFiles;
     }
 }
