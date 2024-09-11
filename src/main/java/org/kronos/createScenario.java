@@ -1193,11 +1193,11 @@ public class createScenario extends JPanel {
 //                fStream.flush();
 //                fStream.close();
 //
-//                FileInputStream in = new FileInputStream("settings.xml");
-//                Properties saveProps = new Properties();
-//                saveProps.loadFromXML(in);
-//                saveProps.setProperty("exportDir", exportChooser.getCurrentDirectory().toString());
-//                saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
+                FileInputStream in = new FileInputStream("settings.xml");
+                Properties saveProps = new Properties();
+                saveProps.loadFromXML(in);
+                saveProps.setProperty("exportDir", exportChooser.getCurrentDirectory().toString());
+                saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
 //
 //                JOptionPane.showMessageDialog(null, "Scenario exported as : " + selectedFile.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
 

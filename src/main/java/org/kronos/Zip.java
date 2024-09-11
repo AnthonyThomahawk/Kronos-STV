@@ -45,6 +45,22 @@ public class Zip {
         return destFile;
     }
 
+    public static ArrayList<String> listArchiveFiles(String zipFile) throws IOException {
+        ArrayList<String> fileList = new ArrayList<>();
+        ZipInputStream zis = new ZipInputStream(Files.newInputStream(Paths.get(zipFile)));
+        ZipEntry zipEntry = zis.getNextEntry();
+
+        while (zipEntry != null) {
+            if (!zipEntry.isDirectory()) {
+                fileList.add(zipEntry.getName());
+            }
+
+            zipEntry = zis.getNextEntry();
+        }
+
+        return fileList;
+    }
+
     public static ArrayList<File> decompressFiles(String zipFile, String destDir) throws IOException {
         ArrayList<File> decompressedFiles = new ArrayList<>();
         File dDir = new File(destDir);

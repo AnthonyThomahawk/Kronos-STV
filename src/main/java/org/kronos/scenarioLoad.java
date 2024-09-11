@@ -10,6 +10,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.filechooser.FileFilter;
@@ -28,6 +30,7 @@ import javax.swing.filechooser.FileSystemView;
  */
 public class scenarioLoad extends JPanel {
     private File[] scenarioFiles;
+    private static JFileChooser importChooser;
 
     public scenarioLoad() {
         initComponents();
@@ -96,17 +99,55 @@ public class scenarioLoad extends JPanel {
     }
 
     private void importBtn(ActionEvent e) {
-        JFileChooser fc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-        FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
-        fc.setFileFilter(filter);
+        if (importChooser == null) {
+            try {
+                FileInputStream in = new FileInputStream("settings.xml");
+                Properties saveProps = new Properties();
+                saveProps.loadFromXML(in);
+                String path = saveProps.getProperty("importDir");
+                importChooser = new JFileChooser(path);
+            } catch (Exception x) {
+                importChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+            }
 
-        int res = fc.showOpenDialog(null);
+            FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
+            importChooser.setFileFilter(filter);
+        }
+        FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
+        importChooser.setFileFilter(filter);
+
+        int res = importChooser.showOpenDialog(null);
 
         if (res == JFileChooser.APPROVE_OPTION) {
-            File f = fc.getSelectedFile();
+            File f = importChooser.getSelectedFile();
             try {
                 String workDir = Main.getWorkDir();
-                ArrayList<File> files =  Zip.decompressFiles(f.getAbsolutePath(), workDir);
+
+                ArrayList<String> archiveFileNames = Zip.listArchiveFiles(f.getAbsolutePath());
+                ArrayList<String> existingFileNames = new ArrayList<>();
+
+                for (String fileName : archiveFileNames) {
+                    if (new File(workDir + File.separator + fileName).exists()) {
+                        existingFileNames.add(fileName);
+                    }
+                }
+
+                if (!existingFileNames.isEmpty()) {
+                    String msg = "<html><b>Warning!</b><br>";
+                    msg += "The following files already exist in your work folder : <br>";
+
+                    for (String existingFile : existingFileNames) {
+                        msg += "<b>" + existingFile + "</b><br>";
+                    }
+
+                    msg += "Do you want to <b>overwrite</b> them ?";
+
+                    int ans = JOptionPane.showConfirmDialog(null, msg, "Warning", JOptionPane.YES_NO_OPTION);
+
+                    if (ans == JOptionPane.NO_OPTION) return;
+                }
+
+                ArrayList<File> files = Zip.decompressFiles(f.getAbsolutePath(), workDir);
                 initList();
                 String msg = "<html>Imported from : " + f.getPath() + "<br>";
                 msg += "Files imported : <br>";
@@ -114,6 +155,13 @@ public class scenarioLoad extends JPanel {
                     msg += "<b>" + z.getName() + "</b><br>";
                 }
                 msg += "</html>";
+
+                FileInputStream in = new FileInputStream("settings.xml");
+                Properties saveProps = new Properties();
+                saveProps.loadFromXML(in);
+                saveProps.setProperty("importDir", importChooser.getCurrentDirectory().toString());
+                saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
+
                 JOptionPane.showMessageDialog(null, msg, "Info", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception x) {
                 System.out.println(x);
