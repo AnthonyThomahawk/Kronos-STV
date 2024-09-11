@@ -1187,19 +1187,11 @@ public class createScenario extends JPanel {
 
                 JOptionPane.showMessageDialog(null,  msg, "Success", JOptionPane.INFORMATION_MESSAGE);
 
-
-//                OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(selectedFile.toPath()), StandardCharsets.UTF_8);
-//                fStream.write(getFullCSV(","));
-//                fStream.flush();
-//                fStream.close();
-//
                 FileInputStream in = new FileInputStream("settings.xml");
                 Properties saveProps = new Properties();
                 saveProps.loadFromXML(in);
                 saveProps.setProperty("exportDir", exportChooser.getCurrentDirectory().toString());
                 saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
-//
-//                JOptionPane.showMessageDialog(null, "Scenario exported as : " + selectedFile.getAbsolutePath(), "Success", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (Exception ex) {
                 System.out.println(ex);

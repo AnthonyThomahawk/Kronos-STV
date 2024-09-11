@@ -113,8 +113,6 @@ public class scenarioLoad extends JPanel {
             FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
             importChooser.setFileFilter(filter);
         }
-        FileFilter filter = new FileNameExtensionFilter("Kronos export File","KRONOS");
-        importChooser.setFileFilter(filter);
 
         int res = importChooser.showOpenDialog(null);
 
