@@ -701,14 +701,14 @@ public class inputCandidates extends JPanel {
                         .addComponent(label3)
                         .addComponent(electionNameBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 492, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
                         .addComponent(remBtn, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(exportBtn)
                         .addComponent(createBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addContainerGap())
+                    .addGap(9, 9, 9))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

@@ -54,6 +54,8 @@ public class scenarioLoad extends JPanel {
         return scenarioList.toArray(new File[0]);
     }
 
+
+
     private void initList() {
         try {
             scenarioFiles = scanWorkDirForScenarios();
@@ -93,7 +95,6 @@ public class scenarioLoad extends JPanel {
     private void list1MouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2 && !e.isConsumed()) {
             e.consume();
-
             loadElectionBtn(null);
         }
     }
@@ -147,6 +148,7 @@ public class scenarioLoad extends JPanel {
 
                 ArrayList<File> files = Zip.decompressFiles(f.getAbsolutePath(), workDir);
                 initList();
+
                 String msg = "<html>Imported from : " + f.getPath() + "<br>";
                 msg += "Files imported : <br>";
                 for (File z : files) {
@@ -161,6 +163,15 @@ public class scenarioLoad extends JPanel {
                 saveProps.storeToXML(Files.newOutputStream(Paths.get("settings.xml")), "");
 
                 JOptionPane.showMessageDialog(null, msg, "Info", JOptionPane.INFORMATION_MESSAGE);
+
+                for (File x : files) {
+                    if (x.getName().endsWith(".scenario")) {
+                        String sName = x.getName().replace(".scenario", "");
+                        list1.setSelectedValue(sName, true);
+                        list1.grabFocus();
+                        break;
+                    }
+                }
             } catch (Exception x) {
                 System.out.println(x);
             }
