@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 			"$horizontalGroup": "par l {seq {space :p::p, par l {comp scrollPane1::l::568:x, seq {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp saveBtn:::p::p, space ::149:x, comp newElecBtn:::p:182:p}, seq l {space :p:5:p, par l {seq l {comp label2:::p::p, space :::p, comp iName:::::x}, seq {par l {comp label1:::p:263:p, seq l {comp label3:::p::p, space :::p, comp dQuota:::p::p, space :::p, comp label4:::p::p}}, space :0:0:x}}}}, space :p::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p:41:p, space :p::p, par b {comp label2::b:p::p, comp iName::b:p::p}, space :p::p, par b {comp label3::b:p::p, comp dQuota::b:p::p, comp label4::b:p::p}, space :p::p, comp scrollPane1:::p:445:p, space :p:8:p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp saveBtn::b:p::p, comp newElecBtn::b:p::p}, space :p::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p:41:p, space :p::p, par b {comp label2::b:p::p, comp iName::b:p::p}, space :p::p, par b {comp label3::b:p::p, comp dQuota::b:p::p, comp label4::b:p::p}, space :p::p, comp scrollPane1::::445:x, space :p:8:p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp saveBtn::b:p::p, comp newElecBtn::b:p::p}, space :p::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
