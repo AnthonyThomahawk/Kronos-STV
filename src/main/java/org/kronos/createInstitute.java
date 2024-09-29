@@ -221,6 +221,14 @@ public class createInstitute extends JPanel {
             return false;
         }
 
+        if (nameChecks.isFileNameValid(iName.getText())) {
+            label1.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">Institution name contains illegal characters.</b>" +"</html>");
+            saveBtn.setEnabled(false);
+            newElecBtn.setEnabled(false);
+            return false;
+        }
+
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int rows = dtm.getRowCount();
 
@@ -229,6 +237,15 @@ public class createInstitute extends JPanel {
             if (dName.isEmpty()) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Ward #" + (i+1) +" does not have a name.</b>" +"</html>");
+
+                saveBtn.setEnabled(false);
+                newElecBtn.setEnabled(false);
+
+                return false;
+            }
+            if (dName.contains(",")) {
+                label1.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\">Ward #" + (i+1) +" name contains comma.</b>" +"</html>");
 
                 saveBtn.setEnabled(false);
                 newElecBtn.setEnabled(false);

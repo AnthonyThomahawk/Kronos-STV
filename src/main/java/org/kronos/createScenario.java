@@ -785,7 +785,7 @@ public class createScenario extends JPanel {
             return false;
         }
 
-        if (scenarioTitleTxt.getText().matches(".*[\"*:|?<>/].*") || scenarioTitleTxt.getText().contains("\\")) {
+        if (nameChecks.isFileNameValid(scenarioTitleTxt.getText())) {
             label1.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Scenario name contains illegal characters.</b></html>");
             viewBtn.setEnabled(false);
             exportBtn.setEnabled(false);

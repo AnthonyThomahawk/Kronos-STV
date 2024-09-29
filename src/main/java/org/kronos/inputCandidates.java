@@ -324,7 +324,7 @@ public class inputCandidates extends JPanel {
             return false;
         }
 
-        if (electionNameBox.getText().matches(".*[\"*:|?<>/].*") || electionNameBox.getText().contains("\\")) {
+        if (nameChecks.isFileNameValid(electionNameBox.getText())) {
             label2.setText("<html><b> Alert : </b><br> <b style=\"color:RED;\">Election name contains illegal characters.</b></html>");
             createBtn.setEnabled(false);
             exportBtn.setEnabled(false);
@@ -366,7 +366,7 @@ public class inputCandidates extends JPanel {
         for (int i = 0; i < rows; i++) {
             String d = (String) dtm.getValueAt(i, 1);
 
-            if (d.matches(".*[!@#$%^&*(),;'~`><?=-].*") || d.contains("\\") || d.contains("/") || d.contains("[") || d.contains("]"))
+            if (nameChecks.isPersonNameValid(d))
             {
                 label2.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Candidate " + (i+1) + " name cannot contain special characters.</b>" +"</html>");
