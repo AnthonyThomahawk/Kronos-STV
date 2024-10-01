@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::0:x, seq {par l {comp label1:::p::p, seq l {comp importBtn:::p::p, space :p:75:p, comp loadElectionBtn:::p:111:p}}, space :0:150:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1:::p:307:p, space :p:8:p, par b {comp importBtn::b:p::p, comp loadElectionBtn::b::31:x}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::0:x, seq {par l {comp label1:::p::p, seq {comp importBtn:::p::p, space :p:75:p, comp loadElectionBtn:::p:111:p}}, space :0:150:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1::::307:x, par l {seq {space :p:8:p, comp loadElectionBtn::::31:x}, seq {space :::p, comp importBtn::::33:x}}, space :p::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {

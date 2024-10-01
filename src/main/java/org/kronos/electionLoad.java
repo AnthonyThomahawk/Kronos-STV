@@ -134,10 +134,10 @@ public class electionLoad extends JPanel {
                     .addContainerGap()
                     .addComponent(label1)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 307, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(loadElectionBtn, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(8, Short.MAX_VALUE))
+                    .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }

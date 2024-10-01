@@ -5,7 +5,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::t::0:x, seq {comp label1:::p::p, space :0:0:x}}, space :::p}, seq l {space :p:155:p, comp loadElectionBtn::::111:x, space :p:154:p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1:::p:307:p, space :p::p, comp loadElectionBtn:::p:31:p, space ::8:x}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp label1:::p::p, space :p::p, comp scrollPane1::::307:x, space :p::p, comp loadElectionBtn:::p:31:p, space :p:8:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
