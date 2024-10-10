@@ -26,8 +26,9 @@ if not os.path.isfile(target_script):
 try:
   # grab commandline
   args = sys.argv[1:]
-  result = subprocess.Popen([sys.executable, target_script] + args, env=env)
-  exit_code = result.returncode
+  p = subprocess.Popen([sys.executable, target_script] + args, env=env)
+  p.wait()
+  exit_code = p.returncode
   
 
 except subprocess.CalledProcessError as e:
