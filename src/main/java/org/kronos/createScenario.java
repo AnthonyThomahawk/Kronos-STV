@@ -45,6 +45,8 @@ public class createScenario extends JPanel {
     private ArrayList<JComboBox[]> cbGroups;
     private String electionTitle;
     private String[] candidates;
+    private ArrayList<String> groupNames;
+    private ArrayList<Integer> groupCandidates;
     private int candidateCount;
     private String notes = "";
     private static JFileChooser exportChooser;
@@ -371,6 +373,11 @@ public class createScenario extends JPanel {
     }
 
     private void initTable() {
+        if (groupNames == null)
+            groupNames = new ArrayList<>();
+        if (groupCandidates == null)
+            groupCandidates = new ArrayList<>();
+
         remBtn.setEnabled(false);
         Class<?>[] columnTypes = new Class[candidateCount+2];
         columnTypes[0] = Integer.class;
@@ -1206,6 +1213,15 @@ public class createScenario extends JPanel {
             table1.getCellEditor().stopCellEditing();
     }
 
+    private void groupsBtn(ActionEvent e) {
+        JDialog d = new JDialog(Main.mainFrame, "Manage candidate groups", true);
+        createGroups g = new createGroups(groupNames, groupCandidates, candidates);
+        d.setContentPane(g);
+        d.pack();
+        d.setLocationRelativeTo(null);
+        d.setVisible(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -1225,6 +1241,7 @@ public class createScenario extends JPanel {
         viewNotesBtn = new JButton();
         exportFileBtn = new JButton();
         label3 = new JLabel();
+        groupsBtn = new JButton();
 
         //======== this ========
 
@@ -1306,6 +1323,13 @@ public class createScenario extends JPanel {
         label3.setHorizontalAlignment(SwingConstants.RIGHT);
         label3.setFont(label3.getFont().deriveFont(label3.getFont().getSize() + 3f));
 
+        //---- groupsBtn ----
+        groupsBtn.setText("Groups");
+        groupsBtn.addActionListener(e -> {
+			groupsBtn(e);
+			groupsBtn(e);
+		});
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -1325,7 +1349,9 @@ public class createScenario extends JPanel {
                             .addComponent(exportFileBtn)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(copyBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(groupsBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
                             .addComponent(customSeats)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -1372,7 +1398,8 @@ public class createScenario extends JPanel {
                         .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(customSeats)
                         .addComponent(exportFileBtn)
-                        .addComponent(copyBtn))
+                        .addComponent(copyBtn)
+                        .addComponent(groupsBtn))
                     .addGap(8, 8, 8))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -1396,5 +1423,6 @@ public class createScenario extends JPanel {
     private JButton viewNotesBtn;
     private JButton exportFileBtn;
     private JLabel label3;
+    private JButton groupsBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
