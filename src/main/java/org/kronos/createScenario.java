@@ -1325,10 +1325,7 @@ public class createScenario extends JPanel {
 
         //---- groupsBtn ----
         groupsBtn.setText("Groups");
-        groupsBtn.addActionListener(e -> {
-			groupsBtn(e);
-			groupsBtn(e);
-		});
+        groupsBtn.addActionListener(e -> groupsBtn(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);

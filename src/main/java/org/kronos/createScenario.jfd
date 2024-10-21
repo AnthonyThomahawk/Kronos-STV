@@ -91,7 +91,6 @@ new FormModel {
 				name: "groupsBtn"
 				"text": "Groups"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "groupsBtn", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "groupsBtn", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

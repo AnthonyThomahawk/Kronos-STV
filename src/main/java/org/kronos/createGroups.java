@@ -8,12 +8,14 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventObject;
+import java.util.Vector;
 
 /**
  * @author Worker
@@ -30,6 +32,20 @@ public class createGroups extends JPanel {
         candidates = c;
         initComponents();
         initTables();
+    }
+
+    private Object[] makeOptsArr(ArrayList<String> gn) {
+        Object[] opts;
+
+        if (gn == null || gn.isEmpty()) {
+            opts = new String[1];
+            opts[0] = "No group";
+        } else {
+            opts = Arrays.copyOf(gn.toArray(), gn.size()+1);
+            opts[gn.size()] = "No group";
+        }
+
+        return opts;
     }
 
     private void initTables() {
@@ -50,15 +66,7 @@ public class createGroups extends JPanel {
             }
         }
 
-        String[] opts;
-
-        if (groupNames == null || groupNames.isEmpty()) {
-            opts = new String[1];
-            opts[0] = "No group";
-        } else {
-            opts = (String[]) Arrays.copyOf(groupNames.toArray(), candidates.length+1);
-            opts[candidates.length] = "No group";
-        }
+        Object[] opts = makeOptsArr(groupNames);
 
         groupBoxes = new ArrayList<>();
         int i = 0;
@@ -122,6 +130,46 @@ public class createGroups extends JPanel {
         table2.setColumnSelectionAllowed(false);
         table2.setRowSelectionAllowed(true);
         table2.getTableHeader().setReorderingAllowed(false);
+
+        updateStatus();
+
+        table1.getModel().addTableModelListener(e -> {
+            if (updateStatus())
+                updateGroups();
+        });
+    }
+
+    private void updateGroups() {
+        ArrayList<String> newGroups = new ArrayList<>();
+        for (int i = 0; i < table1.getRowCount(); i++) {
+            newGroups.add((String) table1.getValueAt(i, 0));
+        }
+
+        int[] oldSelIndexes = new int[candidates.length];
+
+        for (int i = 0; i < candidates.length; i++) {
+            oldSelIndexes[i] = groupBoxes.get(i).getSelectedIndex();
+        }
+
+        Object[] newOpts = makeOptsArr(newGroups);
+
+        for (int i = 0; i < candidates.length; i++) {
+            groupBoxes.set(i, new JComboBox(newOpts));
+            try {
+                if (newGroups.contains(groupNames.get(oldSelIndexes[i])))
+                    groupBoxes.get(i).setSelectedItem(groupNames.get(oldSelIndexes[i]));
+                else
+                    groupBoxes.get(i).setSelectedItem("No group");
+            } catch (IndexOutOfBoundsException iex) {
+                groupBoxes.get(i).setSelectedItem("No group");
+            }
+
+            table2.setValueAt(groupBoxes.get(i).getSelectedItem(), i, 1);
+        }
+
+        groupNames = new ArrayList<>();
+
+        groupNames.addAll(newGroups);
     }
 
     private boolean updateStatus() {
@@ -129,6 +177,7 @@ public class createGroups extends JPanel {
             label1.setText("<html>" + "<b> Alert : </b>" +
                     "<br> <b style=\"color:RED;\">There are no Groups.</b>" +"</html>");
             table2.setEnabled(false);
+            table2.setBorder(BorderFactory.createLineBorder(Color.RED));
             return false;
         }
 
@@ -136,16 +185,18 @@ public class createGroups extends JPanel {
 
         for (int i = 0; i < dtm1.getRowCount(); i++) {
             String s = (String) dtm1.getValueAt(i, 0);
-            if (s.isEmpty()) {
+            if (s == null || s.isEmpty()) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">Group name " + i + " is empty.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">Group name " + (i+1) + " is empty.</b>" +"</html>");
                 table2.setEnabled(false);
+                table2.setBorder(BorderFactory.createLineBorder(Color.RED));
                 return false;
             }
             if (nameChecks.isPersonNameValid(s)) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
-                        "<br> <b style=\"color:RED;\">Group name " + i + " contains special characters.</b>" +"</html>");
+                        "<br> <b style=\"color:RED;\">Group name " + (i+1) + " contains special characters.</b>" +"</html>");
                 table2.setEnabled(false);
+                table2.setBorder(BorderFactory.createLineBorder(Color.RED));
                 return false;
             }
         }
@@ -154,13 +205,27 @@ public class createGroups extends JPanel {
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
 
         table2.setEnabled(true);
+        table2.setBorder(null);
         return true;
     }
 
 
     private void addBtn(ActionEvent e) {
+        if (table1.isEditing())
+            table1.getCellEditor().stopCellEditing();
+
+        if (table2.isEditing())
+            table2.getCellEditor().stopCellEditing();
+
         DefaultTableModel dtm1 = (DefaultTableModel) table1.getModel();
-        dtm1.addRow(new Object[]{});
+        dtm1.addRow((Vector) null);
+    }
+
+    private void remBtn(ActionEvent e) {
+        DefaultTableModel dtm1 = (DefaultTableModel) table1.getModel();
+        for (int i : table1.getSelectedRows()) {
+            dtm1.removeRow(i);
+        }
     }
 
 
@@ -189,6 +254,7 @@ public class createGroups extends JPanel {
 
         //---- remBtn ----
         remBtn.setText("Remove group(s)");
+        remBtn.addActionListener(e -> remBtn(e));
 
         //======== scrollPane2 ========
         {
