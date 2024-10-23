@@ -69,7 +69,11 @@ public class createScenario extends JPanel {
             parseScenario(file);
 
         initTable();
+        initDeselectAreas();
+        viewBtn.setText("<html> <b> Evaluate </b> </html>");
+    }
 
+    private void initDeselectAreas() {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -141,8 +145,6 @@ public class createScenario extends JPanel {
             if (table1.isEditing())
                 table1.getCellEditor().stopCellEditing();
         });
-
-        viewBtn.setText("<html> <b> Evaluate </b> </html>");
     }
 
     private void parseElection(String electionFile) {

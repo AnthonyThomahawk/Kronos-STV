@@ -30,7 +30,106 @@ public class createGroups extends JPanel {
         groupCandidates = gC;
         candidates = c;
         initComponents();
+        initDeselectAreas();
         initTables();
+    }
+
+    private void initDeselectAreas() {
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (table1.isEditing()) {
+                    table1.getCellEditor().stopCellEditing();
+                }
+                if (table2.isEditing()) {
+                    table2.getCellEditor().stopCellEditing();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        scrollPane1.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (table1.isEditing()) {
+                    table1.getCellEditor().stopCellEditing();
+                }
+                if (table2.isEditing()) {
+                    table2.getCellEditor().stopCellEditing();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
+        scrollPane2.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (table1.isEditing()) {
+                    table1.getCellEditor().stopCellEditing();
+                }
+                if (table2.isEditing()) {
+                    table2.getCellEditor().stopCellEditing();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
     }
 
     private Object[] makeOptsArr(ArrayList<String> gn) {
@@ -116,7 +215,7 @@ public class createGroups extends JPanel {
         dtm2.addColumn("Group");
 
         for (int i = 0; i < candidates.length; i++) {
-            if (groupCandidates.isEmpty() || groupCandidates.get(i) == -1 || groupNames.isEmpty()) {
+            if (groupCandidates.isEmpty() || groupNames.isEmpty() || groupCandidates.get(i) >= groupNames.size() || groupCandidates.get(i) == -1) {
                 dtm2.addRow(new Object[]{candidates[i], "No group"});
             } else {
                 dtm2.addRow(new Object[]{candidates[i], groupNames.get(groupCandidates.get(i))});
@@ -139,8 +238,10 @@ public class createGroups extends JPanel {
 
         table1.getModel().addTableModelListener(e -> {
             status = updateStatus();
-            if (status)
+            if (status) {
                 updateGroups();
+                updateGroupCandidates();
+            }
         });
 
         table2.getModel().addTableModelListener(e -> updateGroupCandidates());
@@ -263,6 +364,9 @@ public class createGroups extends JPanel {
 
         DefaultTableModel dtm1 = (DefaultTableModel) table1.getModel();
         dtm1.addRow((Vector) null);
+
+        table1.requestFocus();
+        table1.editCellAt(table1.getRowCount()-1, 0);
     }
 
     private void remBtn(ActionEvent e) {
