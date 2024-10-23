@@ -270,6 +270,20 @@ public class createScenario extends JPanel {
                 label3.setText("<html> (Independent) <b>Election : </b>" + electionTitle + "</html>");
             }
 
+            if (scenario.containsKey("GroupNames") && scenario.containsKey("GroupCandidates")) {
+                groupNames = new ArrayList<>();
+                groupCandidates = new ArrayList<>();
+
+                JSONArray gN = (JSONArray) scenario.get("GroupNames");
+                groupNames.addAll(gN);
+
+                JSONArray gC = (JSONArray) scenario.get("GroupCandidates");
+                for (Object o : gC) {
+                    Long longIndex = (Long) o;
+                    groupCandidates.add(longIndex.intValue());
+                }
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
             mainForm.stopLoadingForm = true;
@@ -952,6 +966,20 @@ public class createScenario extends JPanel {
                 scenario.put("CandidateDepartments", cDepts);
             }
 
+            if (groupNames != null && groupCandidates != null) {
+                if (!groupNames.isEmpty() && !groupCandidates.isEmpty()) {
+                    JSONArray groups = new JSONArray();
+                    groups.addAll(groupNames);
+                    JSONArray groupIndexes = new JSONArray();
+                    groupIndexes.addAll(groupCandidates);
+
+                    scenario.put("GroupNames", groups);
+                    scenario.put("GroupCandidates", groupIndexes);
+                }
+            }
+
+
+
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
             file.write(scenario.toJSONString());
             file.close();
@@ -1123,7 +1151,7 @@ public class createScenario extends JPanel {
         if (table1.isEditing())
             table1.getCellEditor().stopCellEditing();
 
-        String scenarioFile = "";
+        String scenarioFile;
         try {
             scenarioFile = saveChanges();
         } catch (Exception z) {
@@ -1216,10 +1244,34 @@ public class createScenario extends JPanel {
     private void groupsBtn(ActionEvent e) {
         JDialog d = new JDialog(Main.mainFrame, "Manage candidate groups", true);
         createGroups g = new createGroups(groupNames, groupCandidates, candidates);
+
+        d.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        d.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                if (!g.status) {
+                    JOptionPane.showMessageDialog(null, "Groups are invalid. Either remove ALL groups, or use appropriate names.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    d.dispose();
+                }
+            }
+        });
+
         d.setContentPane(g);
         d.pack();
         d.setLocationRelativeTo(null);
         d.setVisible(true);
+
+        if (!groupNames.equals(g.groupNames) || !groupCandidates.equals(g.groupCandidates)) {
+            groupNames = new ArrayList<>();
+            groupNames.addAll(g.groupNames);
+
+            groupCandidates = new ArrayList<>();
+            groupCandidates.addAll(g.groupCandidates);
+
+            unsaved = true;
+        }
     }
 
     private void initComponents() {

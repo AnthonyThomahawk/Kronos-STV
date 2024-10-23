@@ -8,10 +8,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
-import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventObject;
@@ -25,6 +23,7 @@ public class createGroups extends JPanel {
     public ArrayList<Integer> groupCandidates;
     public String[] candidates;
     public ArrayList<JComboBox> groupBoxes;
+    public boolean status;
 
     public createGroups(ArrayList<String> gN, ArrayList<Integer> gC, String[] c) {
         groupNames = gN;
@@ -69,11 +68,12 @@ public class createGroups extends JPanel {
         Object[] opts = makeOptsArr(groupNames);
 
         groupBoxes = new ArrayList<>();
-        int i = 0;
-        for (String s : candidates) {
+        for (int i = 0; i < candidates.length; i++) {
             groupBoxes.add(new JComboBox(opts));
-            groupBoxes.get(i).setSelectedItem("No group");
-            i++;
+            if (groupCandidates.isEmpty())
+                groupBoxes.get(i).setSelectedItem("No group");
+            else
+                groupBoxes.get(i).setSelectedIndex(groupCandidates.get(i));
         }
 
         table2 = new JTable() {
@@ -115,8 +115,12 @@ public class createGroups extends JPanel {
         dtm2.addColumn("Candidate");
         dtm2.addColumn("Group");
 
-        for (String s : candidates) {
-            dtm2.addRow(new Object[]{s, "No group"});
+        for (int i = 0; i < candidates.length; i++) {
+            if (groupCandidates.isEmpty() || groupCandidates.get(i) == -1 || groupNames.isEmpty()) {
+                dtm2.addRow(new Object[]{candidates[i], "No group"});
+            } else {
+                dtm2.addRow(new Object[]{candidates[i], groupNames.get(groupCandidates.get(i))});
+            }
         }
 
         table1.setShowVerticalLines(true);
@@ -134,9 +138,24 @@ public class createGroups extends JPanel {
         updateStatus();
 
         table1.getModel().addTableModelListener(e -> {
-            if (updateStatus())
+            status = updateStatus();
+            if (status)
                 updateGroups();
         });
+
+        table2.getModel().addTableModelListener(e -> updateGroupCandidates());
+
+        status = true;
+    }
+
+    private void updateGroupCandidates() {
+        groupCandidates = new ArrayList<>();
+        for (JComboBox j : groupBoxes) {
+            if (j.getSelectedIndex() < groupNames.size())
+                groupCandidates.add(j.getSelectedIndex());
+            else
+                groupCandidates.add(-1);
+        }
     }
 
     private void updateGroups() {
@@ -173,12 +192,16 @@ public class createGroups extends JPanel {
     }
 
     private boolean updateStatus() {
+        if (table2.isEditing()) {
+            table2.getCellEditor().stopCellEditing();
+        }
+
         if (table1.getRowCount() == 0) {
-            label1.setText("<html>" + "<b> Alert : </b>" +
-                    "<br> <b style=\"color:RED;\">There are no Groups.</b>" +"</html>");
+            label1.setText("<html>" + "<b> Status : </b>" +
+                    "<br> <b style=\"color:BLUE;\">There are no Groups.</b>" +"</html>");
             table2.setEnabled(false);
-            table2.setBorder(BorderFactory.createLineBorder(Color.RED));
-            return false;
+            table2.setBorder(null);
+            return true;
         }
 
         DefaultTableModel dtm1 = (DefaultTableModel) table1.getModel();
@@ -195,6 +218,13 @@ public class createGroups extends JPanel {
             if (nameChecks.isPersonNameValid(s)) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">Group name " + (i+1) + " contains special characters.</b>" +"</html>");
+                table2.setEnabled(false);
+                table2.setBorder(BorderFactory.createLineBorder(Color.RED));
+                return false;
+            }
+            if (s.toLowerCase().contains("no group")) {
+                label1.setText("<html>" + "<b> Alert : </b>" +
+                        "<br> <b style=\"color:RED;\">Group name " + (i+1) + " is not allowed.</b>" +"</html>");
                 table2.setEnabled(false);
                 table2.setBorder(BorderFactory.createLineBorder(Color.RED));
                 return false;
