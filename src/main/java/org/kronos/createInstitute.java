@@ -268,6 +268,22 @@ public class createInstitute extends JPanel {
             }
         }
 
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < rows; j++) {
+                if (i == j)
+                    continue;
+                if (dtm.getValueAt(i, 1).equals(dtm.getValueAt(j, 1))) {
+                    label1.setText("<html>" + "<b> Alert : </b>" +
+                            "<br> <b style=\"color:RED;\">Ward #" + (i+1) + " and #" + (j+1) + " cannot have the same name.</b>" +"</html>");
+
+                    saveBtn.setEnabled(false);
+                    newElecBtn.setEnabled(false);
+
+                    return false;
+                }
+            }
+        }
+
         label1.setText("<html>" + "<b> Status : </b>" +
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
 

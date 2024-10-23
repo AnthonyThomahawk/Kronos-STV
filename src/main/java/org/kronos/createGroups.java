@@ -231,6 +231,20 @@ public class createGroups extends JPanel {
             }
         }
 
+        for (int i = 0; i < dtm1.getRowCount(); i++) {
+            for (int j = 0; j < dtm1.getRowCount(); j++) {
+                if (i == j)
+                    continue;
+                if (dtm1.getValueAt(i,0).equals(dtm1.getValueAt(j,0))) {
+                    label1.setText("<html>" + "<b> Alert : </b>" +
+                            "<br> <b style=\"color:RED;\">Group names " + (i+1) + " and " + (j+1) + " cannot be the same.</b>" +"</html>");
+                    table2.setEnabled(false);
+                    table2.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    return false;
+                }
+            }
+        }
+
         label1.setText("<html>" + "<b> Status : </b>" +
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
 
