@@ -282,6 +282,7 @@ public class createScenario extends JPanel {
                     Long longIndex = (Long) o;
                     groupCandidates.add(longIndex.intValue());
                 }
+
             }
 
         } catch (Exception e) {
@@ -752,7 +753,7 @@ public class createScenario extends JPanel {
             System.out.println(x);
     };
 
-    resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults);
+    resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
     j.setContentPane(x);
     j.pack();
     j.setLocationRelativeTo(null);

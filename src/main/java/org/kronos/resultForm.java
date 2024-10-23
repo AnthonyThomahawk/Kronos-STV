@@ -11,6 +11,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.filechooser.FileFilter;
@@ -24,23 +26,48 @@ import javax.swing.table.DefaultTableModel;
 public class resultForm extends JPanel {
     STVResults r;
     String s;
-    public resultForm(String scenarioTitle, STVResults results) {
+    ArrayList<String> groupNames;
+    ArrayList<Integer> groupCandidates;
+    String[] candidates;
+    public resultForm(String scenarioTitle, STVResults results, ArrayList<String> gN, ArrayList<Integer> gC, String[] c) {
         initComponents();
         r = results;
         s = scenarioTitle;
+        if (gN == null)
+            groupNames = new ArrayList<>();
+        else
+            groupNames = gN;
+        if (gC == null)
+            groupCandidates = new ArrayList<>();
+        else
+            groupCandidates = gC;
+
+        candidates = c;
         initTable();
     }
 
     private void initTable() {
-        table1.setModel(new DefaultTableModel(new Object[][] {
-                null
-        }, new String[]{"Rank #", "Elected candidate", "Votes"})
-        {
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return false;
-            }
-        });
+        if (!groupNames.isEmpty() && !groupCandidates.isEmpty()) {
+            table1.setModel(new DefaultTableModel(new Object[][] {
+                    null
+            }, new String[]{"Rank #", "Elected candidate", "Votes", "Group"})
+            {
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            });
+        } else {
+            table1.setModel(new DefaultTableModel(new Object[][] {
+                    null
+            }, new String[]{"Rank #", "Elected candidate", "Votes"})
+            {
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return false;
+                }
+            });
+        }
 
         table1.setShowVerticalLines(true);
         table1.setShowHorizontalLines(true);
@@ -64,14 +91,30 @@ public class resultForm extends JPanel {
     private void populateTable() {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         model.removeRow(0);
-        for (int i = 1; i <= r.lastRank; i++) {
-            Object[] row = new Object[3];
-            row[0] = i;
-            row[1] = r.getElected(i);
-            row[2] = r.getVotes(i);
-            model.addRow(row);
-        }
 
+        if (!groupNames.isEmpty() && !groupCandidates.isEmpty()) {
+            for (int i = 1; i <= r.lastRank; i++) {
+                Object[] row = new Object[4];
+                row[0] = i;
+                row[1] = r.getElected(i);
+                row[2] = r.getVotes(i);
+                int groupCandidateIndex = groupCandidates.get(Arrays.asList(candidates).indexOf(r.getElected(i)));
+                if (groupCandidateIndex == -1) {
+                    row[3] = "No group";
+                } else {
+                    row[3] = groupNames.get(groupCandidateIndex);
+                }
+                model.addRow(row);
+            }
+        } else {
+            for (int i = 1; i <= r.lastRank; i++) {
+                Object[] row = new Object[3];
+                row[0] = i;
+                row[1] = r.getElected(i);
+                row[2] = r.getVotes(i);
+                model.addRow(row);
+            }
+        }
     }
 
     private void copyBtn(ActionEvent e) {
