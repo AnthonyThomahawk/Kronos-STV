@@ -19,7 +19,7 @@ import javax.swing.GroupLayout;
  * @author Enterprise
  */
 public class mainForm extends JPanel {
-    public static inputCandidates inputCandidatesObj;
+    static inputCandidates inputCandidatesObj;
     public mainForm() {
         initComponents();
         setIcons();
