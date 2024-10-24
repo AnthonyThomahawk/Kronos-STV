@@ -19,9 +19,7 @@ import javax.swing.GroupLayout;
  * @author Enterprise
  */
 public class mainForm extends JPanel {
-    public static boolean stopLoadingForm;
     public static inputCandidates inputCandidatesObj;
-    public static JDialog instituteDlg;
     public mainForm() {
         initComponents();
         setIcons();
@@ -93,16 +91,16 @@ public class mainForm extends JPanel {
         int sel = JOptionPane.showOptionDialog(null, "Select election type.", "Election type", 0, 3, null, opts, opts[0]);
 
         if (sel == 0) {
-            stopLoadingForm = false;
             JDialog x = new JDialog(Main.mainFrame, "Load institution", true);
             instituteLoad iL = new instituteLoad();
             x.setContentPane(iL);
             x.pack();
             x.setLocationRelativeTo(null);
-            if (!stopLoadingForm)
-                x.setVisible(true);
-            else
+            if (iL.failed) {
                 x.dispose();
+            } else {
+                x.setVisible(true);
+            }
         } else if (sel == 1) {
             openCandidatesForm(null, "New election");
         }
@@ -118,16 +116,15 @@ public class mainForm extends JPanel {
     }
 
     public static void openInstitutionForm(String title, String f2e) {
-        instituteDlg = new JDialog(Main.mainFrame, title, true);
+        JDialog instituteDlg = new JDialog(Main.mainFrame, title, true);
 
-        instituteDlg.setContentPane(new createInstitute(f2e));
+        instituteDlg.setContentPane(new createInstitute(f2e, instituteDlg));
         instituteDlg.pack();
         instituteDlg.setLocationRelativeTo(null);
         instituteDlg.setVisible(true);
     }
 
     public static void openCandidatesForm(File inFile, String title) {
-        stopLoadingForm = false;
         JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, title, true);
 
         if (inFile != null) inputCandidatesObj = new inputCandidates(inFile);
@@ -146,14 +143,13 @@ public class mainForm extends JPanel {
         });
         inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        if (!stopLoadingForm)
-            inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
-        else
+        if (inputCandidatesObj.failed)
             inputCandidatesDlg.dispose();
+        else
+            inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
     }
 
     public static void openDeptCandidatesForm(String dFile, String title) {
-        stopLoadingForm = false;
         JDialog inputCandidatesDlg = new JDialog(Main.mainFrame, title, true);
 
         inputCandidatesObj = new inputCandidates(true, dFile);
@@ -171,16 +167,15 @@ public class mainForm extends JPanel {
         });
         inputCandidatesDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        if (!stopLoadingForm)
-            inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
-        else
+        if (inputCandidatesObj.failed)
             inputCandidatesDlg.dispose();
+        else
+            inputCandidatesDlg.setVisible(true); // BLOCKING CALL!!!
     }
 
 
 
     public static void openScenarioForm(File inFile, String title) {
-        stopLoadingForm = false;
         JDialog createBallotsDlg = new JDialog(Main.mainFrame, title, true);
         createScenario c = null;
         if (inputCandidatesObj != null && inFile == null) {
@@ -206,10 +201,11 @@ public class mainForm extends JPanel {
         });
         createBallotsDlg.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-        if (!stopLoadingForm)
-            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
-        else
+        if (c.failed) {
             createBallotsDlg.dispose();
+        } else {
+            createBallotsDlg.setVisible(true); // BLOCKING CALL !!!
+        }
     }
 
     private void loadScenarioBtn(ActionEvent e) {
@@ -223,12 +219,11 @@ public class mainForm extends JPanel {
 
     private void settingsBtn(ActionEvent e) {
         JDialog settings = new JDialog(Main.mainFrame, "", true);
-        SettingsUI settingsPane = new SettingsUI();
+        SettingsUI settingsPane = new SettingsUI(settings);
         settings.setContentPane(settingsPane);
         settings.pack();
         settings.setLocationRelativeTo(null);
         settings.setVisible(true);
-        settings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     private void newInstituteBtn(ActionEvent e) {

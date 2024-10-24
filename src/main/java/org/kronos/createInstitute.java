@@ -4,6 +4,7 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -35,12 +36,14 @@ public class createInstitute extends JPanel {
     private int dLength = 1;
     private String editFile = "";
     private boolean unsaved;
+    JDialog parentForm;
 
-    public createInstitute(String file2Edit) {
+    public createInstitute(String file2Edit, JDialog form) {
         initComponents();
         dQuota.setValue(2);
         remBtn.setEnabled(false);
         editFile = file2Edit;
+        parentForm = form;
         initTable();
     }
 
@@ -398,7 +401,7 @@ public class createInstitute extends JPanel {
     private void newElecBtn(ActionEvent e) {
         if (editFile != null) {
             saveChanges();
-            mainForm.instituteDlg.dispose();
+            parentForm.dispose();
             return;
         }
 

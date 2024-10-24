@@ -209,12 +209,11 @@ public class Main {
 
         while (!checkConfig()) {
             JDialog settings = new JDialog(Main.mainFrame, "", true);
-            SettingsUI settingsPane = new SettingsUI();
+            SettingsUI settingsPane = new SettingsUI(settings);
             settings.setContentPane(settingsPane);
             settings.pack();
             settings.setLocationRelativeTo(null);
             settings.setVisible(true);
-            settings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         }
 
         String theme = getTheme();

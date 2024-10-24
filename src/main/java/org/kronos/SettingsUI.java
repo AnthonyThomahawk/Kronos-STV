@@ -4,6 +4,8 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JD;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -19,9 +21,11 @@ import javax.swing.GroupLayout;
  */
 public class SettingsUI extends JPanel {
     String theme = "dark";
-    public SettingsUI() {
+    JDialog parentForm;
+    public SettingsUI(JDialog form) {
         initComponents();
         loadSettings();
+        parentForm = form;
         clearWorkDirectory.setVisible(false); // hidden for now
     }
 
@@ -146,6 +150,7 @@ public class SettingsUI extends JPanel {
 
 
         JOptionPane.showMessageDialog(null, "Settings saved.", "Info", JOptionPane.INFORMATION_MESSAGE);
+        parentForm.dispose();
     }
 
     private void followSystemBtn(ActionEvent e) {

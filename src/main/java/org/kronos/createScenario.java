@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Enterprise
  */
 public class createScenario extends JPanel {
+    public boolean failed = false;
     private int ballotCount = 1;
     public static boolean unsaved;
     private STVResults electionResults;
@@ -289,7 +290,7 @@ public class createScenario extends JPanel {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
-            mainForm.stopLoadingForm = true;
+            failed = true;
         }
     }
 

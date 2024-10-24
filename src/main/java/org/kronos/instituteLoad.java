@@ -18,6 +18,7 @@ import javax.swing.GroupLayout;
 public class instituteLoad extends JPanel {
     private String[] instituteFiles;
     private File[] instituteFilesTmp;
+    public boolean failed = false;
 
     public instituteLoad() {
         try {
@@ -26,8 +27,7 @@ public class instituteLoad extends JPanel {
 
         if (instituteFilesTmp.length == 0) {
             JOptionPane.showMessageDialog(null, "<html><b>No institutions found in work directory.</b><br> Create one by using the \"New institution\" option in the main menu. </html>", "Error", JOptionPane.ERROR_MESSAGE);
-            mainForm.stopLoadingForm = true;
-            return;
+            failed = true;
         }
 
         initComponents();
