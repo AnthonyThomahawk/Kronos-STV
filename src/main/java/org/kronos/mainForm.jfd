@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :p::p, par l {seq l {comp label7:::::x, space :p::p, comp settingsBtn:::p:40:p}, seq l {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:272:p}, seq l {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:285:p}, seq {comp newInstituteBtn:::p:46:p, space :::p, comp label8:::p:272:p}, seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label6:::p:286:p}, seq {par l {comp label4::l::337:x, comp label5::l:::x, comp label9::l:::x}, space :47:47:p}}, space :p:5:p}}"
-			"$verticalGroup": "par l {seq t {space :p::p, par l {comp newInstituteBtn:::p:46:p, comp label8:::p:46:p}, space :p::p, comp label9::::36:x, space :p::p, par l {comp startElectionBtn:::p:46:p, comp label2:::p:46:p}, space :::p, comp label4::::34:x, space :::p, par l {comp loadElectionBtn:::p:46:p, comp label3:::::x}, space :p::p, comp label5::::36:x, space :p::p, par l:::p {comp loadScenarioBtn::::46:x, comp label6::::46:x}, space :p::p, comp label7:::::x, space :p:27:p}, seq t {space :::x, comp settingsBtn:::p:37:p, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {seq {par l {comp label9:::::x, seq {par l {seq l {comp startElectionBtn:::p:46:p, space :::p, comp label2:::p:272:p}, seq l {comp loadElectionBtn:::p:46:p, space :::p, comp label3:::p:285:p}}, space :0:0:x}}, space :p:52:p}, seq l {par t:::p {comp label5::l::361:x, seq l {comp loadScenarioBtn:::p:46:p, space :::p, comp label6:::p:286:p}, comp label7::l::361:x}, space :45::x}, seq {par l {seq {comp newInstituteBtn:::p:46:p, space :::p, comp label8:::p:272:p}, comp label4::l:p:370:p}, space :0:0:x}}}, seq t {space :::x, par l {seq l {comp scenarioBuilderBtn:::p:46:p, space :::p, comp label11:::p:286:p}, comp label10:::p:361:p}, space u:::p, comp settingsBtn:::p:40:p, space :::p}}"
+			"$verticalGroup": "par t {seq t {space :p::p, par l {comp newInstituteBtn:::p:46:p, comp label8:::::x}, space :::p, comp label9:::p:32:p, space :::p, par l {comp startElectionBtn:::p:46:p, comp label2:::::x}, space :::p, comp label4:::p:28:p, space :::p, par l {comp loadElectionBtn:::p:46:p, comp label3:::::x}, space :::p, comp label5:::p:30:p, space :::p, par l {comp loadScenarioBtn:::p:46:p, comp label6:::::x}, space :::p, comp label7:::p:32:p, par l {seq {space :::x, comp settingsBtn:::p:37:p, space :::p}, seq l {space :::p, par l {comp scenarioBuilderBtn:::p:46:p, comp label11:::p:40:p}, space :6:6:p, comp label10:::p:32:p, space ::11:x}}}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -44,7 +44,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "loadScenarioBtn"
-				"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
+				"font": &SwingDerivedFont4 new com.jformdesigner.model.SwingDerivedFont( null, 1, 15, false )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "loadScenarioBtn", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -80,9 +80,25 @@ new FormModel {
 				"font": #SwingDerivedFont3
 				"verticalAlignment": 1
 			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label10"
+				"text": "<html> <p align=\"justify\"> Create scenarios dynamically. </p> </html>"
+				"font": #SwingDerivedFont3
+				"verticalAlignment": 1
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label11"
+				"text": "Scenario Builder"
+				"font": #SwingDerivedFont2
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "scenarioBuilderBtn"
+				"font": #SwingDerivedFont4
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "scenarioBuilderBtn", true ) )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 395, 405 )
+			"size": new java.awt.Dimension( 420, 455 )
 		} )
 	}
 }

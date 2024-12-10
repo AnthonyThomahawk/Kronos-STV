@@ -1,0 +1,59 @@
+JFDML JFormDesigner: "8.2.3.0.386" Java: "17.0.11" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane2:::p:441:p, seq {par l {seq {par l {comp textField1::l:p:187:p, comp label1::l:p::p}, space :::p, par l {comp spinner1::l:p::p, comp label2::l:p::p}}, comp label4::l:p::p}, space u:::p, par l:::p {comp label3:::::x, comp scrollPane1::::0:x}}, seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p}}, space ::8:x}}"
+			"$verticalGroup": "par l {seq l {space :p:52:p, par b {comp label1::b:p::p, comp label2::b:p::p, comp label3::b:p::p}, space :::p, par l {seq {par b {comp textField1::b:p::p, comp spinner1::b:p::p}, space u:::p, comp label4:::p::p}, comp scrollPane1:::p:92:p}, space ::13:x, comp scrollPane2:::p:312:p, space :::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p}, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Scenario name"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "Ballot count"
+			} )
+			add( new FormComponent( "javax.swing.JSpinner" ) {
+				name: "spinner1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Candidates for exclusive random"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "permTable"
+				} )
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "exRandtable"
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "addBtn"
+				"text": "Add +"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "addBtn", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "remBtn"
+				"text": "Remove -"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Multiplier possible values :"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 455, 525 )
+		} )
+	}
+}
