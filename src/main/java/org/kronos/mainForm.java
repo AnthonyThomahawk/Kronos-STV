@@ -234,7 +234,7 @@ public class mainForm extends JPanel {
 
     private void scenarioBuilderBtn(ActionEvent e) {
         JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-        ScenarioBuilder sbf = new ScenarioBuilder();
+        ScenarioBuilder sbf = new ScenarioBuilder(new String[]{"Rafe", "Adler", "Mike", "John", "Jay", "Jake"}, null);
         sb.setContentPane(sbf);
         sb.pack();
         sb.setLocationRelativeTo(null);

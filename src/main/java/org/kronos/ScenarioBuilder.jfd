@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l:::p {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::x, comp buildBtn:::p::p}, comp scrollPane2:::p:441:p, seq {par l:::p {seq {par l {comp textField1::l:p:187:p, comp label1::l:p::p}, space :::p, par l {comp spinner1::l:p::p, comp label2::l:p::p}}, seq {comp label4:::p::p, space :::x, par l {comp label5:::p::p, comp spinner2:::p::p}}}, space u:::p, par l:::p {comp label3:::::x, comp scrollPane1::::0:x}}}, space ::8:x}}"
-			"$verticalGroup": "par l {seq l {space :p:52:p, par b {comp label1::b:p::p, comp label2::b:p::p, comp label3::b:p::p}, space :::p, par l {seq {par b {comp textField1::b:p::p, comp spinner1::b:p::p}, space u:::p, par l {comp label4:::p::p, seq {comp label5:::p::p, space :6:6:p, comp spinner2:::p::p}}}, comp scrollPane1:::p:92:p}, space ::13:x, comp scrollPane2:::p:312:p, space :::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp buildBtn::b:p::p}, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {par l:::p {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::x, comp buildBtn:::p::p}, comp scrollPane2:::p:441:p, seq {par l:::p {seq {par l {comp scenarioNameTxt::l:p:187:p, comp label1::l:p::p}, space :::p, par l {comp spinner1::l:p::p, comp label2::l:p::p}}, seq {comp label4:::p::p, space :::x, par l {comp label5:::p::p, comp spinner2:::p::p}}}, space u:::p, par l:::p {comp label3:::::x, comp scrollPane1::::0:x}}}, comp statusTxt::l:p::p}, space ::8:x}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp statusTxt:::p::p, space :p:26:p, par b {comp label1::b:p::p, comp label2::b:p::p, comp label3::b:p::p}, space :::p, par l {seq {par b {comp scenarioNameTxt::b:p::p, comp spinner1::b:p::p}, space u:::p, par l {comp label4:::p::p, seq {comp label5:::p::p, space :6:6:p, comp spinner2:::p::p}}}, comp scrollPane1:::p:92:p}, space ::17:x, comp scrollPane2:::p:312:p, space :::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp buildBtn::b:p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -13,7 +13,7 @@ new FormModel {
 				"text": "Scenario name"
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textField1"
+				name: "scenarioNameTxt"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
@@ -21,6 +21,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
 				name: "spinner1"
+				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "spinner1StateChanged", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
@@ -63,6 +64,11 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
 				name: "spinner2"
+				addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "spinner2StateChanged", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "statusTxt"
+				"text": "Status :"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

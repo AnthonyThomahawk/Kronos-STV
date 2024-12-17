@@ -7,10 +7,12 @@ package org.kronos;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,15 +24,15 @@ public class ScenarioBuilder extends JPanel {
     ArrayList<String> options;
     ArrayList<String> patterns;
 
-    public ScenarioBuilder() {
+    public ScenarioBuilder(String[] candidates, String constituencyFile) {
         initComponents();
 
         options = new ArrayList<>();
-        options.add("Test 1");
-        options.add("Test 2");
-        options.add("Test 3");
-        options.add("Test 4");
 
+        options.addAll(Arrays.asList(candidates));
+
+        spinner1.setValue(1);
+        spinner2.setValue(1);
         init();
     }
 
@@ -73,6 +75,58 @@ public class ScenarioBuilder extends JPanel {
 //        Collections.shuffle(rem);
 //        return rem.get(0);
 //    }
+
+
+
+    private boolean updateStatus() {
+        if (scenarioNameTxt.getText().isEmpty()) {
+            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">Scenario must have a title.</b>" +"</html>");
+            buildBtn.setEnabled(false);
+            return false;
+        }
+
+        DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            boolean foundBlank = false;
+            for (int j = 0; j < dtm.getColumnCount(); j++) {
+                if (j == 0) {
+                    String s = (String) dtm.getValueAt(i, 0);
+
+                    if (!nameChecks.isInteger(s) && !s.equals("?")) {
+                        statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                "<br> <b style=\"color:RED;\">Invalid multiplier on row #" + (i+1) + ".</b>" +"</html>");
+                        buildBtn.setEnabled(false);
+                        return false;
+                    }
+                } else {
+                    String s = (String) dtm.getValueAt(i, j);
+
+                    if (foundBlank) {
+                        if (!(s == null || s.isEmpty())) {
+                            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                    "<br> <b style=\"color:RED;\">Row #" + (i+1) + " is skipping choices.</b>" +"</html>");
+                            buildBtn.setEnabled(false);
+                            return false;
+                        }
+                    }
+
+                    if (s == null || s.isEmpty()) {
+                        foundBlank = true;
+                    }
+
+
+                }
+            }
+        }
+
+        statusTxt.setText("<html>" + "<b> Status : </b>" +
+                "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
+
+        buildBtn.setEnabled(true);
+        return true;
+    }
 
     private ArrayList<JComboBox> createComboBoxGroup(ArrayList<String> opts) {
         ArrayList<JComboBox> arr = new ArrayList<>();
@@ -199,12 +253,31 @@ public class ScenarioBuilder extends JPanel {
         scrollPane2.setViewportView(permTable);
 
         comboBoxGroups = new ArrayList<>();
+
+        updateStatus();
+
+        permTable.getModel().addTableModelListener(e -> updateStatus());
+
+        exRandtable.getModel().addTableModelListener(e -> updateStatus());
+
+        scenarioNameTxt.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+            public void insertUpdate(DocumentEvent e) {
+                updateStatus();
+            }
+        });
+
     }
 
     private void addBtn(ActionEvent e) {
         DefaultTableModel dtm2 = (DefaultTableModel) permTable.getModel();
         comboBoxGroups.add(createComboBoxGroup(options));
-        dtm2.addRow(new Object[] {0, null, null, null, null});
+        dtm2.addRow(new Object[] {"0", null, null, null, null});
     }
 
     private void remBtn(ActionEvent e) {
@@ -254,15 +327,27 @@ public class ScenarioBuilder extends JPanel {
             patterns.add(line.toString());
         }
 
+
+
         ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer)spinner2.getValue());
-        sg.ballotsToCSV("b.csv");
+        sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+    }
+
+    private void spinner1StateChanged(ChangeEvent e) {
+        if ((Integer) spinner1.getValue() < 1)
+            spinner1.setValue(1);
+    }
+
+    private void spinner2StateChanged(ChangeEvent e) {
+        if ((Integer) spinner2.getValue() < 1)
+            spinner2.setValue(1);
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
         label1 = new JLabel();
-        textField1 = new JTextField();
+        scenarioNameTxt = new JTextField();
         label2 = new JLabel();
         spinner1 = new JSpinner();
         label3 = new JLabel();
@@ -276,6 +361,7 @@ public class ScenarioBuilder extends JPanel {
         buildBtn = new JButton();
         label5 = new JLabel();
         spinner2 = new JSpinner();
+        statusTxt = new JLabel();
 
         //======== this ========
 
@@ -284,6 +370,9 @@ public class ScenarioBuilder extends JPanel {
 
         //---- label2 ----
         label2.setText("Ballot count");
+
+        //---- spinner1 ----
+        spinner1.addChangeListener(e -> spinner1StateChanged(e));
 
         //---- label3 ----
         label3.setText("Candidates for exclusive random");
@@ -316,46 +405,56 @@ public class ScenarioBuilder extends JPanel {
         //---- label5 ----
         label5.setText("Seats");
 
+        //---- spinner2 ----
+        spinner2.addChangeListener(e -> spinner2StateChanged(e));
+
+        //---- statusTxt ----
+        statusTxt.setText("Status :");
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(addBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(remBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(buildBtn))
-                        .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 441, GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGroup(layout.createParallelGroup()
-                                        .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label1))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(layout.createParallelGroup()
-                                        .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label2)))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(label4)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(layout.createParallelGroup()
-                                        .addComponent(label5)
-                                        .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createParallelGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(addBtn)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(remBtn)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(buildBtn))
+                            .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 441, GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup()
+                                            .addComponent(scenarioNameTxt, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(label1))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup()
+                                            .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(label2)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(label4)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup()
+                                            .addComponent(label5)
+                                            .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))))
+                        .addComponent(statusTxt))
                     .addContainerGap(8, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(52, 52, 52)
+                    .addContainerGap()
+                    .addComponent(statusTxt)
+                    .addGap(26, 26, 26)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label1)
                         .addComponent(label2)
@@ -364,7 +463,7 @@ public class ScenarioBuilder extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scenarioNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(layout.createParallelGroup()
@@ -374,7 +473,7 @@ public class ScenarioBuilder extends JPanel {
                                     .addGap(6, 6, 6)
                                     .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                         .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                     .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -389,7 +488,7 @@ public class ScenarioBuilder extends JPanel {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
     // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
     private JLabel label1;
-    private JTextField textField1;
+    private JTextField scenarioNameTxt;
     private JLabel label2;
     private JSpinner spinner1;
     private JLabel label3;
@@ -403,5 +502,6 @@ public class ScenarioBuilder extends JPanel {
     private JButton buildBtn;
     private JLabel label5;
     private JSpinner spinner2;
+    private JLabel statusTxt;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
