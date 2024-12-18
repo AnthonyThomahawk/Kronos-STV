@@ -43,6 +43,8 @@ public class ScenarioBuilder extends JPanel {
     String[] departmentNames;
     int[] departmentStrengths;
     int[] candidateDepartments;
+    private ArrayList<String> groupNames;
+    private ArrayList<Integer> groupCandidates;
 
 
     public ScenarioBuilder(String[] candidates, String constituencyFile) {
@@ -112,7 +114,9 @@ public class ScenarioBuilder extends JPanel {
                 departmental = false;
             }
 
-        } catch (Exception ignored) {}
+        } catch (Exception ez) {
+            System.out.println(ez);
+        }
     }
 
     private void generateConstituencyFile(String filename) {
@@ -288,6 +292,11 @@ public class ScenarioBuilder extends JPanel {
     }
 
     private void init() {
+        if (groupNames == null)
+            groupNames = new ArrayList<>();
+        if (groupCandidates == null)
+            groupCandidates = new ArrayList<>();
+
         exRandtable.setModel(new DefaultTableModel() {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -393,6 +402,30 @@ public class ScenarioBuilder extends JPanel {
         }
     }
 
+    private String generateOutput(String inputFile) {
+        STVpy stv = new STVpy();
+        String stvOutput;
+        try {
+            stvOutput = stv.callSTV(inputFile, (Integer)spinner2.getValue());
+        } catch (Exception x) {
+            return null;
+        }
+
+        return stvOutput;
+    }
+
+    private String generateOutput(String ballotsFile, String constituenciesFile) {
+        STVpy stv = new STVpy();
+        String stvOutput;
+        try {
+            stvOutput = stv.callSTV(ballotsFile, (Integer)spinner2.getValue(), constituenciesFile, instituteQuota);
+        } catch (Exception x) {
+            return null;
+        }
+
+        return stvOutput;
+    }
+
     private void buildBtn(ActionEvent e) {
         patterns = new ArrayList<>();
 
@@ -440,7 +473,25 @@ public class ScenarioBuilder extends JPanel {
             generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
         }
 
+        String output;
 
+        if (departmental)
+            output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+        else
+            output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+        STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+
+        JDialog j = new JDialog(Main.mainFrame, "Results", true);
+        resultForm x = new resultForm(scenarioNameTxt.getText(), electionResults, null, null, candidates);
+
+        if (!groupNames.isEmpty())
+            x = new resultForm(scenarioNameTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
+
+        j.setContentPane(x);
+        j.pack();
+        j.setLocationRelativeTo(null);
+        j.setVisible(true);
     }
 
     private void spinner1StateChanged(ChangeEvent e) {
@@ -451,6 +502,37 @@ public class ScenarioBuilder extends JPanel {
     private void spinner2StateChanged(ChangeEvent e) {
         if ((Integer) spinner2.getValue() < 1)
             spinner2.setValue(1);
+    }
+
+    private void groupsBtn(ActionEvent e) {
+        JDialog d = new JDialog(Main.mainFrame, "Manage candidate groups", true);
+        createGroups g = new createGroups(groupNames, groupCandidates, candidates);
+
+        d.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        d.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                if (!g.status) {
+                    JOptionPane.showMessageDialog(null, "Groups are invalid. Either remove ALL groups, or use appropriate names.", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    d.dispose();
+                }
+            }
+        });
+
+        d.setContentPane(g);
+        d.pack();
+        d.setLocationRelativeTo(null);
+        d.setVisible(true);
+
+        if (!groupNames.equals(g.groupNames) || !groupCandidates.equals(g.groupCandidates)) {
+            groupNames = new ArrayList<>();
+            groupNames.addAll(g.groupNames);
+
+            groupCandidates = new ArrayList<>();
+            groupCandidates.addAll(g.groupCandidates);
+        }
     }
 
     private void initComponents() {
@@ -472,6 +554,7 @@ public class ScenarioBuilder extends JPanel {
         label5 = new JLabel();
         spinner2 = new JSpinner();
         statusTxt = new JLabel();
+        groupsBtn = new JButton();
 
         //======== this ========
 
@@ -521,6 +604,10 @@ public class ScenarioBuilder extends JPanel {
         //---- statusTxt ----
         statusTxt.setText("Status :");
 
+        //---- groupsBtn ----
+        groupsBtn.setText("Groups");
+        groupsBtn.addActionListener(e -> groupsBtn(e));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -533,6 +620,8 @@ public class ScenarioBuilder extends JPanel {
                                 .addComponent(addBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(remBtn)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(groupsBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(buildBtn))
                             .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 441, GroupLayout.PREFERRED_SIZE)
@@ -589,7 +678,8 @@ public class ScenarioBuilder extends JPanel {
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
                         .addComponent(remBtn)
-                        .addComponent(buildBtn))
+                        .addComponent(buildBtn)
+                        .addComponent(groupsBtn))
                     .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
@@ -613,5 +703,6 @@ public class ScenarioBuilder extends JPanel {
     private JLabel label5;
     private JSpinner spinner2;
     private JLabel statusTxt;
+    private JButton groupsBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
