@@ -115,6 +115,8 @@ public class mainForm extends JPanel {
         j.pack();
         j.setLocationRelativeTo(null);
         j.setVisible(true);
+
+        mainForm.openCandidatesForm(el.selectedFile, "Edit election");
     }
 
     public static void openInstitutionForm(String title, String f2e) {
@@ -233,8 +235,15 @@ public class mainForm extends JPanel {
     }
 
     private void scenarioBuilderBtn(ActionEvent e) {
+        JDialog j = new JDialog(Main.mainFrame, "Load election", true);
+        electionLoad el = new electionLoad();
+        j.setContentPane(el);
+        j.pack();
+        j.setLocationRelativeTo(null);
+        j.setVisible(true);
+
         JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-        ScenarioBuilder sbf = new ScenarioBuilder("");
+        ScenarioBuilder sbf = new ScenarioBuilder(el.selectedFile.toString());
         sb.setContentPane(sbf);
         sb.pack();
         sb.setLocationRelativeTo(null);

@@ -18,6 +18,8 @@ import java.util.List;
 public class electionLoad extends JPanel {
     private File[] electionFiles;
 
+    public File selectedFile;
+
     public electionLoad() {
         initComponents();
 
@@ -67,7 +69,9 @@ public class electionLoad extends JPanel {
             return;
         }
 
-        mainForm.openCandidatesForm(electionFiles[selectedIndex], "Edit election");
+        selectedFile = electionFiles[selectedIndex];
+        JDialog jd = (JDialog) this.getRootPane().getParent();
+        jd.dispose();
     }
 
     private void list1MouseClicked(MouseEvent e) {
@@ -76,7 +80,9 @@ public class electionLoad extends JPanel {
 
             int selectedIndex = list1.getSelectedIndex();
 
-            mainForm.openCandidatesForm(electionFiles[selectedIndex], "Edit election");
+            selectedFile = electionFiles[selectedIndex];
+            JDialog jd = (JDialog) this.getRootPane().getParent();
+            jd.dispose();
         }
     }
 
