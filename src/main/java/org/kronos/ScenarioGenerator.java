@@ -1,14 +1,15 @@
 package org.kronos;
 
+import org.json.simple.JSONArray;
+import sun.awt.image.ImageWatched;
+
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class ScenarioGenerator {
@@ -114,6 +115,41 @@ public class ScenarioGenerator {
         } catch (Exception e) {
             System.out.println("Failed writing file " + e);
         }
+    }
+
+    public JSONArray ballotsToJSON() {
+        JSONArray choices = new JSONArray();
+        LinkedHashMap<String[], Integer> consolidated = new LinkedHashMap<>();
+
+        for (String[] b : ballots) {
+            boolean found = false;
+
+            List<String[]> keys = new ArrayList<>(consolidated.keySet());
+
+            for (int i = 0; i < keys.size(); i++) {
+                if (Arrays.equals(keys.get(i), b)) {
+                    found = true;
+                    consolidated.put(keys.get(i), consolidated.get(keys.get(i)) + 1);
+                    break;
+                }
+            }
+
+            if (!found) {
+                consolidated.put(b, 1);
+            }
+        }
+
+        for (String[] k : consolidated.keySet()) {
+            JSONArray ballot = new JSONArray();
+
+            ballot.addAll(Arrays.asList(k));
+
+            ballot.add(consolidated.get(k));
+
+            choices.add(ballot);
+        }
+
+        return choices;
     }
 
     void processLine(String line) {

@@ -296,7 +296,12 @@ public class ScenarioBuilder extends JPanel {
                         foundBlank = true;
                     }
 
-
+                    if (getExRand().isEmpty() && s != null && s.equals("EX-RANDOM")) {
+                        statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                "<br> <b style=\"color:RED;\">Row #" + (i+1) + " contains EX-RANDOM but no exclusive random candidates are selected.</b>" +"</html>");
+                        buildBtn.setEnabled(false);
+                        return false;
+                    }
                 }
             }
         }
@@ -503,12 +508,14 @@ public class ScenarioBuilder extends JPanel {
 
         patterns.add(Integer.toString((Integer) spinner1.getValue()));
         ArrayList<String> exRand = getExRand();
-        StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
-        for (int i = 1; i < exRand.size(); i++) {
-            exRandStr.append(",").append(exRand.get(i));
+        if (!exRand.isEmpty()) {
+            StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
+            for (int i = 1; i < exRand.size(); i++) {
+                exRandStr.append(",").append(exRand.get(i));
+            }
+            exRandStr.append("}");
+            patterns.add(exRandStr.toString());
         }
-        exRandStr.append("}");
-        patterns.add(exRandStr.toString());
 
         DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
@@ -540,6 +547,8 @@ public class ScenarioBuilder extends JPanel {
 
         ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer)spinner2.getValue());
         sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+
+        JSONArray b = sg.ballotsToJSON();
 
         if (departmental) {
             generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
