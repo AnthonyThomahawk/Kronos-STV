@@ -268,6 +268,7 @@ public class ScenarioBuilder extends JPanel {
 
         DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
+        int totalCount = 0;
         for (int i = 0; i < dtm.getRowCount(); i++) {
             boolean foundBlank = false;
             for (int j = 0; j < dtm.getColumnCount(); j++) {
@@ -279,6 +280,10 @@ public class ScenarioBuilder extends JPanel {
                                 "<br> <b style=\"color:RED;\">Invalid multiplier on row #" + (i+1) + ".</b>" +"</html>");
                         buildBtn.setEnabled(false);
                         return false;
+                    }
+
+                    if (nameChecks.isInteger(s)) {
+                        totalCount += Integer.parseInt(s);
                     }
                 } else {
                     String s = (String) dtm.getValueAt(i, j);
@@ -304,6 +309,13 @@ public class ScenarioBuilder extends JPanel {
                     }
                 }
             }
+        }
+
+        if (totalCount > (Integer) spinner1.getValue()) {
+            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                    "<br> <b style=\"color:RED;\">Total votes exceed the ballot limit (" + totalCount + " > " + spinner1.getValue() + ") .</b>" +"</html>");
+            buildBtn.setEnabled(false);
+            return false;
         }
 
         statusTxt.setText("<html>" + "<b> Status : </b>" +
