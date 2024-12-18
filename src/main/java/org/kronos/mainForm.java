@@ -219,6 +219,9 @@ public class mainForm extends JPanel {
         j.pack();
         j.setLocationRelativeTo(null);
         j.setVisible(true);
+
+        if (sl.selectedFile != null)
+            mainForm.openScenarioForm(sl.selectedFile, "Edit scenario - " + sl.scenarioTitle);
     }
 
     private void settingsBtn(ActionEvent e) {
@@ -235,19 +238,48 @@ public class mainForm extends JPanel {
     }
 
     private void scenarioBuilderBtn(ActionEvent e) {
-        JDialog j = new JDialog(Main.mainFrame, "Load election", true);
-        electionLoad el = new electionLoad();
-        j.setContentPane(el);
-        j.pack();
-        j.setLocationRelativeTo(null);
-        j.setVisible(true);
+        String[] opts = {"Election", "Scenario"};
 
-        JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-        ScenarioBuilder sbf = new ScenarioBuilder(el.selectedFile.toString());
-        sb.setContentPane(sbf);
-        sb.pack();
-        sb.setLocationRelativeTo(null);
-        sb.setVisible(true);
+        int sel = JOptionPane.showOptionDialog(null, "What do you want to build upon?", "Select type", 0, 3, null, opts, opts[0]);
+
+        if (sel == -1)
+            return;
+        if (sel == 0) {
+            JDialog j = new JDialog(Main.mainFrame, "Load election", true);
+            electionLoad el = new electionLoad();
+            j.setContentPane(el);
+            j.pack();
+            j.setLocationRelativeTo(null);
+            j.setVisible(true);
+
+            if (el.selectedFile == null)
+                return;
+
+            JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
+            ScenarioBuilder sbf = new ScenarioBuilder(el.selectedFile.toString(), false);
+            sb.setContentPane(sbf);
+            sb.pack();
+            sb.setLocationRelativeTo(null);
+            sb.setVisible(true);
+        } else {
+            JDialog j = new JDialog(Main.mainFrame, "Load scenario", true);
+            scenarioLoad sl = new scenarioLoad();
+            j.setContentPane(sl);
+            j.pack();
+            j.setLocationRelativeTo(null);
+            j.setVisible(true);
+
+            if (sl.selectedFile == null)
+                return;
+
+            JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
+            ScenarioBuilder sbf = new ScenarioBuilder(sl.selectedFile.toString(), true);
+            sb.setContentPane(sbf);
+            sb.pack();
+            sb.setLocationRelativeTo(null);
+            sb.setVisible(true);
+        }
+
     }
 
     private void initComponents() {

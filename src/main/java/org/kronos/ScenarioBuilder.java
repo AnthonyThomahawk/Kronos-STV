@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -59,10 +60,13 @@ public class ScenarioBuilder extends JPanel {
         init();
     }
 
-    public ScenarioBuilder(String electionFile) {
+    public ScenarioBuilder(String file, boolean isScenario) {
         initComponents();
 
-        parseElection(electionFile);
+        if (!isScenario)
+            parseElection(file);
+        else
+            parseScenario(file);
 
         options = new ArrayList<>();
 
@@ -115,7 +119,75 @@ public class ScenarioBuilder extends JPanel {
             }
 
         } catch (Exception ez) {
-            System.out.println(ez);
+            JOptionPane.showMessageDialog(null, "This election file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.dispose();
+        }
+    }
+
+    private void parseScenario(String scenarioFile) {
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject scenario = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(scenarioFile)), StandardCharsets.UTF_8));
+            electionTitle = (String) scenario.get("ElectionTitle");
+
+            JSONArray jCandidates = (JSONArray) scenario.get("Candidates");
+            ArrayList<String> cList = new ArrayList<>();
+            jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
+            candidates = cList.toArray(new String[0]);
+            candidateCount = candidates.length;
+
+            int c = Math.toIntExact((Long) scenario.get("Seats"));
+            spinner2.setValue(c);
+
+            if (scenario.containsKey("InstituteName")) {
+                departmental = true;
+                instituteName = (String) scenario.get("InstituteName");
+                Long l = (long) scenario.get("InstituteQuota");
+                instituteQuota = l.intValue();
+                JSONArray depts = (JSONArray) scenario.get("Departments");
+
+                departmentNames = new String[depts.size()];
+                departmentStrengths = new int[depts.size()];
+
+                for (int i = 0; i < depts.size(); i++) {
+                    JSONArray dept = (JSONArray) depts.get(i);
+                    departmentNames[i] = (String) dept.get(0);
+                    Long dS = (long) dept.get(1);
+                    departmentStrengths[i] = dS.intValue();
+                }
+
+                JSONArray cDepts = (JSONArray) scenario.get("CandidateDepartments");
+                candidateDepartments = new int[cDepts.size()];
+
+                for (int i = 0; i < cDepts.size(); i++) {
+                    Long x = (long) cDepts.get(i);
+                    candidateDepartments[i] = x.intValue();
+                }
+
+            } else {
+                departmental = false;
+            }
+
+            if (scenario.containsKey("GroupNames") && scenario.containsKey("GroupCandidates")) {
+                groupNames = new ArrayList<>();
+                groupCandidates = new ArrayList<>();
+
+                JSONArray gN = (JSONArray) scenario.get("GroupNames");
+                groupNames.addAll(gN);
+
+                JSONArray gC = (JSONArray) scenario.get("GroupCandidates");
+                for (Object o : gC) {
+                    Long longIndex = (Long) o;
+                    groupCandidates.add(longIndex.intValue());
+                }
+
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.dispose();
         }
     }
 
@@ -493,6 +565,8 @@ public class ScenarioBuilder extends JPanel {
         j.setLocationRelativeTo(null);
         j.setVisible(true);
     }
+
+
 
     private void spinner1StateChanged(ChangeEvent e) {
         if ((Integer) spinner1.getValue() < 1)

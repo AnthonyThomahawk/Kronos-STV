@@ -32,6 +32,9 @@ public class scenarioLoad extends JPanel {
     private File[] scenarioFiles;
     private static JFileChooser importChooser;
 
+    public String scenarioTitle;
+    public File selectedFile;
+
     public scenarioLoad() {
         initComponents();
         initList();
@@ -82,13 +85,20 @@ public class scenarioLoad extends JPanel {
             return;
         }
 
+        selectedFile = scenarioFiles[selectedIndex];
+
         JSONParser parser = new JSONParser();
         try {
             JSONObject election = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(scenarioFiles[selectedIndex].toURI())), StandardCharsets.UTF_8));
             String electionTitle = (String) election.get("ElectionTitle");
-            mainForm.openScenarioForm(scenarioFiles[selectedIndex], "Edit scenario - " + electionTitle);
+
+            scenarioTitle = electionTitle;
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.dispose();
         } catch (Exception x) {
             JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            JDialog z = (JDialog) this.getRootPane().getParent();
+            z.dispose();
         }
     }
 
