@@ -4,22 +4,22 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.awt.event.*;
+import javax.management.openmbean.OpenDataException;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -417,7 +417,7 @@ public class ScenarioBuilder extends JPanel {
 
         dtm2.addColumn("Multiplier");
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < options.size(); i++) {
             dtm2.addColumn("Choice " + i);
         }
 
@@ -543,38 +543,119 @@ public class ScenarioBuilder extends JPanel {
             patterns.add(line.toString());
         }
 
-
-
         ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer)spinner2.getValue());
-        sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
 
-        JSONArray b = sg.ballotsToJSON();
 
-        if (departmental) {
-            generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+        String[] opts = {"Results", "Edit scenario"};
+
+        int sel = JOptionPane.showOptionDialog(null, "Display results or edit generated scenario ?", "Select action", 0, 3, null, opts, opts[0]);
+
+        if (sel == 0) {
+            sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+
+            if (departmental) {
+                generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+            }
+
+            String output;
+
+            if (departmental)
+                output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+            else
+                output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+            STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+
+            JDialog j = new JDialog(Main.mainFrame, "Results", true);
+            resultForm x = new resultForm(scenarioNameTxt.getText(), electionResults, null, null, candidates);
+
+            if (!groupNames.isEmpty())
+                x = new resultForm(scenarioNameTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
+
+            j.setContentPane(x);
+            j.pack();
+            j.setLocationRelativeTo(null);
+            j.setVisible(true);
+        } else if (sel == 1) {
+            String fileName = saveScenario(sg.ballotsToJSON());
+            mainForm.openScenarioForm(new File(fileName), "Edit scenario - " + scenarioNameTxt.getText());
         }
-
-        String output;
-
-        if (departmental)
-            output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
-        else
-            output = generateOutput(scenarioNameTxt.getText() + ".csv");
-
-        STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
-
-        JDialog j = new JDialog(Main.mainFrame, "Results", true);
-        resultForm x = new resultForm(scenarioNameTxt.getText(), electionResults, null, null, candidates);
-
-        if (!groupNames.isEmpty())
-            x = new resultForm(scenarioNameTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
-
-        j.setContentPane(x);
-        j.pack();
-        j.setLocationRelativeTo(null);
-        j.setVisible(true);
     }
 
+    public String saveScenario(JSONArray choices) {
+        if (!Main.checkConfig())
+            return null;
+
+        try {
+            String workDir = Main.getWorkDir();
+
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String filePath = workDir + fileSeperator + scenarioNameTxt.getText() + ".scenario";
+
+            JSONObject scenario = new JSONObject();
+
+            scenario.put("ScenarioTitle", scenarioNameTxt.getText());
+            scenario.put("ElectionTitle", electionTitle);
+            JSONArray arr = new JSONArray();
+            for (String s : candidates)
+                arr.add(s);
+            scenario.put("Candidates", arr);
+
+            scenario.put("Choices", choices);
+            scenario.put("Seats", spinner2.getValue());
+            scenario.put("EnforceSeats", true);
+            scenario.put("Notes", "");
+
+            if (departmental) {
+                scenario.put("InstituteName", instituteName);
+                scenario.put("InstituteQuota", instituteQuota);
+
+                JSONArray depts = new JSONArray();
+
+                for (int i = 0; i < departmentNames.length; i++) {
+                    JSONArray dept = new JSONArray();
+                    dept.add(departmentNames[i]);
+                    dept.add(departmentStrengths[i]);
+                    depts.add(dept);
+                }
+
+                scenario.put("Departments", depts);
+
+                JSONArray cDepts = new JSONArray();
+
+                for (int candidateDepartment : candidateDepartments) {
+                    cDepts.add(candidateDepartment);
+                }
+
+                scenario.put("CandidateDepartments", cDepts);
+            }
+
+            if (groupNames != null && groupCandidates != null) {
+                if (!groupNames.isEmpty() && !groupCandidates.isEmpty()) {
+                    JSONArray groups = new JSONArray();
+                    groups.addAll(groupNames);
+                    JSONArray groupIndexes = new JSONArray();
+                    groupIndexes.addAll(groupCandidates);
+
+                    scenario.put("GroupNames", groups);
+                    scenario.put("GroupCandidates", groupIndexes);
+                }
+            }
+
+
+
+            OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
+            file.write(scenario.toJSONString());
+            file.close();
+
+            return filePath;
+        } catch (Exception x) {
+            System.out.println(x);
+            JOptionPane.showMessageDialog(null, "Error saving scenario", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+    }
 
 
     private void spinner1StateChanged(ChangeEvent e) {
@@ -698,7 +779,7 @@ public class ScenarioBuilder extends JPanel {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createParallelGroup()
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(addBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -707,12 +788,12 @@ public class ScenarioBuilder extends JPanel {
                                 .addComponent(groupsBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(buildBtn))
-                            .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 441, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createParallelGroup()
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup()
-                                            .addComponent(scenarioNameTxt, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(scenarioNameTxt, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                                             .addComponent(label1))
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup()
@@ -725,11 +806,11 @@ public class ScenarioBuilder extends JPanel {
                                             .addComponent(label5)
                                             .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createParallelGroup()
                                     .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))))
                         .addComponent(statusTxt))
-                    .addContainerGap(8, Short.MAX_VALUE))
+                    .addGap(8, 8, 8))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
@@ -745,7 +826,7 @@ public class ScenarioBuilder extends JPanel {
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(scenarioNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scenarioNameTxt)
                                 .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(layout.createParallelGroup()
@@ -753,10 +834,11 @@ public class ScenarioBuilder extends JPanel {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(label5)
                                     .addGap(6, 6, 6)
-                                    .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
-                    .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 312, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                            .addGap(14, 14, 14))
+                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addGap(17, 17, 17)
+                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
