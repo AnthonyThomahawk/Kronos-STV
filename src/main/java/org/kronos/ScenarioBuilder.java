@@ -4,6 +4,10 @@
 
 package org.kronos;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
@@ -11,6 +15,13 @@ import javax.swing.event.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +34,16 @@ public class ScenarioBuilder extends JPanel {
     ArrayList<ArrayList<JComboBox>> comboBoxGroups;
     ArrayList<String> options;
     ArrayList<String> patterns;
+    String[] candidates;
+    String electionTitle;
+    int candidateCount;
+    boolean departmental;
+    String instituteName;
+    int instituteQuota;
+    String[] departmentNames;
+    int[] departmentStrengths;
+    int[] candidateDepartments;
+
 
     public ScenarioBuilder(String[] candidates, String constituencyFile) {
         initComponents();
@@ -34,6 +55,89 @@ public class ScenarioBuilder extends JPanel {
         spinner1.setValue(1);
         spinner2.setValue(1);
         init();
+    }
+
+    public ScenarioBuilder(String electionFile) {
+        initComponents();
+
+        parseElection(electionFile);
+
+        options = new ArrayList<>();
+
+        options.addAll(Arrays.asList(candidates));
+
+        spinner1.setValue(1);
+        spinner2.setValue(1);
+        init();
+    }
+
+    private void parseElection(String electionFile) {
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject election = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(electionFile)), StandardCharsets.UTF_8));
+            electionTitle = (String) election.get("Title");
+
+            JSONArray jCandidates = (JSONArray) election.get("Candidates");
+            ArrayList<String> cList = new ArrayList<>();
+            jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
+            candidates = cList.toArray(new String[0]);
+            candidateCount = candidates.length;
+
+            if (election.containsKey("InstituteName")) {
+                departmental = true;
+                instituteName = (String) election.get("InstituteName");
+                Long l = (long) election.get("InstituteQuota");
+                instituteQuota = l.intValue();
+                JSONArray depts = (JSONArray) election.get("Departments");
+
+                departmentNames = new String[depts.size()];
+                departmentStrengths = new int[depts.size()];
+
+                for (int i = 0; i < depts.size(); i++) {
+                    JSONArray dept = (JSONArray) depts.get(i);
+                    departmentNames[i] = (String) dept.get(0);
+                    Long dS = (long) dept.get(1);
+                    departmentStrengths[i] = dS.intValue();
+                }
+
+                JSONArray cDepts = (JSONArray) election.get("CandidateDepartments");
+                candidateDepartments = new int[cDepts.size()];
+
+                for (int i = 0; i < cDepts.size(); i++) {
+                    Long x = (long) cDepts.get(i);
+                    candidateDepartments[i] = x.intValue();
+                }
+
+            } else {
+                departmental = false;
+            }
+
+        } catch (Exception ignored) {}
+    }
+
+    private void generateConstituencyFile(String filename) {
+        try {
+            OutputStream outputStream = Files.newOutputStream(Paths.get(filename));
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
+
+            for (int i = 0; i < departmentNames.length; i++) {
+                String line = departmentNames[i] + ", " + departmentStrengths[i];
+
+                for (int j = 0; j < candidates.length; j++) {
+                    if (i == candidateDepartments[j]) {
+                        line += ", ";
+                        line += candidates[j];
+                    }
+                }
+
+                out.println(line);
+            }
+
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     private ArrayList<String> getExRand() {
@@ -331,6 +435,12 @@ public class ScenarioBuilder extends JPanel {
 
         ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer)spinner2.getValue());
         sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+
+        if (departmental) {
+            generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+        }
+
+
     }
 
     private void spinner1StateChanged(ChangeEvent e) {

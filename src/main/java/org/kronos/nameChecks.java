@@ -6,7 +6,7 @@ public class nameChecks {
     }
 
     public static boolean isPersonNameValid(String d) {
-        return d.matches(".*[!@#$%^&*();'~`><?=-].*") || d.contains(",") || d.contains("\\") || d.contains("/") || d.contains("[") || d.contains("]");
+        return d.matches(".*[!@#$%^&*();'~`><?=-].*") || d.contains(",") || d.contains("\\") || d.contains("/") || d.contains("[") || d.contains("]") || d.contains("RANDOM") || d.contains("EX-RANDOM");
     }
 
     public static boolean isInteger(String str) {

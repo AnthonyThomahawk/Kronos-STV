@@ -98,7 +98,8 @@ public class resultForm extends JPanel {
                 row[0] = i;
                 row[1] = r.getElected(i);
                 row[2] = r.getVotes(i);
-                int groupCandidateIndex = groupCandidates.get(Arrays.asList(candidates).indexOf(r.getElected(i)));
+                int ind = Arrays.asList(candidates).indexOf(row[1]);
+                int groupCandidateIndex = groupCandidates.get(ind);
                 if (groupCandidateIndex == -1) {
                     row[3] = "No group";
                 } else {
