@@ -430,7 +430,7 @@ public class ScenarioBuilder extends JPanel {
         dtm2.addColumn("Multiplier");
 
         for (int i = 0; i < options.size(); i++) {
-            dtm2.addColumn("Choice " + i);
+            dtm2.addColumn("Choice " + (i+1));
         }
 
         permTable.setShowVerticalLines(true);

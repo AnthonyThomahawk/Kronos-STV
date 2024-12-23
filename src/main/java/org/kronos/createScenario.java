@@ -745,12 +745,13 @@ public class createScenario extends JPanel {
                 evalExport += "\"" + s + "\"" + System.lineSeparator();
             }
 
-            String eEName = generateUniqueFileName(Main.getWorkDir(), scenarioTitleTxt.getText() + "_eval", ".csv");
-            File f = new File(Main.getWorkDir(), eEName);
-            OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
-            fStream.write(evalExport);
-            fStream.flush();
-            fStream.close();
+            // not needed for now, may use it later
+//            String eEName = generateUniqueFileName(Main.getWorkDir(), scenarioTitleTxt.getText() + "_eval", ".csv");
+//            File f = new File(Main.getWorkDir(), eEName);
+//            OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
+//            fStream.write(evalExport);
+//            fStream.flush();
+//            fStream.close();
 
         } catch (Exception x) {
             System.out.println(x);
