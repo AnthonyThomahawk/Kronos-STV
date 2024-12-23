@@ -579,16 +579,14 @@ public class ScenarioBuilder extends JPanel {
 
         if (selectedExRandToInit != null) {
             for (String c : selectedExRandToInit) {
-                int ind = options.indexOf(c);
-                dtm.setValueAt(Boolean.TRUE, ind, 1);
+                dtm.setValueAt(Boolean.TRUE, options.indexOf(c), 1);
             }
         }
 
         if (pTableDataToInit != null) {
             for (ArrayList<String> row : pTableDataToInit) {
                 comboBoxGroups.add(createComboBoxGroup(options));
-                Object[] rowData = row.toArray();
-                dtm2.addRow(rowData);
+                dtm2.addRow(row.toArray());
             }
         }
 
