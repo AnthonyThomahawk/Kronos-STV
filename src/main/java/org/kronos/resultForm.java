@@ -138,26 +138,18 @@ public class resultForm extends JPanel {
         if (!scrollPane2.isVisible()) {
             scrollPane2.setVisible(true);
             textArea1.setVisible(true);
-
             button1.setText("Hide analysis");
-
-            revalidate();
-            repaint();
-
-            JDialog x = (JDialog) this.getRootPane().getParent();
-            x.pack();
         } else {
             scrollPane2.setVisible(false);
             textArea1.setVisible(false);
-
             button1.setText("Show analysis");
-
-            revalidate();
-            repaint();
-
-            JDialog x = (JDialog) this.getRootPane().getParent();
-            x.pack();
         }
+
+        revalidate();
+        repaint();
+
+        JDialog x = (JDialog) this.getRootPane().getParent();
+        x.pack();
     }
 
     private void initComponents() {
