@@ -51,6 +51,9 @@ public class ScenarioBuilder extends JPanel {
     ArrayList<String> selectedExRandToInit;
     ArrayList<ArrayList<String>> pTableDataToInit;
 
+    int seatsInit = -1;
+    int ballotCountInit = -1;
+
 
     public ScenarioBuilder(String[] candidates, String constituencyFile) {
         initComponents();
@@ -149,8 +152,9 @@ public class ScenarioBuilder extends JPanel {
             candidates = cList.toArray(new String[0]);
             candidateCount = candidates.length;
 
-            int c = Math.toIntExact((Long) buildFile.get("Seats"));
-            spinner2.setValue(c);
+            seatsInit = Math.toIntExact((Long) buildFile.get("Seats"));
+
+            ballotCountInit = Math.toIntExact((Long) buildFile.get("BallotCount"));
 
             if (buildFile.containsKey("InstituteName")) {
                 departmental = true;
@@ -207,6 +211,8 @@ public class ScenarioBuilder extends JPanel {
             JSONArray tableData = (JSONArray) buildFile.get("PermTable");
             pTableDataToInit = new ArrayList<>();
             pTableDataToInit.addAll(tableData);
+
+            scenarioNameTxt.setText(electionTitle + "_scen");
 
 
         } catch (Exception e) {
@@ -558,8 +564,6 @@ public class ScenarioBuilder extends JPanel {
 
         comboBoxGroups = new ArrayList<>();
 
-        updateStatus();
-
         permTable.getModel().addTableModelListener(e -> updateStatus());
 
         exRandtable.getModel().addTableModelListener(e -> updateStatus());
@@ -590,6 +594,13 @@ public class ScenarioBuilder extends JPanel {
             }
         }
 
+        if (ballotCountInit != -1)
+            spinner1.setValue(ballotCountInit);
+
+        if (seatsInit != -1)
+            spinner2.setValue(seatsInit);
+
+        updateStatus();
     }
 
     private void addBtn(ActionEvent e) {
@@ -732,6 +743,7 @@ public class ScenarioBuilder extends JPanel {
             buildFile.put("Candidates", arr);
 
             buildFile.put("Seats", spinner2.getValue());
+            buildFile.put("BallotCount", spinner1.getValue());
             buildFile.put("EnforceSeats", true);
             buildFile.put("Notes", "");
 
