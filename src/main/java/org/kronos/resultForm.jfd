@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::::443:x, seq t {space :0:240:x, comp copyAnalysisBtn:::p::p, space :::p, comp copyBtn:::p::p}, seq l {comp label1:::p::p, space :0:400:x}, comp scrollPane2::l::443:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp scrollPane1:::p:169:p, space :p::p, comp label1:::p::p, space :::p, comp scrollPane2::::365:x, space :::p, par b {comp copyBtn::b:p::p, comp copyAnalysisBtn::b:p::p}, space :p:4:p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::::443:x, comp scrollPane2::l::443:x, seq l {comp button1:::p::p, space ::122:x, comp copyAnalysisBtn:::p::p, space u:::p, comp copyBtn:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp scrollPane1::::169:x, space :p::p, comp scrollPane2::::359:x, space u:p::p, par b {comp button1::b:p::p, comp copyAnalysisBtn::b:p::p, comp copyBtn::b:p::p}, space :p:11:p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -30,13 +30,14 @@ new FormModel {
 				"text": "Copy analysis"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "copyAnalysisBtn", true ) )
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "Analysis"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "button1"
+				"text": "Show analysis"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 5, 5 )
-			"size": new java.awt.Dimension( 455, 600 )
+			"size": new java.awt.Dimension( 455, 585 )
 		} )
 	}
 }

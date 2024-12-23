@@ -86,6 +86,9 @@ public class resultForm extends JPanel {
         populateTable();
 
         textArea1.setText(r.stvInput);
+
+        textArea1.setVisible(false);
+        scrollPane2.setVisible(false);
     }
 
     private void populateTable() {
@@ -131,6 +134,32 @@ public class resultForm extends JPanel {
         clipboard.setContents(selection, selection);
     }
 
+    private void button1(ActionEvent e) {
+        if (!scrollPane2.isVisible()) {
+            scrollPane2.setVisible(true);
+            textArea1.setVisible(true);
+
+            button1.setText("Hide analysis");
+
+            revalidate();
+            repaint();
+
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.pack();
+        } else {
+            scrollPane2.setVisible(false);
+            textArea1.setVisible(false);
+
+            button1.setText("Show analysis");
+
+            revalidate();
+            repaint();
+
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.pack();
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -140,7 +169,7 @@ public class resultForm extends JPanel {
         scrollPane2 = new JScrollPane();
         textArea1 = new JTextArea();
         copyAnalysisBtn = new JButton();
-        label1 = new JLabel();
+        button1 = new JButton();
 
         //======== this ========
 
@@ -162,8 +191,9 @@ public class resultForm extends JPanel {
         copyAnalysisBtn.setText("Copy analysis");
         copyAnalysisBtn.addActionListener(e -> copyAnalysisBtn(e));
 
-        //---- label1 ----
-        label1.setText("Analysis");
+        //---- button1 ----
+        button1.setText("Show analysis");
+        button1.addActionListener(e -> button1(e));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -173,31 +203,28 @@ public class resultForm extends JPanel {
                     .addContainerGap()
                     .addGroup(layout.createParallelGroup()
                         .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(0, 240, Short.MAX_VALUE)
-                            .addComponent(copyAnalysisBtn)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(copyBtn))
+                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(label1)
-                            .addGap(0, 400, Short.MAX_VALUE))
-                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 443, Short.MAX_VALUE))
+                            .addComponent(button1)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                            .addComponent(copyAnalysisBtn)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(copyBtn)))
                     .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label1)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(copyBtn)
-                        .addComponent(copyAnalysisBtn))
-                    .addGap(4, 4, 4))
+                        .addComponent(button1)
+                        .addComponent(copyAnalysisBtn)
+                        .addComponent(copyBtn))
+                    .addGap(11, 11, 11))
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
@@ -210,6 +237,6 @@ public class resultForm extends JPanel {
     private JScrollPane scrollPane2;
     private JTextArea textArea1;
     private JButton copyAnalysisBtn;
-    private JLabel label1;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
