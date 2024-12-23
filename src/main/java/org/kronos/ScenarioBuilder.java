@@ -47,6 +47,10 @@ public class ScenarioBuilder extends JPanel {
     private ArrayList<String> groupNames;
     private ArrayList<Integer> groupCandidates;
 
+    ArrayList<String> allExRandToInit;
+    ArrayList<String> selectedExRandToInit;
+    ArrayList<ArrayList<String>> pTableDataToInit;
+
 
     public ScenarioBuilder(String[] candidates, String constituencyFile) {
         initComponents();
@@ -60,13 +64,18 @@ public class ScenarioBuilder extends JPanel {
         init();
     }
 
-    public ScenarioBuilder(String file, boolean isScenario) {
+    public ScenarioBuilder(String file, int fileType) {
         initComponents();
 
-        if (!isScenario)
-            parseElection(file);
-        else
-            parseScenario(file);
+        switch (fileType) {
+            case 0:
+                parseElection(file);
+                break;
+            case 1:
+                parseScenario(file);
+            case 2:
+                parseBuildFile(file);
+        }
 
         options = new ArrayList<>();
 
@@ -74,6 +83,7 @@ public class ScenarioBuilder extends JPanel {
 
         spinner1.setValue(1);
         spinner2.setValue(1);
+
         init();
     }
 
@@ -120,6 +130,85 @@ public class ScenarioBuilder extends JPanel {
 
         } catch (Exception ez) {
             JOptionPane.showMessageDialog(null, "This election file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.dispose();
+        }
+    }
+
+    private void parseBuildFile(String buildFilePath) {
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject buildFile = (JSONObject) parser.parse(new InputStreamReader(Files.newInputStream(Paths.get(buildFilePath)), StandardCharsets.UTF_8));
+            electionTitle = (String) buildFile.get("ElectionTitle");
+
+            JSONArray jCandidates = (JSONArray) buildFile.get("Candidates");
+            ArrayList<String> cList = new ArrayList<>();
+            jCandidates.iterator().forEachRemaining((x) -> cList.add((String)x));
+            candidates = cList.toArray(new String[0]);
+            candidateCount = candidates.length;
+
+            int c = Math.toIntExact((Long) buildFile.get("Seats"));
+            spinner2.setValue(c);
+
+            if (buildFile.containsKey("InstituteName")) {
+                departmental = true;
+                instituteName = (String) buildFile.get("InstituteName");
+                Long l = (long) buildFile.get("InstituteQuota");
+                instituteQuota = l.intValue();
+                JSONArray depts = (JSONArray) buildFile.get("Departments");
+
+                departmentNames = new String[depts.size()];
+                departmentStrengths = new int[depts.size()];
+
+                for (int i = 0; i < depts.size(); i++) {
+                    JSONArray dept = (JSONArray) depts.get(i);
+                    departmentNames[i] = (String) dept.get(0);
+                    Long dS = (long) dept.get(1);
+                    departmentStrengths[i] = dS.intValue();
+                }
+
+                JSONArray cDepts = (JSONArray) buildFile.get("CandidateDepartments");
+                candidateDepartments = new int[cDepts.size()];
+
+                for (int i = 0; i < cDepts.size(); i++) {
+                    Long x = (long) cDepts.get(i);
+                    candidateDepartments[i] = x.intValue();
+                }
+
+            } else {
+                departmental = false;
+            }
+
+            if (buildFile.containsKey("GroupNames") && buildFile.containsKey("GroupCandidates")) {
+                groupNames = new ArrayList<>();
+                groupCandidates = new ArrayList<>();
+
+                JSONArray gN = (JSONArray) buildFile.get("GroupNames");
+                groupNames.addAll(gN);
+
+                JSONArray gC = (JSONArray) buildFile.get("GroupCandidates");
+                for (Object o : gC) {
+                    Long longIndex = (Long) o;
+                    groupCandidates.add(longIndex.intValue());
+                }
+
+            }
+
+            JSONArray allXRand = (JSONArray) buildFile.get("ExRandomAll");
+            allExRandToInit = new ArrayList<>();
+            allExRandToInit.addAll(allXRand);
+
+            JSONArray selectedXRand = (JSONArray) buildFile.get("ExRandomSelected");
+            selectedExRandToInit = new ArrayList<>();
+            selectedExRandToInit.addAll(selectedXRand);
+
+            JSONArray tableData = (JSONArray) buildFile.get("PermTable");
+            pTableDataToInit = new ArrayList<>();
+            pTableDataToInit.addAll(tableData);
+
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
             JDialog x = (JDialog) this.getRootPane().getParent();
             x.dispose();
         }
@@ -224,6 +313,17 @@ public class ScenarioBuilder extends JPanel {
             if ((Boolean) dtm.getValueAt(i, 1)) {
                 exRandList.add((String) dtm.getValueAt(i, 0));
             }
+        }
+
+        return exRandList;
+    }
+
+    private ArrayList<String> getAllExRand() {
+        DefaultTableModel dtm = (DefaultTableModel) exRandtable.getModel();
+        ArrayList<String> exRandList = new ArrayList<>();
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            exRandList.add((String) dtm.getValueAt(i, 0));
         }
 
         return exRandList;
@@ -474,6 +574,21 @@ public class ScenarioBuilder extends JPanel {
             }
         });
 
+
+        if (selectedExRandToInit != null) {
+            for (String c : selectedExRandToInit) {
+                int ind = options.indexOf(c);
+                dtm.setValueAt(Boolean.TRUE, ind, 1);
+            }
+        }
+
+        if (pTableDataToInit != null) {
+            for (ArrayList<String> row : pTableDataToInit) {
+                Object[] rowData = row.toArray();
+                dtm2.addRow(rowData);
+            }
+        }
+
     }
 
     private void addBtn(ActionEvent e) {
@@ -563,6 +678,8 @@ public class ScenarioBuilder extends JPanel {
         int sel = JOptionPane.showOptionDialog(null, "Display results or edit generated scenario ?", "Select action", 0, 3, null, opts, opts[0]);
 
         if (sel == 0) {
+            saveBuildFile();
+
             sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
 
             if (departmental) {
@@ -591,6 +708,101 @@ public class ScenarioBuilder extends JPanel {
         } else if (sel == 1) {
             String fileName = saveScenario(sg.ballotsToJSON());
             mainForm.openScenarioForm(new File(fileName), "Edit scenario - " + scenarioNameTxt.getText());
+        }
+    }
+
+    public String saveBuildFile() {
+        if (!Main.checkConfig())
+            return null;
+
+        try {
+            String workDir = Main.getWorkDir();
+
+            String fileSeperator = FileSystems.getDefault().getSeparator();
+            String filePath = workDir + fileSeperator + scenarioNameTxt.getText() + ".buildTemplate";
+
+            JSONObject buildFile = new JSONObject();
+
+            buildFile.put("ScenarioTitle", scenarioNameTxt.getText());
+            buildFile.put("ElectionTitle", electionTitle);
+            JSONArray arr = new JSONArray();
+            for (String s : candidates)
+                arr.add(s);
+            buildFile.put("Candidates", arr);
+
+            buildFile.put("Seats", spinner2.getValue());
+            buildFile.put("EnforceSeats", true);
+            buildFile.put("Notes", "");
+
+            if (departmental) {
+                buildFile.put("InstituteName", instituteName);
+                buildFile.put("InstituteQuota", instituteQuota);
+
+                JSONArray depts = new JSONArray();
+
+                for (int i = 0; i < departmentNames.length; i++) {
+                    JSONArray dept = new JSONArray();
+                    dept.add(departmentNames[i]);
+                    dept.add(departmentStrengths[i]);
+                    depts.add(dept);
+                }
+
+                buildFile.put("Departments", depts);
+
+                JSONArray cDepts = new JSONArray();
+
+                for (int candidateDepartment : candidateDepartments) {
+                    cDepts.add(candidateDepartment);
+                }
+
+                buildFile.put("CandidateDepartments", cDepts);
+            }
+
+            if (groupNames != null && groupCandidates != null) {
+                if (!groupNames.isEmpty() && !groupCandidates.isEmpty()) {
+                    JSONArray groups = new JSONArray();
+                    groups.addAll(groupNames);
+                    JSONArray groupIndexes = new JSONArray();
+                    groupIndexes.addAll(groupCandidates);
+
+                    buildFile.put("GroupNames", groups);
+                    buildFile.put("GroupCandidates", groupIndexes);
+                }
+            }
+
+            JSONArray XRandom = new JSONArray();
+            XRandom.addAll(getAllExRand());
+
+            buildFile.put("ExRandomAll", XRandom);
+
+            JSONArray XRandomSelected = new JSONArray();
+            XRandomSelected.addAll(getExRand());
+
+            buildFile.put("ExRandomSelected", XRandomSelected);
+
+            JSONArray ptable = new JSONArray();
+            DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                JSONArray row = new JSONArray();
+                for (int j = 0; j < dtm.getColumnCount(); j++) {
+                    row.add(dtm.getValueAt(i,j));
+                }
+
+                ptable.add(row);
+            }
+
+            buildFile.put("PermTable", ptable);
+
+            OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
+            file.write(buildFile.toJSONString());
+            file.close();
+
+            return filePath;
+        } catch (Exception x) {
+            System.out.println(x);
+            JOptionPane.showMessageDialog(null, "Error saving scenario", "Error", JOptionPane.ERROR_MESSAGE);
+            return null;
         }
     }
 

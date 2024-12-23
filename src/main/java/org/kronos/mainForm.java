@@ -256,7 +256,7 @@ public class mainForm extends JPanel {
                 return;
 
             JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-            ScenarioBuilder sbf = new ScenarioBuilder(el.selectedFile.toString(), false);
+            ScenarioBuilder sbf = new ScenarioBuilder(el.selectedFile.toString(), sel);
             sb.setContentPane(sbf);
             sb.pack();
             sb.setLocationRelativeTo(null);
@@ -273,7 +273,7 @@ public class mainForm extends JPanel {
                 return;
 
             JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-            ScenarioBuilder sbf = new ScenarioBuilder(sl.selectedFile.toString(), true);
+            ScenarioBuilder sbf = new ScenarioBuilder(sl.selectedFile.toString(), sel);
             sb.setContentPane(sbf);
             sb.pack();
             sb.setLocationRelativeTo(null);
