@@ -737,25 +737,25 @@ public class createScenario extends JPanel {
 
        JDialog j = new JDialog(Main.mainFrame, "Results", true);
 
-        try {
-            String evalExport = getFullCSV(",");
-            evalExport += System.lineSeparator() + System.lineSeparator();
-
-            for (String s : electionResults.stvInput.split(System.lineSeparator())) {
-                evalExport += "\"" + s + "\"" + System.lineSeparator();
-            }
-
-            // not needed for now, may use it later
+//        try {
+//            String evalExport = getFullCSV(",");
+//            evalExport += System.lineSeparator() + System.lineSeparator();
+//
+//            for (String s : electionResults.stvInput.split(System.lineSeparator())) {
+//                evalExport += "\"" + s + "\"" + System.lineSeparator();
+//            }
+//
+//            // not needed for now, may use it later
 //            String eEName = generateUniqueFileName(Main.getWorkDir(), scenarioTitleTxt.getText() + "_eval", ".csv");
 //            File f = new File(Main.getWorkDir(), eEName);
 //            OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
 //            fStream.write(evalExport);
 //            fStream.flush();
 //            fStream.close();
-
-        } catch (Exception x) {
-            System.out.println(x);
-    };
+//
+//        } catch (Exception x) {
+//            System.out.println(x);
+//    };
 
     resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
     j.setContentPane(x);
