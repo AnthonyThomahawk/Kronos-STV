@@ -586,6 +586,7 @@ public class ScenarioBuilder extends JPanel {
 
         if (pTableDataToInit != null) {
             for (ArrayList<String> row : pTableDataToInit) {
+                comboBoxGroups.add(createComboBoxGroup(options));
                 Object[] rowData = row.toArray();
                 dtm2.addRow(rowData);
             }
