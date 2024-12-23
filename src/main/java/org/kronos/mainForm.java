@@ -30,8 +30,8 @@ public class mainForm extends JPanel {
     public void setIcons() {
         String[] iconLocations;
 
-        String[] darkIcons = {"plusIconDark.png", "plusIconDark.png", "darkFolder.png", "darkFolder.png", "gearDark.png"};
-        String[] lightIcons = {"plusicon24.png", "plusicon24.png", "icons8-folder-24.png", "icons8-folder-24.png", "gearLight.png"};
+        String[] darkIcons = {"plusIconDark.png", "plusIconDark.png", "darkFolder.png", "darkFolder.png", "gearDark.png", "hammerDark.png"};
+        String[] lightIcons = {"plusicon24.png", "plusicon24.png", "icons8-folder-24.png", "icons8-folder-24.png", "gearLight.png", "hammerDark.png"};
 
         if (Main.getTheme().equals("system")) {
             if (DarkModeDetector.isDarkMode()) {
@@ -46,7 +46,7 @@ public class mainForm extends JPanel {
             iconLocations = lightIcons;
         }
 
-        JButton[] buttons = {newInstituteBtn, startElectionBtn, loadElectionBtn, loadScenarioBtn, settingsBtn};
+        JButton[] buttons = {newInstituteBtn, startElectionBtn, loadElectionBtn, loadScenarioBtn, settingsBtn, scenarioBuilderBtn};
 
         try {
             for (int i = 0; i < iconLocations.length; i++) {
@@ -431,18 +431,19 @@ public class mainForm extends JPanel {
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(label8, GroupLayout.PREFERRED_SIZE, 272, GroupLayout.PREFERRED_SIZE))
                                 .addComponent(label4, GroupLayout.PREFERRED_SIZE, 370, GroupLayout.PREFERRED_SIZE))
-                            .addGap(0, 0, Short.MAX_VALUE))))
-                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(scenarioBuilderBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(label11, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE))
-                        .addComponent(label10, GroupLayout.PREFERRED_SIZE, 361, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap())
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup()
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(scenarioBuilderBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(label11, GroupLayout.PREFERRED_SIZE, 286, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(35, 35, 35))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(label10)
+                                    .addGap(12, 12, 12)))
+                            .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
@@ -471,19 +472,15 @@ public class mainForm extends JPanel {
                         .addComponent(label6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(label7, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())
-                        .addGroup(layout.createSequentialGroup()
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup()
-                                .addComponent(scenarioBuilderBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(label11, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
-                            .addGap(6, 6, 6)
-                            .addComponent(label10, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap(11, Short.MAX_VALUE))))
+                        .addComponent(scenarioBuilderBtn, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label11, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(settingsBtn, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label10, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on
     }
