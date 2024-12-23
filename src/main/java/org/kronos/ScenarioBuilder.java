@@ -73,8 +73,10 @@ public class ScenarioBuilder extends JPanel {
                 break;
             case 1:
                 parseScenario(file);
+                break;
             case 2:
                 parseBuildFile(file);
+                break;
         }
 
         options = new ArrayList<>();

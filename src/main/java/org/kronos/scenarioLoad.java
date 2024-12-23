@@ -35,7 +35,11 @@ public class scenarioLoad extends JPanel {
     public String scenarioTitle;
     public File selectedFile;
 
-    public scenarioLoad() {
+    boolean t;
+
+    public scenarioLoad(boolean template) {
+        t = template;
+
         initComponents();
         initList();
 
@@ -48,8 +52,11 @@ public class scenarioLoad extends JPanel {
         File[] allFiles = directory.listFiles();
         List<File> scenarioList = new ArrayList<>();
 
+        String extension;
+        if (t) extension = ".buildTemplate"; else extension = ".scenario";
+
         for (File f : allFiles) {
-            if (f.getName().endsWith(".scenario")) {
+            if (f.getName().endsWith(extension)) {
                 scenarioList.add(f);
             }
         }
@@ -86,6 +93,12 @@ public class scenarioLoad extends JPanel {
         }
 
         selectedFile = scenarioFiles[selectedIndex];
+
+        if (t) {
+            JDialog x = (JDialog) this.getRootPane().getParent();
+            x.dispose();
+            return;
+        }
 
         JSONParser parser = new JSONParser();
         try {
