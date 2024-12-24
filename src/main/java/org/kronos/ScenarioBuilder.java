@@ -455,7 +455,7 @@ public class ScenarioBuilder extends JPanel {
         return true;
     }
 
-    private ArrayList<JComboBox> createComboBoxGroup(ArrayList<String> opts) {
+    private ArrayList<JComboBox> createComboBoxGroup(ArrayList<String> opts, int currentIndex) {
         ArrayList<JComboBox> arr = new ArrayList<>();
         for (int i = 0; i < permTable.getColumnCount() - 1; i++) {
             JComboBox x = new JComboBox();
@@ -465,9 +465,32 @@ public class ScenarioBuilder extends JPanel {
             x.addItem("RANDOM");
             x.addItem("EX-RANDOM");
             x.addItem("Clear option [x]");
-            x.setSelectedIndex(-1);
 
-            AtomicInteger oldSel = new AtomicInteger(-1);
+            ArrayList<String> newOpts = new ArrayList<>(opts);
+            newOpts.add("RANDOM");
+            newOpts.add("EX-RANDOM");
+
+            int selection;
+            String v;
+
+            if (pTableDataToInit != null) {
+                try {
+                    v = pTableDataToInit.get(currentIndex).get(i+1);
+                } catch (Exception e) {
+                    v = null;
+                }
+            } else {
+                v = null;
+            }
+
+            if (v != null && !v.isEmpty())
+                selection = newOpts.indexOf(v);
+            else
+                selection = -1;
+
+            x.setSelectedIndex(selection);
+
+            AtomicInteger oldSel = new AtomicInteger(selection);
 
             x.addItemListener(e -> {
                 if (x.getSelectedIndex() == -1)
@@ -614,10 +637,15 @@ public class ScenarioBuilder extends JPanel {
         }
 
         if (pTableDataToInit != null) {
-            for (ArrayList<String> row : pTableDataToInit) {
-                comboBoxGroups.add(createComboBoxGroup(options));
-                dtm2.addRow(row.toArray());
+            for (int i = 0; i < pTableDataToInit.size(); i++) {
+                comboBoxGroups.add(createComboBoxGroup(options, i));
+                dtm2.addRow(pTableDataToInit.get(i).toArray());
             }
+
+//            for (ArrayList<String> row : pTableDataToInit) {
+//                comboBoxGroups.add(createComboBoxGroup(options, comboBoxGroups.size()));
+//                dtm2.addRow(row.toArray());
+//            }
         }
 
         if (ballotCountInit != -1)
@@ -631,7 +659,7 @@ public class ScenarioBuilder extends JPanel {
 
     private void addBtn(ActionEvent e) {
         DefaultTableModel dtm2 = (DefaultTableModel) permTable.getModel();
-        comboBoxGroups.add(createComboBoxGroup(options));
+        comboBoxGroups.add(createComboBoxGroup(options, comboBoxGroups.size()));
         dtm2.addRow(new Object[] {"0", null, null, null, null});
     }
 
