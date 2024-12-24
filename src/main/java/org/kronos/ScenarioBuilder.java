@@ -444,7 +444,7 @@ public class ScenarioBuilder extends JPanel {
 
         if (totalCount > (Integer) spinner1.getValue()) {
             statusTxt.setText("<html>" + "<b> Alert : </b>" +
-                    "<br> <b style=\"color:RED;\">Total votes exceed the ballot limit (" + totalCount + " > " + spinner1.getValue() + ") .</b>" +"</html>");
+                    "<br> <b style=\"color:RED;\">Total votes are exceeded (" + totalCount + " > " + spinner1.getValue() + ") .</b>" +"</html>");
             buildBtn.setEnabled(false);
             return false;
         }

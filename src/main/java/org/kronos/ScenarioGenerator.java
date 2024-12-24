@@ -64,7 +64,11 @@ public class ScenarioGenerator {
 
                 preparedBallot[i] = patternTokens[i];
                 remainingCandidates.remove(preparedBallot[i]);
-            } else if (patternTokens[i].equals("$")) {
+            }
+        }
+
+        for (int i = 0; i < patternTokens.length; i++) {
+            if (patternTokens[i].equals("$")) {
                 if (remainingCandidates.isEmpty())
                     throw new NumberFormatException("There are no more candidates in random set.");
 
@@ -85,9 +89,6 @@ public class ScenarioGenerator {
                 preparedBallot[i] = localCandidateSubSet.get(ra.nextInt(localCandidateSubSet.size()));
                 remainingCandidates.remove(preparedBallot[i]);
                 localCandidateSubSet.remove(preparedBallot[i]);
-            }
-            else {
-                throw new NumberFormatException("Value : " + patternTokens[i] + " is not an index nor a bound letter (R or r)");
             }
         }
 
