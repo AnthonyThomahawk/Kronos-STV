@@ -780,44 +780,47 @@ public class ScenarioBuilder extends JPanel {
             patterns.add(line.toString());
         }
 
-        ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer)spinner2.getValue());
+        try {
+            ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
 
+            String[] opts = {"Results", "Edit scenario"};
 
-        String[] opts = {"Results", "Edit scenario"};
+            int sel = JOptionPane.showOptionDialog(null, "Display results or edit generated scenario ?", "Select action", 0, 3, null, opts, opts[0]);
 
-        int sel = JOptionPane.showOptionDialog(null, "Display results or edit generated scenario ?", "Select action", 0, 3, null, opts, opts[0]);
+            if (sel == 0) {
+                saveBuildFile();
 
-        if (sel == 0) {
-            saveBuildFile();
+                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
 
-            sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+                if (departmental) {
+                    generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+                }
 
-            if (departmental) {
-                generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+                String output;
+
+                if (departmental)
+                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+                else
+                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+                STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+
+                JDialog j = new JDialog(Main.mainFrame, "Results", true);
+                resultForm x = new resultForm(scenarioNameTxt.getText(), electionResults, null, null, candidates);
+
+                if (!groupNames.isEmpty())
+                    x = new resultForm(scenarioNameTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
+
+                j.setContentPane(x);
+                j.pack();
+                j.setLocationRelativeTo(null);
+                j.setVisible(true);
+            } else if (sel == 1) {
+                String fileName = saveScenario(sg.ballotsToJSON());
+                mainForm.openScenarioForm(new File(fileName), "Edit scenario - " + scenarioNameTxt.getText());
             }
-
-            String output;
-
-            if (departmental)
-                output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
-            else
-                output = generateOutput(scenarioNameTxt.getText() + ".csv");
-
-            STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
-
-            JDialog j = new JDialog(Main.mainFrame, "Results", true);
-            resultForm x = new resultForm(scenarioNameTxt.getText(), electionResults, null, null, candidates);
-
-            if (!groupNames.isEmpty())
-                x = new resultForm(scenarioNameTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
-
-            j.setContentPane(x);
-            j.pack();
-            j.setLocationRelativeTo(null);
-            j.setVisible(true);
-        } else if (sel == 1) {
-            String fileName = saveScenario(sg.ballotsToJSON());
-            mainForm.openScenarioForm(new File(fileName), "Edit scenario - " + scenarioNameTxt.getText());
+        } catch (Exception ez) {
+            JOptionPane.showMessageDialog(null, ez.getMessage(), "Build Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -1016,7 +1019,11 @@ public class ScenarioBuilder extends JPanel {
             throw new OpenDataException();
         }
 
-        return saveBuildFile();
+        String fPath = saveBuildFile();
+        JOptionPane.showMessageDialog(this, "Saved as : " + fPath + "\n <b>(Scenario builder saves BUILDFILES by default!)", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+
+        return fPath;
     }
 
 

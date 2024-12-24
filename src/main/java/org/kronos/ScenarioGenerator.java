@@ -1,7 +1,6 @@
 package org.kronos;
 
 import org.json.simple.JSONArray;
-import sun.awt.image.ImageWatched;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -179,7 +178,12 @@ public class ScenarioGenerator {
             String pattern = split1[1].trim();
 
             for (int i = 0 ; i < multiplier; i++) {
-                ballots.add(makeBallot(pattern));
+                try {
+                    ballots.add(makeBallot(pattern));
+                } catch (NumberFormatException ef) {
+                    throw new NumberFormatException("Row #" + (i+1) + " " + ef.getMessage());
+                }
+
             }
         }
     }
