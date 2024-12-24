@@ -622,9 +622,10 @@ public class ScenarioBuilder extends JPanel {
     private void remBtn(ActionEvent e) {
         int[] rows = permTable.getSelectedRows();
         DefaultTableModel dtm2 = (DefaultTableModel) permTable.getModel();
-        for (int r : rows) {
-            comboBoxGroups.remove(r);
-            dtm2.removeRow(r);
+
+        for (int i = rows.length - 1; i >= 0; i--) {
+            comboBoxGroups.remove(rows[i]);
+            dtm2.removeRow(rows[i]);
         }
     }
 
