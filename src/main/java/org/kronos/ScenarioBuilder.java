@@ -377,6 +377,7 @@ public class ScenarioBuilder extends JPanel {
         DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
         int totalCount = 0;
+        boolean foundWildcard = false;
         for (int i = 0; i < dtm.getRowCount(); i++) {
             boolean foundBlank = false;
             for (int j = 0; j < dtm.getColumnCount(); j++) {
@@ -392,6 +393,15 @@ public class ScenarioBuilder extends JPanel {
 
                     if (nameChecks.isInteger(s)) {
                         totalCount += Integer.parseInt(s);
+                    } else {
+                        if (foundWildcard) {
+                            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                    "<br> <b style=\"color:RED;\">Wildcard (?) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
+                            buildBtn.setEnabled(false);
+                            return false;
+                        }
+
+                        foundWildcard = true;
                     }
                 } else {
                     String s = (String) dtm.getValueAt(i, j);
@@ -642,7 +652,31 @@ public class ScenarioBuilder extends JPanel {
         return stvOutput;
     }
 
+    void sortPermTable() {
+        DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+
+        int wildCardRow = -1;
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            String s = (String) dtm.getValueAt(i, 0);
+            if (s.equals("?")) {
+                wildCardRow = i;
+                break;
+            }
+        }
+
+        if (wildCardRow != -1 && wildCardRow < dtm.getRowCount() - 1) {
+            dtm.moveRow(wildCardRow, wildCardRow, dtm.getRowCount() - 1);
+
+            ArrayList<JComboBox> tmp = comboBoxGroups.get(wildCardRow);
+            comboBoxGroups.set(wildCardRow, comboBoxGroups.get(comboBoxGroups.size() - 1));
+            comboBoxGroups.set(comboBoxGroups.size() - 1, tmp);
+        }
+    }
+
     private void buildBtn(ActionEvent e) {
+        sortPermTable();
+
         patterns = new ArrayList<>();
 
         patterns.add(Integer.toString((Integer) spinner1.getValue()));
