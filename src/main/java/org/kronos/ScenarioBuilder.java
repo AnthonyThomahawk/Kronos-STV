@@ -602,6 +602,10 @@ public class ScenarioBuilder extends JPanel {
             }
         });
 
+        spinner1.addChangeListener(e -> updateStatus());
+
+        spinner2.addChangeListener(e -> updateStatus());
+
 
         if (selectedExRandToInit != null) {
             for (String c : selectedExRandToInit) {
