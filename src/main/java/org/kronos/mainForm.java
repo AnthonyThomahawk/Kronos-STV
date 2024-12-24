@@ -241,11 +241,14 @@ public class mainForm extends JPanel {
         String[] opts = {"Election", "Scenario", "Build template"};
 
         int sel = JOptionPane.showOptionDialog(null, "What do you want to build upon?", "Select type", 0, 3, null, opts, opts[0]);
+        JDialog j = new JDialog(Main.mainFrame, "Load election", true);
+        JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
+        ScenarioBuilder sbf;
 
         if (sel == -1)
             return;
         if (sel == 0) {
-            JDialog j = new JDialog(Main.mainFrame, "Load election", true);
+            j.setTitle("Load election");
             electionLoad el = new electionLoad();
             j.setContentPane(el);
             j.pack();
@@ -255,14 +258,13 @@ public class mainForm extends JPanel {
             if (el.selectedFile == null)
                 return;
 
-            JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-            ScenarioBuilder sbf = new ScenarioBuilder(el.selectedFile.toString(), sel);
+            sbf = new ScenarioBuilder(el.selectedFile.toString(), sel);
             sb.setContentPane(sbf);
             sb.pack();
             sb.setLocationRelativeTo(null);
-            sb.setVisible(true);
+
         } else if (sel == 1) {
-            JDialog j = new JDialog(Main.mainFrame, "Load scenario", true);
+            j.setTitle("Load scenario");
             scenarioLoad sl = new scenarioLoad(false);
             j.setContentPane(sl);
             j.pack();
@@ -272,14 +274,13 @@ public class mainForm extends JPanel {
             if (sl.selectedFile == null)
                 return;
 
-            JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-            ScenarioBuilder sbf = new ScenarioBuilder(sl.selectedFile.toString(), sel);
+            sbf = new ScenarioBuilder(sl.selectedFile.toString(), sel);
             sb.setContentPane(sbf);
             sb.pack();
             sb.setLocationRelativeTo(null);
-            sb.setVisible(true);
+
         } else {
-            JDialog j = new JDialog(Main.mainFrame, "Load template", true);
+            j.setTitle("Load template");
             scenarioLoad sl = new scenarioLoad(true);
             j.setContentPane(sl);
             j.pack();
@@ -289,14 +290,24 @@ public class mainForm extends JPanel {
             if (sl.selectedFile == null)
                 return;
 
-            JDialog sb = new JDialog(Main.mainFrame, "Scenario Builder", true);
-            ScenarioBuilder sbf = new ScenarioBuilder(sl.selectedFile.toString(), sel);
+            sbf = new ScenarioBuilder(sl.selectedFile.toString(), sel);
             sb.setContentPane(sbf);
             sb.pack();
             sb.setLocationRelativeTo(null);
-            sb.setVisible(true);
+
         }
 
+        sb.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+
+                mainForm.safeClose(sb, ScenarioBuilder.class, sbf);
+            }
+        });
+        sb.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        sb.setVisible(true);
     }
 
     private void initComponents() {

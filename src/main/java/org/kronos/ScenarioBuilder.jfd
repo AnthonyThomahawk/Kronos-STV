@@ -10,14 +10,14 @@ new FormModel {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
-				"text": "Scenario name"
+				"text": "Scenario title"
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
 				name: "scenarioNameTxt"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
-				"text": "Ballot count"
+				"text": "Total votes"
 			} )
 			add( new FormComponent( "javax.swing.JSpinner" ) {
 				name: "spinner1"
@@ -25,7 +25,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label3"
-				"text": "Candidates for exclusive random"
+				"text": "EX-RANDOM candidates"
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane2"

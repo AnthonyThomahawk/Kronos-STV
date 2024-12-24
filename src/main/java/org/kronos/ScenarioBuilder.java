@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Worker
  */
 public class ScenarioBuilder extends JPanel {
+    public static boolean unsaved;
     ArrayList<ArrayList<JComboBox>> comboBoxGroups;
     ArrayList<String> options;
     ArrayList<String> patterns;
@@ -609,18 +610,27 @@ public class ScenarioBuilder extends JPanel {
 
         comboBoxGroups = new ArrayList<>();
 
-        permTable.getModel().addTableModelListener(e -> updateStatus());
+        permTable.getModel().addTableModelListener(e -> {
+            unsaved = true;
+            updateStatus();
+        });
 
-        exRandtable.getModel().addTableModelListener(e -> updateStatus());
+        exRandtable.getModel().addTableModelListener(e -> {
+            unsaved = true;
+            updateStatus();
+        });
 
         scenarioNameTxt.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
+                unsaved = true;
                 updateStatus();
             }
             public void removeUpdate(DocumentEvent e) {
+                unsaved = true;
                 updateStatus();
             }
             public void insertUpdate(DocumentEvent e) {
+                unsaved = true;
                 updateStatus();
             }
         });
@@ -641,11 +651,6 @@ public class ScenarioBuilder extends JPanel {
                 comboBoxGroups.add(createComboBoxGroup(options, i));
                 dtm2.addRow(pTableDataToInit.get(i).toArray());
             }
-
-//            for (ArrayList<String> row : pTableDataToInit) {
-//                comboBoxGroups.add(createComboBoxGroup(options, comboBoxGroups.size()));
-//                dtm2.addRow(row.toArray());
-//            }
         }
 
         if (ballotCountInit != -1)
@@ -655,15 +660,23 @@ public class ScenarioBuilder extends JPanel {
             spinner2.setValue(seatsInit);
 
         updateStatus();
+
+        unsaved = false;
     }
 
     private void addBtn(ActionEvent e) {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+
         DefaultTableModel dtm2 = (DefaultTableModel) permTable.getModel();
         comboBoxGroups.add(createComboBoxGroup(options, comboBoxGroups.size()));
         dtm2.addRow(new Object[] {"0", null, null, null, null});
     }
 
     private void remBtn(ActionEvent e) {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+
         int[] rows = permTable.getSelectedRows();
         DefaultTableModel dtm2 = (DefaultTableModel) permTable.getModel();
 
@@ -720,6 +733,12 @@ public class ScenarioBuilder extends JPanel {
     }
 
     private void buildBtn(ActionEvent e) {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+
+        if (exRandtable.isEditing())
+            exRandtable.getCellEditor().stopCellEditing();
+
         sortPermTable();
 
         patterns = new ArrayList<>();
@@ -803,6 +822,12 @@ public class ScenarioBuilder extends JPanel {
     }
 
     public String saveBuildFile() {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+
+        if (exRandtable.isEditing())
+            exRandtable.getCellEditor().stopCellEditing();
+
         if (!Main.checkConfig())
             return null;
 
@@ -899,6 +924,12 @@ public class ScenarioBuilder extends JPanel {
     }
 
     public String saveScenario(JSONArray choices) {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+
+        if (exRandtable.isEditing())
+            exRandtable.getCellEditor().stopCellEditing();
+
         if (!Main.checkConfig())
             return null;
 
@@ -973,6 +1004,21 @@ public class ScenarioBuilder extends JPanel {
 
     }
 
+    public String saveChanges() throws OpenDataException {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+
+        if (exRandtable.isEditing())
+            exRandtable.getCellEditor().stopCellEditing();
+
+        if (!updateStatus()) {
+            JOptionPane.showMessageDialog(this, "Cannot save changes, because there are active alerts.", "Error", JOptionPane.OK_OPTION);
+            throw new OpenDataException();
+        }
+
+        return saveBuildFile();
+    }
+
 
     private void spinner1StateChanged(ChangeEvent e) {
         if ((Integer) spinner1.getValue() < 1)
@@ -1039,16 +1085,16 @@ public class ScenarioBuilder extends JPanel {
         //======== this ========
 
         //---- label1 ----
-        label1.setText("Scenario name");
+        label1.setText("Scenario title");
 
         //---- label2 ----
-        label2.setText("Ballot count");
+        label2.setText("Total votes");
 
         //---- spinner1 ----
         spinner1.addChangeListener(e -> spinner1StateChanged(e));
 
         //---- label3 ----
-        label3.setText("Candidates for exclusive random");
+        label3.setText("EX-RANDOM candidates");
 
         //======== scrollPane2 ========
         {
