@@ -89,6 +89,7 @@ public class resultForm extends JPanel {
 
         textArea1.setVisible(false);
         scrollPane2.setVisible(false);
+        copyAnalysisBtn.setVisible(false);
     }
 
     private void populateTable() {
@@ -138,10 +139,12 @@ public class resultForm extends JPanel {
         if (!scrollPane2.isVisible()) {
             scrollPane2.setVisible(true);
             textArea1.setVisible(true);
+            copyAnalysisBtn.setVisible(true);
             button1.setText("Hide analysis");
         } else {
             scrollPane2.setVisible(false);
             textArea1.setVisible(false);
+            copyAnalysisBtn.setVisible(false);
             button1.setText("Show analysis");
         }
 
