@@ -281,6 +281,18 @@ public class ScenarioBuilder extends JPanel {
 
             }
 
+            pTableDataToInit = new ArrayList<>();
+            JSONArray choices = (JSONArray) scenario.get("Choices");
+            for (Object choice : choices) {
+                List list = (List) choice;
+                ArrayList<String> p = new ArrayList<>();
+                p.add(String.valueOf(Math.toIntExact((long) list.get(list.size() - 1))));
+                for (int i = 0; i < list.size() - 1; i++) {
+                    p.add((String) list.get(i));
+                }
+                pTableDataToInit.add(p);
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
             JDialog x = (JDialog) this.getRootPane().getParent();
