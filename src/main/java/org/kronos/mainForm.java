@@ -302,6 +302,11 @@ public class mainForm extends JPanel {
             public void windowClosing(WindowEvent e) {
                 super.windowClosing(e);
 
+                if (sbf.solveThread != null && sbf.solveThread.isAlive()) {
+                    JOptionPane.showMessageDialog(null, "Cannot exit because solver is running. Please cancel before exiting!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 mainForm.safeClose(sb, ScenarioBuilder.class, sbf);
             }
         });

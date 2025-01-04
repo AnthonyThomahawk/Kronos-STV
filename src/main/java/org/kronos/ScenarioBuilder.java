@@ -4,7 +4,6 @@
 
 package org.kronos;
 
-import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -56,7 +54,7 @@ public class ScenarioBuilder extends JPanel {
     int seatsInit = -1;
     int ballotCountInit = -1;
 
-    Thread solveThread;
+    public Thread solveThread;
 
 
     public ScenarioBuilder(String[] candidates, String constituencyFile) {
@@ -463,6 +461,13 @@ public class ScenarioBuilder extends JPanel {
             return false;
         }
 
+        if (solveThread != null && solveThread.isAlive() && foundX) {
+            statusTxt.setText("<html>" + "<b> Warning : </b>" +
+                    "<br> <b style=\"color:ORANGE;\">Solving for X, please wait...</b>" +"</html>");
+
+            buildBtn.setEnabled(false);
+            return false;
+        }
 
         if (foundX) {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
@@ -1172,7 +1177,6 @@ public class ScenarioBuilder extends JPanel {
 
                 progressBar1.setValue(progress);
                 int percent = (int) ((progress / (double) maxLimit) * 100);
-                System.out.println(percent);
                 label8.setText(percent + " %");
 
                 patterns = new ArrayList<>();
@@ -1292,8 +1296,6 @@ public class ScenarioBuilder extends JPanel {
         label9.setText("Idle");
         label8.setText("0 %");
 
-        updateStatus();
-
         permTable.setEnabled(true);
         exRandtable.setEnabled(true);
         addBtn.setEnabled(true);
@@ -1302,6 +1304,8 @@ public class ScenarioBuilder extends JPanel {
         cancelSolveBtn.setEnabled(false);
 
         JOptionPane.showMessageDialog(null, "Operation aborted.", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+        updateStatus();
     }
 
     private void initComponents() {
