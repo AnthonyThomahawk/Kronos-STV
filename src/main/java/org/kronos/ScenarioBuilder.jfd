@@ -72,8 +72,8 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "groupsBtn", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {space :p:120:p, comp label7:::p::p, space ::133:x}, seq t {space ::81:x, par l {seq l {par l {comp label4::l:p::p, comp targetGroupBox::l:p::p}, space :p:27:p, par l {comp minSeatsSpinner:::p::p, comp label6:::p::p}}, seq l {space :p:44:p, comp solveBtn:::p::p}}, space :p:77:p}}"
-				"$verticalGroup": "par l {seq t {space :::p, comp label7:::p::p, space ::12:x, par b {comp label4::b:p::p, comp label6::b:p::p}, space :::p, par b {comp targetGroupBox::b:p::p, comp minSeatsSpinner::b:p::p}, space s:::p, comp solveBtn:::p::p, space :::p}}"
+				"$horizontalGroup": "par l {seq {space :::p, par l {seq l {par l {comp label4::l:p::p, comp targetGroupBox::l:p::p}, space :p:27:p, par l {seq l {comp minSeatsSpinner:::p::p, space ::100:x, comp label8:::p:64:p}, seq l {comp label6:::p::p, space ::82:x, comp label9:::p:64:p}}}, seq {comp label7:::p::p, space :0:0:x}, seq l {comp solveBtn:::p::p, space :::p, comp cancelSolveBtn:::p::p, space ::8:x, comp progressBar1:::p:155:p}}, space :::p}}"
+				"$verticalGroup": "par l {seq t {space :::x, par t {seq t {comp label7:::p::p, space u:::p, par b {comp label4::b:p::p, comp label6::b:p::p}, space :::p, par b {comp targetGroupBox::b:p::p, comp minSeatsSpinner::b:p::p}, space s:::p}, seq t {comp label9:::p::p, space :::p, comp label8:::p::p, space :p:5:p}}, par l {par b {comp solveBtn::b:p::p, comp cancelSolveBtn::b:p::p}, comp progressBar1:::::x}, space :::p}}"
 			} ) {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JComboBox" ) {
@@ -89,6 +89,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JSpinner" ) {
 					name: "minSeatsSpinner"
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "minSeatsSpinnerStateChanged", true ) )
 				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "solveBtn"
@@ -99,6 +100,25 @@ new FormModel {
 					name: "label7"
 					"text": "Vote solver"
 					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 4, false )
+				} )
+				add( new FormComponent( "javax.swing.JProgressBar" ) {
+					name: "progressBar1"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label8"
+					"text": "0%"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label9"
+					"text": "Idle"
+					"horizontalAlignment": 4
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "cancelSolveBtn"
+					"text": "Cancel"
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelSolveBtn", true ) )
 				} )
 			} )
 		}, new FormLayoutConstraints( null ) {

@@ -56,6 +56,8 @@ public class ScenarioBuilder extends JPanel {
     int seatsInit = -1;
     int ballotCountInit = -1;
 
+    Thread solveThread;
+
 
     public ScenarioBuilder(String[] candidates, String constituencyFile) {
         initComponents();
@@ -90,6 +92,7 @@ public class ScenarioBuilder extends JPanel {
 
         spinner1.setValue(1);
         spinner2.setValue(1);
+        minSeatsSpinner.setValue(1);
 
         init();
     }
@@ -1089,129 +1092,198 @@ public class ScenarioBuilder extends JPanel {
             permTable.getCellEditor().stopCellEditing();
         //sortPermTable();
 
-        int targetGroup = targetGroupBox.getSelectedIndex();
-        int minSeats = (int) minSeatsSpinner.getValue();
-        int total = (int) spinner1.getValue();
-        int maxLimit;
+        solveThread = new Thread(() -> {
+            int targetGroup = targetGroupBox.getSelectedIndex();
+            int minSeats = (int) minSeatsSpinner.getValue();
+            int total = (int) spinner1.getValue();
+            int maxLimit;
 
-        DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+            DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
-        int restDefined = 0;
-        int restUndefined = 0;
-        int Xpos = -1;
-        int wildCardPos = -1;
+            int restDefined = 0;
+            int restUndefined = 0;
+            int Xpos = -1;
+            int wildCardPos = -1;
 
-        for (int i = 0; i < dtm.getRowCount(); i++) {
-            String v = (String) dtm.getValueAt(i, 0);
-            if (v.equals("?")) {
-                wildCardPos = i;
-            } else if (nameChecks.isInteger(v)) {
-                restDefined += Integer.parseInt((String) dtm.getValueAt(i, 0));
-            } else {
-                Xpos = i;
-            }
-        }
-
-        if (Xpos == -1) {
-            JOptionPane.showMessageDialog(null, "Variable X not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (wildCardPos == -1) {
-            JOptionPane.showMessageDialog(null, "Wildcard \"?\" not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        restUndefined = total - restDefined;
-
-        maxLimit = restUndefined;
-        int solution = -1;
-
-        for (int i = 1; i <= maxLimit; i++) {
-            patterns = new ArrayList<>();
-
-            patterns.add(Integer.toString((Integer) spinner1.getValue()));
-            ArrayList<String> exRand = getExRand();
-            if (!exRand.isEmpty()) {
-                StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
-                for (int k = 1; k < exRand.size(); k++) {
-                    exRandStr.append(",").append(exRand.get(k));
-                }
-                exRandStr.append("}");
-                patterns.add(exRandStr.toString());
-            }
-
-            for (int j = 0; j < dtm.getRowCount(); j++) {
-                String first;
-
-                if (dtm.getValueAt(j, 1).equals("EX-RANDOM"))
-                    first = "#";
-                else if (dtm.getValueAt(j, 1).equals("RANDOM"))
-                    first = "$";
-                else
-                    first = (String) dtm.getValueAt(j, 1);
-
-                String v = (String) dtm.getValueAt(j, 0);
-                StringBuilder line;
-                if (v.equals("X")) {
-                    line = new StringBuilder(i + "*" + first);
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                String v = (String) dtm.getValueAt(i, 0);
+                if (v.equals("?")) {
+                    wildCardPos = i;
+                } else if (nameChecks.isInteger(v)) {
+                    restDefined += Integer.parseInt((String) dtm.getValueAt(i, 0));
                 } else {
-                    line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
+                    Xpos = i;
                 }
-                for (int l = 2; l < dtm.getColumnCount(); l++) {
-                    if (dtm.getValueAt(j,l) != null)
-                        if (dtm.getValueAt(j,l).equals("EX-RANDOM"))
-                            line.append("|").append("#");
-                        else if (dtm.getValueAt(j,l).equals("RANDOM"))
-                            line.append("|").append("$");
-                        else
-                            line.append("|").append(dtm.getValueAt(j,l));
+            }
+
+            if (Xpos == -1) {
+                JOptionPane.showMessageDialog(null, "Variable X not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (wildCardPos == -1) {
+                JOptionPane.showMessageDialog(null, "Wildcard \"?\" not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            restUndefined = total - restDefined;
+
+            maxLimit = restUndefined;
+            int solution = -1;
+            int progress = 0;
+            progressBar1.setMaximum(maxLimit);
+            progressBar1.setValue(progress);
+
+            label9.setText("Solving");
+
+            updateStatus();
+
+            permTable.setEnabled(false);
+            exRandtable.setEnabled(false);
+            addBtn.setEnabled(false);
+            remBtn.setEnabled(false);
+
+            cancelSolveBtn.setEnabled(true);
+
+
+            final long startTime = System.currentTimeMillis();
+
+            for (int i = 1; i <= maxLimit; i++) {
+                progress++;
+
+                progressBar1.setValue(progress);
+                int percent = (int) ((progress / (double) maxLimit) * 100);
+                System.out.println(percent);
+                label8.setText(percent + " %");
+
+                patterns = new ArrayList<>();
+
+                patterns.add(Integer.toString((Integer) spinner1.getValue()));
+                ArrayList<String> exRand = getExRand();
+                if (!exRand.isEmpty()) {
+                    StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
+                    for (int k = 1; k < exRand.size(); k++) {
+                        exRandStr.append(",").append(exRand.get(k));
+                    }
+                    exRandStr.append("}");
+                    patterns.add(exRandStr.toString());
+                }
+
+                for (int j = 0; j < dtm.getRowCount(); j++) {
+                    String first;
+
+                    if (dtm.getValueAt(j, 1).equals("EX-RANDOM"))
+                        first = "#";
+                    else if (dtm.getValueAt(j, 1).equals("RANDOM"))
+                        first = "$";
+                    else
+                        first = (String) dtm.getValueAt(j, 1);
+
+                    String v = (String) dtm.getValueAt(j, 0);
+                    StringBuilder line;
+                    if (v.equals("X")) {
+                        line = new StringBuilder(i + "*" + first);
+                    } else {
+                        line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
+                    }
+                    for (int l = 2; l < dtm.getColumnCount(); l++) {
+                        if (dtm.getValueAt(j,l) != null)
+                            if (dtm.getValueAt(j,l).equals("EX-RANDOM"))
+                                line.append("|").append("#");
+                            else if (dtm.getValueAt(j,l).equals("RANDOM"))
+                                line.append("|").append("$");
+                            else
+                                line.append("|").append(dtm.getValueAt(j,l));
+
+                    }
+                    patterns.add(line.toString());
 
                 }
-                patterns.add(line.toString());
 
+                ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
+
+                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+
+                if (departmental) {
+                    generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+                }
+
+                String output;
+
+                if (departmental)
+                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+                else
+                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+                STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+                int targetCount = 0;
+
+                for (int x = 1; x <= electionResults.lastRank; x++) {
+                    String elec = electionResults.getElected(x);
+                    int ind = Arrays.asList(candidates).indexOf(elec);
+                    int groupCandidateIndex = groupCandidates.get(ind);
+
+                    if (groupCandidateIndex == targetGroup)
+                        targetCount++;
+                }
+
+                if (targetCount >= minSeats) {
+                    solution = i;
+                    break;
+                }
             }
 
-            ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
+            final long endTime = System.currentTimeMillis();
 
-            sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
-
-            if (departmental) {
-                generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+            if (solution != -1) {
+                JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - startTime) / 1000 + " seconds", "Info", JOptionPane.INFORMATION_MESSAGE);
+                dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+            } else {
+                JOptionPane.showMessageDialog(null, "No solution was found.", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
 
-            String output;
+            progressBar1.setValue(0);
+            label9.setText("Idle");
+            label8.setText("0 %");
 
-            if (departmental)
-                output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
-            else
-                output = generateOutput(scenarioNameTxt.getText() + ".csv");
+            updateStatus();
 
-            STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
-            int targetCount = 0;
+            permTable.setEnabled(true);
+            exRandtable.setEnabled(true);
+            addBtn.setEnabled(true);
+            remBtn.setEnabled(true);
 
-            for (int x = 1; x <= electionResults.lastRank; x++) {
-                String elec = electionResults.getElected(x);
-                int ind = Arrays.asList(candidates).indexOf(elec);
-                int groupCandidateIndex = groupCandidates.get(ind);
+            cancelSolveBtn.setEnabled(false);
 
-                if (groupCandidateIndex == targetGroup)
-                    targetCount++;
-            }
+        });
 
-            if (targetCount >= minSeats) {
-                solution = i;
-                break;
-            }
+        solveThread.start();
+    }
+
+    private void minSeatsSpinnerStateChanged(ChangeEvent e) {
+        if ((int) minSeatsSpinner.getValue() < 1) {
+           minSeatsSpinner.setValue(1);
         }
+    }
 
-        if (solution != -1) {
-            JOptionPane.showMessageDialog(null, "Solution = " + solution, "Info", JOptionPane.INFORMATION_MESSAGE);
-            dtm.setValueAt(String.valueOf(solution), Xpos, 0);
-            dtm.setValueAt(String.valueOf(restUndefined - solution), wildCardPos, 0);
-        } else {
-            JOptionPane.showMessageDialog(null, "No solution was found.", "Info", JOptionPane.INFORMATION_MESSAGE);
-        }
+    private void cancelSolveBtn(ActionEvent e) {
+        if (solveThread.isAlive())
+            solveThread.stop();
+
+        progressBar1.setValue(0);
+        label9.setText("Idle");
+        label8.setText("0 %");
+
+        updateStatus();
+
+        permTable.setEnabled(true);
+        exRandtable.setEnabled(true);
+        addBtn.setEnabled(true);
+        remBtn.setEnabled(true);
+
+        cancelSolveBtn.setEnabled(false);
+
+        JOptionPane.showMessageDialog(null, "Operation aborted.", "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void initComponents() {
@@ -1240,6 +1312,10 @@ public class ScenarioBuilder extends JPanel {
         minSeatsSpinner = new JSpinner();
         solveBtn = new JButton();
         label7 = new JLabel();
+        progressBar1 = new JProgressBar();
+        label8 = new JLabel();
+        label9 = new JLabel();
+        cancelSolveBtn = new JButton();
 
         //======== this ========
 
@@ -1299,6 +1375,9 @@ public class ScenarioBuilder extends JPanel {
             //---- label6 ----
             label6.setText("Minimum seats");
 
+            //---- minSeatsSpinner ----
+            minSeatsSpinner.addChangeListener(e -> minSeatsSpinnerStateChanged(e));
+
             //---- solveBtn ----
             solveBtn.setText("Solve for X");
             solveBtn.addActionListener(e -> solveBtn(e));
@@ -1307,16 +1386,25 @@ public class ScenarioBuilder extends JPanel {
             label7.setText("Vote solver");
             label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD, label7.getFont().getSize() + 4f));
 
+            //---- label8 ----
+            label8.setText("0%");
+            label8.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            //---- label9 ----
+            label9.setText("Idle");
+            label9.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            //---- cancelSolveBtn ----
+            cancelSolveBtn.setText("Cancel");
+            cancelSolveBtn.setEnabled(false);
+            cancelSolveBtn.addActionListener(e -> cancelSolveBtn(e));
+
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
                 panel1Layout.createParallelGroup()
                     .addGroup(panel1Layout.createSequentialGroup()
-                        .addGap(120, 120, 120)
-                        .addComponent(label7)
-                        .addContainerGap(133, Short.MAX_VALUE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                        .addContainerGap(81, Short.MAX_VALUE)
+                        .addContainerGap()
                         .addGroup(panel1Layout.createParallelGroup()
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addGroup(panel1Layout.createParallelGroup()
@@ -1324,28 +1412,51 @@ public class ScenarioBuilder extends JPanel {
                                     .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(27, 27, 27)
                                 .addGroup(panel1Layout.createParallelGroup()
-                                    .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(label6)))
+                                    .addGroup(panel1Layout.createSequentialGroup()
+                                        .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                                        .addComponent(label8, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panel1Layout.createSequentialGroup()
+                                        .addComponent(label6)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                                        .addComponent(label9, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))))
                             .addGroup(panel1Layout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(solveBtn)))
-                        .addGap(77, 77, 77))
+                                .addComponent(label7)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(solveBtn)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cancelSolveBtn)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                                .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
                 panel1Layout.createParallelGroup()
                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(label7)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(label4)
-                            .addComponent(label6))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(solveBtn)
+                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(label7)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                    .addComponent(label4)
+                                    .addComponent(label6))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                    .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(label9)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(label8)
+                                .addGap(5, 5, 5)))
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(solveBtn)
+                                .addComponent(cancelSolveBtn))
+                            .addComponent(progressBar1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
             );
         }
@@ -1455,5 +1566,9 @@ public class ScenarioBuilder extends JPanel {
     private JSpinner minSeatsSpinner;
     private JButton solveBtn;
     private JLabel label7;
+    private JProgressBar progressBar1;
+    private JLabel label8;
+    private JLabel label9;
+    private JButton cancelSolveBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
