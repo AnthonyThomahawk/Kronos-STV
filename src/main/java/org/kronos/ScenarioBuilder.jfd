@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :p::p, par l {par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp groupsBtn:::p::p, space :::x, comp buildBtn:::p::p}, comp scrollPane2::::0:x, seq {par l {seq {par l {comp scenarioNameTxt::l::187:x, comp label1::l:p::p}, space :p::p, par l {comp spinner1::l:p::p, comp label2::l:p::p}}, seq {comp label4:::p::p, space :::x, par l {comp label5:::p::p, comp spinner2:::p::p}}}, space u:p::p, par l {comp label3:::::x, comp scrollPane1::::0:x}}}, comp statusTxt::l:p::p}, space :p:8:p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp statusTxt:::p::p, space :p:26:p, par b {comp label1::b:p::p, comp label2::b:p::p, comp label3::b:p::p}, space :p::p, par l {seq {par b {comp scenarioNameTxt::b:::x, comp spinner1::b:p::p}, space u:p::p, par l {comp label4:::p::p, seq {comp label5:::p::p, space :6:6:p, comp spinner2:::p::p}}, space :14:14:p}, comp scrollPane1::::0:x}, space :p:17:p, comp scrollPane2::::312:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp buildBtn::b:p::p, comp groupsBtn::b:p::p}, space :p::p}}"
+			"$horizontalGroup": "par l {seq {space :p::p, par l {par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp groupsBtn:::p::p, space :::x, comp buildBtn:::p::p}, seq {par l {seq {space :2:2:p, par l {comp label1:::p::p, comp scenarioNameTxt::t:p:330:p}}, comp panel1:::p::p}, space u:::p, par l {seq l {comp label2:::p:72:p, space :::p, comp label3:::::x}, seq l {par l:::p {comp label5::t:::x, comp spinner2::t:::x, comp spinner1:::::x}, space :p::p, comp scrollPane1::::165:x}}}, comp scrollPane2::l:::x}, comp statusTxt::l:p::p}, space :p:8:p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp statusTxt:::p::p, space :p:26:p, par b {comp label1::b:p::p, comp label3::b:p::p, comp label2::b:p::p}, space :p::p, par l {seq {par b {comp spinner1::b:p::p, comp scenarioNameTxt::b:p::p}, space :::p, par l {seq {comp label5:::p::p, space :::p, comp spinner2:::p::p}, comp panel1:::p::p}, space :p:20:p}, seq {comp scrollPane1::::0:x, space :p::p}}, comp scrollPane2::::243:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp buildBtn::b:p::p, comp groupsBtn::b:p::p}, space :p::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -49,10 +49,6 @@ new FormModel {
 				"text": "Remove -"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "remBtn", true ) )
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label4"
-				"text": "Multiplier possible values :"
-			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buildBtn"
 				"text": "Build"
@@ -75,9 +71,39 @@ new FormModel {
 				"text": "Groups"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "groupsBtn", true ) )
 			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {space :p:120:p, comp label7:::p::p, space ::133:x}, seq t {space ::81:x, par l {seq l {par l {comp label4::l:p::p, comp targetGroupBox::l:p::p}, space :p:27:p, par l {comp minSeatsSpinner:::p::p, comp label6:::p::p}}, seq l {space :p:44:p, comp solveBtn:::p::p}}, space :p:77:p}}"
+				"$verticalGroup": "par l {seq t {space :::p, comp label7:::p::p, space ::12:x, par b {comp label4::b:p::p, comp label6::b:p::p}, space :::p, par b {comp targetGroupBox::b:p::p, comp minSeatsSpinner::b:p::p}, space s:::p, comp solveBtn:::p::p, space :::p}}"
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "targetGroupBox"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": "Target group"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label6"
+					"text": "Minimum seats"
+				} )
+				add( new FormComponent( "javax.swing.JSpinner" ) {
+					name: "minSeatsSpinner"
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "solveBtn"
+					"text": "Solve for X"
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "solveBtn", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label7"
+					"text": "Vote solver"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 4, false )
+				} )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 455, 525 )
+			"size": new java.awt.Dimension( 600, 525 )
 		} )
 	}
 }

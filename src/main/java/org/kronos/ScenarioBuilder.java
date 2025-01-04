@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.awt.*;
 import java.awt.event.*;
 import javax.management.openmbean.OpenDataException;
 import javax.swing.*;
@@ -563,11 +564,13 @@ public class ScenarioBuilder extends JPanel {
             dtm.addRow(new Object[]{s, Boolean.FALSE});
         }
 
-        String multInfo = "<html>Multiplier values : <br>" +
-                "<b>Any number</b> - Number of votes<br>" +
-                "<b> ? </b> - Remaining votes";
+//        String multInfo = "<html>Multiplier values : <br>" +
+//                "<b>Any number</b> - Number of votes<br>" +
+//                "<b> ? </b> - Remaining votes";
+//
+//        label4.setText(multInfo);
 
-        label4.setText(multInfo);
+        panel1.setBorder(BorderFactory.createLineBorder(Color.gray, 2));
 
         permTable = new JTable() {
             @Override
@@ -583,9 +586,14 @@ public class ScenarioBuilder extends JPanel {
 
         dtm2.addColumn("Multiplier");
 
-        for (int i = 0; i < options.size(); i++) {
+        // temp change
+        for (int i = 0; i < 6; i++) {
             dtm2.addColumn("Choice " + (i+1));
         }
+
+//        for (int i = 0; i < options.size(); i++) {
+//            dtm2.addColumn("Choice " + (i+1));
+//        }
 
         permTable.setShowVerticalLines(true);
         permTable.setShowHorizontalLines(true);
@@ -639,6 +647,9 @@ public class ScenarioBuilder extends JPanel {
 
         spinner2.addChangeListener(e -> updateStatus());
 
+        targetGroupBox.removeAllItems();
+        for (String s : groupNames)
+            targetGroupBox.addItem(s);
 
         if (selectedExRandToInit != null) {
             for (String c : selectedExRandToInit) {
@@ -731,6 +742,7 @@ public class ScenarioBuilder extends JPanel {
             comboBoxGroups.set(comboBoxGroups.size() - 1, tmp);
         }
     }
+
 
     private void buildBtn(ActionEvent e) {
         if (permTable.isEditing())
@@ -1020,7 +1032,7 @@ public class ScenarioBuilder extends JPanel {
         }
 
         String fPath = saveBuildFile();
-        JOptionPane.showMessageDialog(this, "Saved as : " + fPath + "\n <b>(Scenario builder saves BUILDFILES by default!)", "Info", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Saved as : " + fPath + "\n (Scenario builder saves BUILDFILES by default!)", "Info", JOptionPane.INFORMATION_MESSAGE);
 
 
         return fPath;
@@ -1065,6 +1077,138 @@ public class ScenarioBuilder extends JPanel {
 
             groupCandidates = new ArrayList<>();
             groupCandidates.addAll(g.groupCandidates);
+
+            targetGroupBox.removeAllItems();
+            for (String s : groupNames)
+                targetGroupBox.addItem(s);
+        }
+    }
+
+    private void solveBtn(ActionEvent e) {
+        if (permTable.isEditing())
+            permTable.getCellEditor().stopCellEditing();
+        //sortPermTable();
+
+        int targetGroup = targetGroupBox.getSelectedIndex();
+        int minSeats = (int) minSeatsSpinner.getValue();
+        int total = (int) spinner1.getValue();
+        int maxLimit;
+
+        DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+
+        int restDefined = 0;
+        int restUndefined = 0;
+        int Xpos = -1;
+        int wildCardPos = -1;
+
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            String v = (String) dtm.getValueAt(i, 0);
+            if (v.equals("?")) {
+                wildCardPos = i;
+            } else if (nameChecks.isInteger(v)) {
+                restDefined += Integer.parseInt((String) dtm.getValueAt(i, 0));
+            } else {
+                Xpos = i;
+            }
+        }
+
+        if (Xpos == -1) {
+            JOptionPane.showMessageDialog(null, "Variable X not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (wildCardPos == -1) {
+            JOptionPane.showMessageDialog(null, "Wildcard \"?\" not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        restUndefined = total - restDefined;
+
+        maxLimit = restUndefined;
+        int solution = -1;
+
+        for (int i = 1; i <= maxLimit; i++) {
+            patterns = new ArrayList<>();
+
+            patterns.add(Integer.toString((Integer) spinner1.getValue()));
+            ArrayList<String> exRand = getExRand();
+            if (!exRand.isEmpty()) {
+                StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
+                for (int k = 1; k < exRand.size(); k++) {
+                    exRandStr.append(",").append(exRand.get(k));
+                }
+                exRandStr.append("}");
+                patterns.add(exRandStr.toString());
+            }
+
+            for (int j = 0; j < dtm.getRowCount(); j++) {
+                String first;
+
+                if (dtm.getValueAt(j, 1).equals("EX-RANDOM"))
+                    first = "#";
+                else if (dtm.getValueAt(j, 1).equals("RANDOM"))
+                    first = "$";
+                else
+                    first = (String) dtm.getValueAt(j, 1);
+
+                String v = (String) dtm.getValueAt(j, 0);
+                StringBuilder line;
+                if (v.equals("X")) {
+                    line = new StringBuilder(i + "*" + first);
+                } else {
+                    line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
+                }
+                for (int l = 2; l < dtm.getColumnCount(); l++) {
+                    if (dtm.getValueAt(j,l) != null)
+                        if (dtm.getValueAt(j,l).equals("EX-RANDOM"))
+                            line.append("|").append("#");
+                        else if (dtm.getValueAt(j,l).equals("RANDOM"))
+                            line.append("|").append("$");
+                        else
+                            line.append("|").append(dtm.getValueAt(j,l));
+
+                }
+                patterns.add(line.toString());
+
+            }
+
+            ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
+
+            sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+
+            if (departmental) {
+                generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+            }
+
+            String output;
+
+            if (departmental)
+                output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+            else
+                output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+            STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+            int targetCount = 0;
+
+            for (int x = 1; x <= electionResults.lastRank; x++) {
+                String elec = electionResults.getElected(x);
+                int ind = Arrays.asList(candidates).indexOf(elec);
+                int groupCandidateIndex = groupCandidates.get(ind);
+
+                if (groupCandidateIndex == targetGroup)
+                    targetCount++;
+            }
+
+            if (targetCount >= minSeats) {
+                solution = i;
+                break;
+            }
+        }
+
+        if (solution != -1) {
+            JOptionPane.showMessageDialog(null, "Solution = " + solution, "Info", JOptionPane.ERROR_MESSAGE);
+            dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+            dtm.setValueAt(String.valueOf(restUndefined - solution), wildCardPos, 0);
         }
     }
 
@@ -1082,12 +1226,18 @@ public class ScenarioBuilder extends JPanel {
         exRandtable = new JTable();
         addBtn = new JButton();
         remBtn = new JButton();
-        label4 = new JLabel();
         buildBtn = new JButton();
         label5 = new JLabel();
         spinner2 = new JSpinner();
         statusTxt = new JLabel();
         groupsBtn = new JButton();
+        panel1 = new JPanel();
+        targetGroupBox = new JComboBox();
+        label4 = new JLabel();
+        label6 = new JLabel();
+        minSeatsSpinner = new JSpinner();
+        solveBtn = new JButton();
+        label7 = new JLabel();
 
         //======== this ========
 
@@ -1121,9 +1271,6 @@ public class ScenarioBuilder extends JPanel {
         remBtn.setText("Remove -");
         remBtn.addActionListener(e -> remBtn(e));
 
-        //---- label4 ----
-        label4.setText("Multiplier possible values :");
-
         //---- buildBtn ----
         buildBtn.setText("Build");
         buildBtn.addActionListener(e -> buildBtn(e));
@@ -1141,6 +1288,66 @@ public class ScenarioBuilder extends JPanel {
         groupsBtn.setText("Groups");
         groupsBtn.addActionListener(e -> groupsBtn(e));
 
+        //======== panel1 ========
+        {
+
+            //---- label4 ----
+            label4.setText("Target group");
+
+            //---- label6 ----
+            label6.setText("Minimum seats");
+
+            //---- solveBtn ----
+            solveBtn.setText("Solve for X");
+            solveBtn.addActionListener(e -> solveBtn(e));
+
+            //---- label7 ----
+            label7.setText("Vote solver");
+            label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD, label7.getFont().getSize() + 4f));
+
+            GroupLayout panel1Layout = new GroupLayout(panel1);
+            panel1.setLayout(panel1Layout);
+            panel1Layout.setHorizontalGroup(
+                panel1Layout.createParallelGroup()
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addGap(120, 120, 120)
+                        .addComponent(label7)
+                        .addContainerGap(133, Short.MAX_VALUE))
+                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addContainerGap(81, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addComponent(label4)
+                                    .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(label6)))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(solveBtn)))
+                        .addGap(77, 77, 77))
+            );
+            panel1Layout.setVerticalGroup(
+                panel1Layout.createParallelGroup()
+                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(label7)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label4)
+                            .addComponent(label6))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(solveBtn)
+                        .addContainerGap())
+            );
+        }
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -1157,27 +1364,28 @@ public class ScenarioBuilder extends JPanel {
                                 .addComponent(groupsBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(buildBtn))
-                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup()
                                     .addGroup(layout.createSequentialGroup()
+                                        .addGap(2, 2, 2)
                                         .addGroup(layout.createParallelGroup()
-                                            .addComponent(scenarioNameTxt, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                                            .addComponent(label1))
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup()
-                                            .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(label2)))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(label4)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup()
-                                            .addComponent(label5)
-                                            .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(label1)
+                                            .addComponent(scenarioNameTxt, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 330, GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup()
-                                    .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(label2, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(label3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(label5, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(spinner2, GroupLayout.Alignment.TRAILING)
+                                            .addComponent(spinner1))
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))))
+                            .addComponent(scrollPane2))
                         .addComponent(statusTxt))
                     .addGap(8, 8, 8))
         );
@@ -1189,25 +1397,26 @@ public class ScenarioBuilder extends JPanel {
                     .addGap(26, 26, 26)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label1)
-                        .addComponent(label2)
-                        .addComponent(label3))
+                        .addComponent(label3)
+                        .addComponent(label2))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                             .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(scenarioNameTxt)
-                                .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scenarioNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(layout.createParallelGroup()
-                                .addComponent(label4)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(label5)
-                                    .addGap(6, 6, 6)
-                                    .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                            .addGap(14, 14, 14))
-                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
-                    .addGap(17, 17, 17)
-                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(20, 20, 20))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)))
+                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
@@ -1232,11 +1441,17 @@ public class ScenarioBuilder extends JPanel {
     private JTable exRandtable;
     private JButton addBtn;
     private JButton remBtn;
-    private JLabel label4;
     private JButton buildBtn;
     private JLabel label5;
     private JSpinner spinner2;
     private JLabel statusTxt;
     private JButton groupsBtn;
+    private JPanel panel1;
+    private JComboBox targetGroupBox;
+    private JLabel label4;
+    private JLabel label6;
+    private JSpinner minSeatsSpinner;
+    private JButton solveBtn;
+    private JLabel label7;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

@@ -238,7 +238,7 @@ public class mainForm extends JPanel {
     }
 
     private void scenarioBuilderBtn(ActionEvent e) {
-        String[] opts = {"Election", "Scenario", "Build template"};
+        String[] opts = {"Election", "Scenario", "Load template"};
 
         int sel = JOptionPane.showOptionDialog(null, "What do you want to build upon?", "Select type", 0, 3, null, opts, opts[0]);
         JDialog j = new JDialog(Main.mainFrame, "Load election", true);
