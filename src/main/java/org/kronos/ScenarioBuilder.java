@@ -1114,7 +1114,8 @@ public class ScenarioBuilder extends JPanel {
     private void solveBtn(ActionEvent e) {
         if (permTable.isEditing())
             permTable.getCellEditor().stopCellEditing();
-        //sortPermTable();
+
+        solveBtn.setEnabled(false);
 
         solveThread = new Thread(() -> {
             int targetGroup = targetGroupBox.getSelectedIndex();
@@ -1138,17 +1139,20 @@ public class ScenarioBuilder extends JPanel {
                     Xpos = i;
                 } else {
                     JOptionPane.showMessageDialog(null, "Unknown symbol on row #" + i, "ERROR", JOptionPane.ERROR_MESSAGE);
+                    solveBtn.setEnabled(true);
                     return;
                 }
             }
 
             if (Xpos == -1) {
                 JOptionPane.showMessageDialog(null, "Variable X not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                solveBtn.setEnabled(true);
                 return;
             }
 
             if (wildCardPos == -1) {
                 JOptionPane.showMessageDialog(null, "Wildcard \"?\" not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                solveBtn.setEnabled(true);
                 return;
             }
 
@@ -1277,6 +1281,7 @@ public class ScenarioBuilder extends JPanel {
             remBtn.setEnabled(true);
 
             cancelSolveBtn.setEnabled(false);
+            solveBtn.setEnabled(true);
         });
 
         solveThread.start();
@@ -1302,6 +1307,7 @@ public class ScenarioBuilder extends JPanel {
         remBtn.setEnabled(true);
 
         cancelSolveBtn.setEnabled(false);
+        solveBtn.setEnabled(true);
 
         JOptionPane.showMessageDialog(null, "Operation aborted.", "Info", JOptionPane.INFORMATION_MESSAGE);
 
