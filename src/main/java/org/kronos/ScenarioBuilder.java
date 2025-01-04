@@ -1206,9 +1206,11 @@ public class ScenarioBuilder extends JPanel {
         }
 
         if (solution != -1) {
-            JOptionPane.showMessageDialog(null, "Solution = " + solution, "Info", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Solution = " + solution, "Info", JOptionPane.INFORMATION_MESSAGE);
             dtm.setValueAt(String.valueOf(solution), Xpos, 0);
             dtm.setValueAt(String.valueOf(restUndefined - solution), wildCardPos, 0);
+        } else {
+            JOptionPane.showMessageDialog(null, "No solution was found.", "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
