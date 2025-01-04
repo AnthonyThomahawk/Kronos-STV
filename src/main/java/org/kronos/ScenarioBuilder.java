@@ -395,13 +395,14 @@ public class ScenarioBuilder extends JPanel {
 
         int totalCount = 0;
         boolean foundWildcard = false;
+        boolean foundX = false;
         for (int i = 0; i < dtm.getRowCount(); i++) {
             boolean foundBlank = false;
             for (int j = 0; j < dtm.getColumnCount(); j++) {
                 if (j == 0) {
                     String s = (String) dtm.getValueAt(i, 0);
 
-                    if (!nameChecks.isInteger(s) && !s.equals("?")) {
+                    if (!nameChecks.isInteger(s) && !s.equals("?") && !s.equals("x") && !s.equals("X")) {
                         statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                 "<br> <b style=\"color:RED;\">Invalid multiplier on row #" + (i+1) + ".</b>" +"</html>");
                         buildBtn.setEnabled(false);
@@ -410,7 +411,7 @@ public class ScenarioBuilder extends JPanel {
 
                     if (nameChecks.isInteger(s)) {
                         totalCount += Integer.parseInt(s);
-                    } else {
+                    } else if (s.equals("?")) {
                         if (foundWildcard) {
                             statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                     "<br> <b style=\"color:RED;\">Wildcard (?) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
@@ -419,6 +420,15 @@ public class ScenarioBuilder extends JPanel {
                         }
 
                         foundWildcard = true;
+                    } else {
+                        if (foundX) {
+                            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                    "<br> <b style=\"color:RED;\">Variable (X) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
+                            buildBtn.setEnabled(false);
+                            return false;
+                        }
+
+                        foundX = true;
                     }
                 } else {
                     String s = (String) dtm.getValueAt(i, j);
@@ -451,6 +461,15 @@ public class ScenarioBuilder extends JPanel {
                     "<br> <b style=\"color:RED;\">Total votes are exceeded (" + totalCount + " > " + spinner1.getValue() + ") .</b>" +"</html>");
             buildBtn.setEnabled(false);
             return false;
+        }
+
+
+        if (foundX) {
+            statusTxt.setText("<html>" + "<b> Warning : </b>" +
+                    "<br> <b style=\"color:ORANGE;\">Unsolved variable X</b>" +"</html>");
+
+            buildBtn.setEnabled(true);
+            return true;
         }
 
         statusTxt.setText("<html>" + "<b> Status : </b>" +
@@ -1101,7 +1120,6 @@ public class ScenarioBuilder extends JPanel {
             DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
             int restDefined = 0;
-            int restUndefined = 0;
             int Xpos = -1;
             int wildCardPos = -1;
 
@@ -1111,8 +1129,11 @@ public class ScenarioBuilder extends JPanel {
                     wildCardPos = i;
                 } else if (nameChecks.isInteger(v)) {
                     restDefined += Integer.parseInt((String) dtm.getValueAt(i, 0));
-                } else {
+                } else if (v.equals("x") || v.equals("X")) {
                     Xpos = i;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Unknown symbol on row #" + i, "ERROR", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
 
@@ -1126,9 +1147,7 @@ public class ScenarioBuilder extends JPanel {
                 return;
             }
 
-            restUndefined = total - restDefined;
-
-            maxLimit = restUndefined;
+            maxLimit = total - restDefined;
             int solution = -1;
             int progress = 0;
             progressBar1.setMaximum(maxLimit);
@@ -1181,7 +1200,7 @@ public class ScenarioBuilder extends JPanel {
 
                     String v = (String) dtm.getValueAt(j, 0);
                     StringBuilder line;
-                    if (v.equals("X")) {
+                    if (v.equals("X") || v.equals("x")) {
                         line = new StringBuilder(i + "*" + first);
                     } else {
                         line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
@@ -1254,7 +1273,6 @@ public class ScenarioBuilder extends JPanel {
             remBtn.setEnabled(true);
 
             cancelSolveBtn.setEnabled(false);
-
         });
 
         solveThread.start();
