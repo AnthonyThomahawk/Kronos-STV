@@ -473,7 +473,7 @@ public class ScenarioBuilder extends JPanel {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
                     "<br> <b style=\"color:ORANGE;\">Unsolved variable X</b>" +"</html>");
 
-            buildBtn.setEnabled(true);
+            buildBtn.setEnabled(false);
             return true;
         }
 
@@ -1176,7 +1176,9 @@ public class ScenarioBuilder extends JPanel {
 
             final long startTime = System.currentTimeMillis();
 
-            for (int i = 1; i <= maxLimit; i++) {
+            boolean uncertain = false;
+
+            for (int i = 1; i < maxLimit; i++) {
                 progress++;
 
                 progressBar1.setValue(progress);
@@ -1254,6 +1256,11 @@ public class ScenarioBuilder extends JPanel {
                         targetCount++;
                 }
 
+                uncertain = electionResults.stvInput.contains("RANDOM") || electionResults.stvInput.contains("random") || electionResults.stvInput.contains("RAND") || electionResults.stvInput.contains("rand");
+
+                if (skipUncertaintyBox.isSelected() && uncertain)
+                    continue;
+
                 if (targetCount >= minSeats) {
                     solution = i;
                     break;
@@ -1262,7 +1269,11 @@ public class ScenarioBuilder extends JPanel {
 
             final long endTime = System.currentTimeMillis();
 
-            if (solution != -1) {
+            if (solution != -1 && uncertain) {
+                int res = JOptionPane.showConfirmDialog(null, "Solution = " + solution + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - startTime) / 1000 + " seconds", "Uncertain solution", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION)
+                    dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+            } else if (solution != -1) {
                 JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - startTime) / 1000 + " seconds", "Info", JOptionPane.INFORMATION_MESSAGE);
                 dtm.setValueAt(String.valueOf(solution), Xpos, 0);
             } else {
@@ -1344,6 +1355,7 @@ public class ScenarioBuilder extends JPanel {
         label8 = new JLabel();
         label9 = new JLabel();
         cancelSolveBtn = new JButton();
+        skipUncertaintyBox = new JCheckBox();
 
         //======== this ========
 
@@ -1401,7 +1413,7 @@ public class ScenarioBuilder extends JPanel {
             label4.setText("Target group");
 
             //---- label6 ----
-            label6.setText("Minimum seats");
+            label6.setText("Min seats");
 
             //---- minSeatsSpinner ----
             minSeatsSpinner.addChangeListener(e -> minSeatsSpinnerStateChanged(e));
@@ -1427,64 +1439,73 @@ public class ScenarioBuilder extends JPanel {
             cancelSolveBtn.setEnabled(false);
             cancelSolveBtn.addActionListener(e -> cancelSolveBtn(e));
 
+            //---- skipUncertaintyBox ----
+            skipUncertaintyBox.setText("Skip uncertain solutions");
+
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
                 panel1Layout.createParallelGroup()
                     .addGroup(panel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(panel1Layout.createParallelGroup()
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addGroup(panel1Layout.createParallelGroup()
                                     .addComponent(label4)
                                     .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(27, 27, 27)
+                                .addGap(18, 18, 18)
                                 .addGroup(panel1Layout.createParallelGroup()
-                                    .addGroup(panel1Layout.createSequentialGroup()
-                                        .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                                        .addComponent(label8, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(panel1Layout.createSequentialGroup()
-                                        .addComponent(label6)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
-                                        .addComponent(label9, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(label6, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addComponent(label9, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(label8, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(skipUncertaintyBox, GroupLayout.Alignment.TRAILING)))
                             .addGroup(panel1Layout.createSequentialGroup()
-                                .addComponent(label7)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                .addComponent(solveBtn)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelSolveBtn)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addComponent(solveBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cancelSolveBtn)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED))
+                                    .addGroup(panel1Layout.createSequentialGroup()
+                                        .addComponent(label7)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                 .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
                 panel1Layout.createParallelGroup()
                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap()
                         .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addComponent(label7)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                    .addComponent(label4)
-                                    .addComponent(label6))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                    .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addComponent(label4)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                            .addComponent(targetGroupBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(minSeatsSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addComponent(label6)
+                                        .addGap(28, 28, 28))))
                             .addGroup(panel1Layout.createSequentialGroup()
-                                .addComponent(label9)
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(skipUncertaintyBox)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(label8)
-                                .addGap(5, 5, 5)))
-                        .addGroup(panel1Layout.createParallelGroup()
+                                .addComponent(label9)
+                                .addGap(5, 5, 5)
+                                .addComponent(label8)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                             .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(solveBtn)
                                 .addComponent(cancelSolveBtn))
-                            .addComponent(progressBar1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
             );
         }
@@ -1513,7 +1534,7 @@ public class ScenarioBuilder extends JPanel {
                                             .addComponent(label1)
                                             .addComponent(scenarioNameTxt, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 330, GroupLayout.PREFERRED_SIZE)))
                                     .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup()
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(label2, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
@@ -1525,7 +1546,7 @@ public class ScenarioBuilder extends JPanel {
                                             .addComponent(spinner2, GroupLayout.Alignment.TRAILING)
                                             .addComponent(spinner1))
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))))
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))))
                             .addComponent(scrollPane2))
                         .addComponent(statusTxt))
                     .addGap(8, 8, 8))
@@ -1547,17 +1568,19 @@ public class ScenarioBuilder extends JPanel {
                                 .addComponent(spinner1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(scenarioNameTxt, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup()
+                            .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(label5)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                            .addGap(20, 20, 20))
+                                    .addComponent(spinner2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(102, 102, 102))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(5, 5, 5))))
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)))
-                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(addBtn)
@@ -1598,5 +1621,6 @@ public class ScenarioBuilder extends JPanel {
     private JLabel label8;
     private JLabel label9;
     private JButton cancelSolveBtn;
+    private JCheckBox skipUncertaintyBox;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

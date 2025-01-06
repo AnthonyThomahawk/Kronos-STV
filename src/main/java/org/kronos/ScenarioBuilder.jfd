@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :p::p, par l {par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp groupsBtn:::p::p, space :::x, comp buildBtn:::p::p}, seq {par l {seq {space :2:2:p, par l {comp label1:::p::p, comp scenarioNameTxt::t:p:330:p}}, comp panel1:::p::p}, space u:::p, par l {seq l {comp label2:::p:72:p, space :::p, comp label3:::::x}, seq l {par l:::p {comp label5::t:::x, comp spinner2::t:::x, comp spinner1:::::x}, space :p::p, comp scrollPane1::::165:x}}}, comp scrollPane2::l:::x}, comp statusTxt::l:p::p}, space :p:8:p}}"
-			"$verticalGroup": "par l {seq l {space :p::p, comp statusTxt:::p::p, space :p:26:p, par b {comp label1::b:p::p, comp label3::b:p::p, comp label2::b:p::p}, space :p::p, par l {seq {par b {comp spinner1::b:p::p, comp scenarioNameTxt::b:p::p}, space :::p, par l {seq {comp label5:::p::p, space :::p, comp spinner2:::p::p}, comp panel1:::p::p}, space :p:20:p}, seq {comp scrollPane1::::0:x, space :p::p}}, comp scrollPane2::::243:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp buildBtn::b:p::p, comp groupsBtn::b:p::p}, space :p::p}}"
+			"$horizontalGroup": "par l {seq {space :p::p, par l {par l {seq l {comp addBtn:::p::p, space :::p, comp remBtn:::p::p, space :::p, comp groupsBtn:::p::p, space :::x, comp buildBtn:::p::p}, seq {par l {seq {space :2:2:p, par l {comp label1:::p::p, comp scenarioNameTxt::t:p:330:p}}, comp panel1:::p::p}, space :::p, par l {seq l {comp label2:::p:72:p, space :::p, comp label3:::::x}, seq l {par l:::p {comp label5::t:::x, comp spinner2::t:::x, comp spinner1:::::x}, space :p::p, comp scrollPane1::::173:x}}}, comp scrollPane2::l:::x}, comp statusTxt::l:p::p}, space :p:8:p}}"
+			"$verticalGroup": "par l {seq l {space :p::p, comp statusTxt:::p::p, space :p:26:p, par b {comp label1::b:p::p, comp label3::b:p::p, comp label2::b:p::p}, space :p::p, par l {seq {par b {comp spinner1::b:p::p, comp scenarioNameTxt::b:p::p}, space :::p, par l:::p {seq {comp label5:::p::p, space :::p, comp spinner2:::p::p, space :p:102:p}, seq {comp panel1:::::x, space :p:5:p}}}, seq {comp scrollPane1::::169:x, space :::p}}, comp scrollPane2::::246:x, space :p::p, par b {comp addBtn::b:p::p, comp remBtn::b:p::p, comp buildBtn::b:p::p, comp groupsBtn::b:p::p}, space :p::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -72,8 +72,8 @@ new FormModel {
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "groupsBtn", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq {space :::p, par l {seq l {par l {comp label4::l:p::p, comp targetGroupBox::l:p::p}, space :p:27:p, par l {seq l {comp minSeatsSpinner:::p::p, space ::100:x, comp label8:::p:64:p}, seq l {comp label6:::p::p, space ::82:x, comp label9:::p:64:p}}}, seq {comp label7:::p::p, space :0:0:x}, seq l {comp solveBtn:::p::p, space :::p, comp cancelSolveBtn:::p::p, space ::8:x, comp progressBar1:::p:155:p}}, space :::p}}"
-				"$verticalGroup": "par l {seq t {space :::x, par t {seq t {comp label7:::p::p, space u:::p, par b {comp label4::b:p::p, comp label6::b:p::p}, space :::p, par b {comp targetGroupBox::b:p::p, comp minSeatsSpinner::b:p::p}, space s:::p}, seq t {comp label9:::p::p, space :::p, comp label8:::p::p, space :p:5:p}}, par l {par b {comp solveBtn::b:p::p, comp cancelSolveBtn::b:p::p}, comp progressBar1:::::x}, space :::p}}"
+				"$horizontalGroup": "par l {seq {space :::p, par t {seq t {par l {comp label4::l:p::p, comp targetGroupBox::l:p::p}, space s:::p, par l {comp label6:::p:64:p, comp minSeatsSpinner::l:p::p}, space :::x, par l {comp label9::t:p:64:p, comp label8::t:p:64:p, comp skipUncertaintyBox::t:p::p}}, seq t {par l {seq t {comp solveBtn:::p::p, space :::p, comp cancelSolveBtn:::p::p, space :::p}, seq l {comp label7:::p::p, space :::x}}, comp progressBar1:::p:155:p}}, space :::p}}"
+				"$verticalGroup": "par l {seq t {space :::p, par t {seq t {comp label7:::p::p, space :::x, par l {seq t {comp label4:::p::p, space :::p, par b {comp targetGroupBox::b:p::p, comp minSeatsSpinner::b:p::p}}, seq t {comp label6:::p::p, space :p:28:p}}}, seq t {space :0:0:x, comp skipUncertaintyBox:::p::p, space :::p, comp label9:::p::p, space :p:5:p, comp label8:::p::p}}, space :::p, par l:::p {par b:l {comp solveBtn::b:p::p, comp cancelSolveBtn::b:p::p}, comp progressBar1:::p:22:p}, space :::p}}"
 			} ) {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JComboBox" ) {
@@ -85,7 +85,7 @@ new FormModel {
 				} )
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label6"
-					"text": "Minimum seats"
+					"text": "Min seats"
 				} )
 				add( new FormComponent( "javax.swing.JSpinner" ) {
 					name: "minSeatsSpinner"
@@ -119,6 +119,10 @@ new FormModel {
 					"text": "Cancel"
 					"enabled": false
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cancelSolveBtn", true ) )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "skipUncertaintyBox"
+					"text": "Skip uncertain solutions"
 				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
