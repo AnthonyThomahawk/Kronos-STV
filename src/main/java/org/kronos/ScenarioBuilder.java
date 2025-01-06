@@ -1059,7 +1059,7 @@ public class ScenarioBuilder extends JPanel {
         }
 
         String fPath = saveBuildFile();
-        JOptionPane.showMessageDialog(this, "Saved as : " + fPath + "\n (Scenario builder saves BUILDFILES by default!)", "Info", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Saved as : " + fPath + "\n (Scenario builder saves TEMPLATES by default!)", "Info", JOptionPane.INFORMATION_MESSAGE);
 
 
         return fPath;

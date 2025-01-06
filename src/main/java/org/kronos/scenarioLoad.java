@@ -53,7 +53,7 @@ public class scenarioLoad extends JPanel {
         List<File> scenarioList = new ArrayList<>();
 
         String extension;
-        if (t) extension = ".buildTemplate"; else extension = ".scenario";
+        if (t) extension = ".template"; else extension = ".scenario";
 
         for (File f : allFiles) {
             if (f.getName().endsWith(extension)) {
@@ -78,7 +78,10 @@ public class scenarioLoad extends JPanel {
 
             list1.setListData(fileNames);
 
-            label1.setText("Available scenarios (" + fileNames.length + ") : ");
+            if (!t)
+                label1.setText("Available scenarios (" + fileNames.length + ") : ");
+            else
+                label1.setText("Available templates (" + fileNames.length + ") : ");
 
         } catch (IOException e) {
         }
