@@ -877,7 +877,7 @@ public class ScenarioBuilder extends JPanel {
             String workDir = Main.getWorkDir();
 
             String fileSeperator = FileSystems.getDefault().getSeparator();
-            String filePath = workDir + fileSeperator + scenarioNameTxt.getText() + ".buildTemplate";
+            String filePath = workDir + fileSeperator + scenarioNameTxt.getText() + ".template";
 
             JSONObject buildFile = new JSONObject();
 
