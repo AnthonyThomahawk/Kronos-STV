@@ -1156,6 +1156,26 @@ public class ScenarioBuilder extends JPanel {
                 return;
             }
 
+            boolean foundRand = false;
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                for (int j = 1; j < dtm.getColumnCount(); j++) {
+                    if (dtm.getValueAt(i,j) != null) {
+                        if (dtm.getValueAt(i,j).equals("RANDOM") || dtm.getValueAt(i,j).equals("EX-RANDOM")) {
+                            foundRand = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (foundRand) {
+                int res = JOptionPane.showConfirmDialog(null, "The template you are currently using contains RANDOM/EX-RANDOM.\nThis may cause any solution found to be incorrect.\nDo you want to continue?", "WARNING", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.NO_OPTION) {
+                    solveBtn.setEnabled(true);
+                    return;
+                }
+            }
+
             maxLimit = total - restDefined;
             int solution = -1;
             int progress = 0;
