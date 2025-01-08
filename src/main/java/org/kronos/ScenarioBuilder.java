@@ -1323,14 +1323,14 @@ public class ScenarioBuilder extends JPanel {
             final long endTime = System.currentTimeMillis();
 
             if (solution != -1 && uncertain) {
-                int res = JOptionPane.showConfirmDialog(null, "Solution = " + solution + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - startTime) / 1000 + " seconds", "Uncertain solution", JOptionPane.YES_NO_OPTION);
+                int res = JOptionPane.showConfirmDialog(null, "Solution = " + solution + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds", "Uncertain solution", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION)
                     dtm.setValueAt(String.valueOf(solution), Xpos, 0);
             } else if (solution != -1) {
-                JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - startTime) / 1000 + " seconds", "Info", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds", "Info", JOptionPane.INFORMATION_MESSAGE);
                 dtm.setValueAt(String.valueOf(solution), Xpos, 0);
             } else {
-                JOptionPane.showMessageDialog(null, "No solution was found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No solution was found.\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
 
             progressBar1.setValue(0);
