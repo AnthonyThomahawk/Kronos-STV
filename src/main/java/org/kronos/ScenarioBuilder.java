@@ -724,6 +724,30 @@ public class ScenarioBuilder extends JPanel {
         }
     }
 
+    private String generateOutputDirect(String ballots, String constituenciesFile) {
+        STVpy stv = new STVpy();
+        String stvOutput;
+        try {
+            stvOutput = stv.callSTVDirect(ballots, (Integer)spinner2.getValue(), constituenciesFile, instituteQuota);
+        } catch (Exception x) {
+            return null;
+        }
+
+        return stvOutput;
+    }
+
+    private String generateOutputDirect(String ballots) {
+        STVpy stv = new STVpy();
+        String stvOutput;
+        try {
+            stvOutput = stv.callSTVDirect(ballots, (Integer)spinner2.getValue());
+        } catch (Exception x) {
+            return null;
+        }
+
+        return stvOutput;
+    }
+
     private String generateOutput(String inputFile) {
         STVpy stv = new STVpy();
         String stvOutput;
@@ -1198,6 +1222,10 @@ public class ScenarioBuilder extends JPanel {
 
             boolean uncertain = false;
 
+            if (departmental) {
+                generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
+            }
+
             for (int i = 1; i < maxLimit; i++) {
                 progress++;
 
@@ -1251,18 +1279,23 @@ public class ScenarioBuilder extends JPanel {
 
                 ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
 
-                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+//                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+//
+//                String output;
+//
+//                if (departmental)
+//                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+//                else
+//                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
 
-                if (departmental) {
-                    generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
-                }
+                String inp = sg.ballotsToCSVString();
 
                 String output;
 
                 if (departmental)
-                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+                    output = generateOutputDirect(inp, scenarioNameTxt.getText() + "_const.csv");
                 else
-                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
+                    output = generateOutputDirect(inp);
 
                 STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
                 int targetCount = 0;

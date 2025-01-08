@@ -98,6 +98,18 @@ public class Main {
                 System.exit(1);
             }
         }
+
+        File z = new File("stv_direct.py");
+        if (!z.exists()) {
+            InputStream stvCore = Main.class.getClassLoader().getResourceAsStream("stv_direct.py");
+            try {
+                Files.copy(stvCore, Paths.get("stv_direct.py"));
+            } catch (Exception e) {
+                System.out.println(e);
+                JOptionPane.showMessageDialog(null, "Cannot write stv_direct.py, terminating.", "Error", JOptionPane.ERROR_MESSAGE);
+                System.exit(1);
+            }
+        }
     }
 
     private static int[] getPythonVer(String target) throws IOException {

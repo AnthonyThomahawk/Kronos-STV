@@ -19,4 +19,20 @@ public class STVpy {
         CallPython py = new CallPython(coreScript, "-b", ballotFile, "-l", "DEBUG", "-s", Integer.toString(seats), "-c", constituencyFile, "-q", Integer.toString(quota));
         return py.run();
     }
+
+    public String callSTVDirect(String ballots, int seats) throws Exception {
+        String input = ballots;
+        input += "[{!ARGUMENT_DELIMITER!}]";
+        input += "-s " + seats;
+        CallPythonDirect py = new CallPythonDirect("stv_direct.py", input);
+        return py.run();
+    }
+
+    public String callSTVDirect(String ballots, int seats, String constituencyFile, int quota) throws Exception {
+        String input = ballots;
+        input += "[{!ARGUMENT_DELIMITER!}]";
+        input += "-s " + seats + " -c " + constituencyFile + " -q " + quota;
+        CallPythonDirect py = new CallPythonDirect("stv_direct.py", input);
+        return py.run();
+    }
 }

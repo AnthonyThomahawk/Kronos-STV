@@ -117,6 +117,22 @@ public class ScenarioGenerator {
         }
     }
 
+    public String ballotsToCSVString() {
+        StringBuilder res = new StringBuilder();
+        for (String[] b : ballots) {
+            StringBuilder line = new StringBuilder();
+            for (int i = 0; i < b.length; i++) {
+                line.append(b[i]);
+                if (i != b.length-1)
+                    line.append(",");
+            }
+            res.append(line);
+            res.append("\n");
+        }
+
+        return res.toString();
+    }
+
     public JSONArray ballotsToJSON() {
         JSONArray choices = new JSONArray();
         LinkedHashMap<String[], Integer> consolidated = new LinkedHashMap<>();
