@@ -163,6 +163,7 @@ public class Main {
 
             System.out.println("Using python : " + custominterp);
             CallPython.interpreterPath = custominterp;
+            CallPythonDirect.interpreterPath = custominterp;
             return;
         }
 
