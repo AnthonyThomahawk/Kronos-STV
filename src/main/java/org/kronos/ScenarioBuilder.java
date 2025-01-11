@@ -24,12 +24,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Worker
  */
+
+class Pair<T, U> {
+    public final T t;
+    public final U u;
+
+    public Pair(T t, U u) {
+        this.t= t;
+        this.u= u;
+    }
+}
+
 public class ScenarioBuilder extends JPanel {
     public static boolean unsaved;
     ArrayList<ArrayList<JComboBox>> comboBoxGroups;
@@ -1135,6 +1147,95 @@ public class ScenarioBuilder extends JPanel {
         }
     }
 
+    private Pair<Integer, Boolean> testScenario(int i) {
+        DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+        int targetGroup = targetGroupBox.getSelectedIndex();
+
+        patterns = new ArrayList<>();
+
+        patterns.add(Integer.toString((Integer) spinner1.getValue()));
+        ArrayList<String> exRand = getExRand();
+        if (!exRand.isEmpty()) {
+            StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
+            for (int k = 1; k < exRand.size(); k++) {
+                exRandStr.append(",").append(exRand.get(k));
+            }
+            exRandStr.append("}");
+            patterns.add(exRandStr.toString());
+        }
+
+        for (int j = 0; j < dtm.getRowCount(); j++) {
+            String first;
+
+            if (dtm.getValueAt(j, 1).equals("EX-RANDOM"))
+                first = "#";
+            else if (dtm.getValueAt(j, 1).equals("RANDOM"))
+                first = "$";
+            else
+                first = (String) dtm.getValueAt(j, 1);
+
+            String v = (String) dtm.getValueAt(j, 0);
+            StringBuilder line;
+            if (v.equals("X") || v.equals("x")) {
+                line = new StringBuilder(i + "*" + first);
+            } else {
+                line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
+            }
+            for (int l = 2; l < dtm.getColumnCount(); l++) {
+                if (dtm.getValueAt(j,l) != null)
+                    if (dtm.getValueAt(j,l).equals("EX-RANDOM"))
+                        line.append("|").append("#");
+                    else if (dtm.getValueAt(j,l).equals("RANDOM"))
+                        line.append("|").append("$");
+                    else
+                        line.append("|").append(dtm.getValueAt(j,l));
+
+            }
+            patterns.add(line.toString());
+
+        }
+
+        ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
+
+//                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+//
+//                String output;
+//
+//                if (departmental)
+//                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+//                else
+//                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+        String inp = sg.ballotsToCSVString();
+
+        String output;
+
+        if (departmental)
+            output = generateOutputDirect(inp, scenarioNameTxt.getText() + "_const.csv");
+        else
+            output = generateOutputDirect(inp);
+
+        STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+        int targetCount = 0;
+
+        for (int x = 1; x <= electionResults.lastRank; x++) {
+            String elec = electionResults.getElected(x);
+            int ind = Arrays.asList(candidates).indexOf(elec);
+            int groupCandidateIndex = groupCandidates.get(ind);
+
+            if (groupCandidateIndex == targetGroup)
+                targetCount++;
+        }
+
+        // old uncertain check
+        //boolean uncertain = electionResults.stvInput.contains("RANDOM") || electionResults.stvInput.contains("random") || electionResults.stvInput.contains("RAND") || electionResults.stvInput.contains("rand");
+
+        // check for scenarios where randomness occured from low votes, and ZEUS chose a random candidate from constituencies
+        boolean uncertain = electionResults.stvInput.contains("xSHUFFLE");
+
+        return new Pair<>(targetCount, uncertain);
+    }
+
     private void solveBtn(ActionEvent e) {
         if (permTable.isEditing())
             permTable.getCellEditor().stopCellEditing();
@@ -1142,7 +1243,6 @@ public class ScenarioBuilder extends JPanel {
         solveBtn.setEnabled(false);
 
         solveThread = new Thread(() -> {
-            int targetGroup = targetGroupBox.getSelectedIndex();
             int minSeats = (int) minSeatsSpinner.getValue();
             int total = (int) spinner1.getValue();
             int maxLimit;
@@ -1226,99 +1326,86 @@ public class ScenarioBuilder extends JPanel {
                 generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
             }
 
-            for (int i = 1; i < maxLimit; i++) {
+            int step = maxLimit / 2;
+            int mid = maxLimit - step;
+            int lastmid = -1;
+
+
+            Pair<Integer, Boolean> results;
+            while(true) {
                 progress++;
+                results = testScenario(mid);
 
-                progressBar1.setValue(progress);
-                int percent = (int) ((progress / (double) maxLimit) * 100);
-                label8.setText(percent + " %");
+                boolean certaintyCheck = !results.u;
 
-                patterns = new ArrayList<>();
-
-                patterns.add(Integer.toString((Integer) spinner1.getValue()));
-                ArrayList<String> exRand = getExRand();
-                if (!exRand.isEmpty()) {
-                    StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
-                    for (int k = 1; k < exRand.size(); k++) {
-                        exRandStr.append(",").append(exRand.get(k));
-                    }
-                    exRandStr.append("}");
-                    patterns.add(exRandStr.toString());
+                if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
+                    certaintyCheck = true;
                 }
 
-                for (int j = 0; j < dtm.getRowCount(); j++) {
-                    String first;
-
-                    if (dtm.getValueAt(j, 1).equals("EX-RANDOM"))
-                        first = "#";
-                    else if (dtm.getValueAt(j, 1).equals("RANDOM"))
-                        first = "$";
-                    else
-                        first = (String) dtm.getValueAt(j, 1);
-
-                    String v = (String) dtm.getValueAt(j, 0);
-                    StringBuilder line;
-                    if (v.equals("X") || v.equals("x")) {
-                        line = new StringBuilder(i + "*" + first);
-                    } else {
-                        line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
-                    }
-                    for (int l = 2; l < dtm.getColumnCount(); l++) {
-                        if (dtm.getValueAt(j,l) != null)
-                            if (dtm.getValueAt(j,l).equals("EX-RANDOM"))
-                                line.append("|").append("#");
-                            else if (dtm.getValueAt(j,l).equals("RANDOM"))
-                                line.append("|").append("$");
-                            else
-                                line.append("|").append(dtm.getValueAt(j,l));
-
-                    }
-                    patterns.add(line.toString());
-
+                if (results.t >= minSeats && certaintyCheck) {
+                    solution = mid;
+                    step /= 2;
+                    mid -= step;
+                } else {
+                    step /= 2;
+                    mid += step;
                 }
 
-                ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
-
-//                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
-//
-//                String output;
-//
-//                if (departmental)
-//                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
-//                else
-//                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
-
-                String inp = sg.ballotsToCSVString();
-
-                String output;
-
-                if (departmental)
-                    output = generateOutputDirect(inp, scenarioNameTxt.getText() + "_const.csv");
-                else
-                    output = generateOutputDirect(inp);
-
-                STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
-                int targetCount = 0;
-
-                for (int x = 1; x <= electionResults.lastRank; x++) {
-                    String elec = electionResults.getElected(x);
-                    int ind = Arrays.asList(candidates).indexOf(elec);
-                    int groupCandidateIndex = groupCandidates.get(ind);
-
-                    if (groupCandidateIndex == targetGroup)
-                        targetCount++;
-                }
-
-                uncertain = electionResults.stvInput.contains("RANDOM") || electionResults.stvInput.contains("random") || electionResults.stvInput.contains("RAND") || electionResults.stvInput.contains("rand");
-
-                if (skipUncertaintyBox.isSelected() && uncertain)
-                    continue;
-
-                if (targetCount >= minSeats) {
-                    solution = i;
+                if (Math.abs(lastmid - mid) <= 1)
                     break;
-                }
+
+                lastmid = mid;
             }
+
+            // BINARY SEARCH WITHOUT CERTAINTY
+
+//            int mid = maxLimit / 2;
+//            int hi = maxLimit;
+//
+//            ArrayList<Integer> validSolutions = new ArrayList<>();
+//
+//            Pair<Integer, Boolean> results = testScenario(mid);
+//            do {
+//                progress++;
+//                if (results.t >= minSeats) {
+//                    validSolutions.add(mid);
+//                    int tmp = mid;
+//                    mid -= Math.abs(hi - mid) / 2;
+//                    hi = tmp;
+//                    solution = mid;
+//                } else {
+//                    int tmp = mid;
+//                    mid += Math.abs(hi - mid) / 2;
+//                    hi = tmp;
+//                }
+//                results = testScenario(mid);
+//
+//
+//            } while (!validSolutions.isEmpty() && mid != validSolutions.get(validSolutions.size() - 1));
+
+
+            // OLD METHOD
+
+//            for (int i = 1; i < maxLimit; i++) {
+//                progress++;
+//
+//                progressBar1.setValue(progress);
+//                int percent = (int) ((progress / (double) maxLimit) * 100);
+//                label8.setText(percent + " %");
+//
+//                Pair<Integer, Boolean> results = testScenario(i);
+//
+//                uncertain = results.u;
+//                int targetCount = results.t;
+//
+//                if (skipUncertaintyBox.isSelected() && uncertain)
+//                    continue;
+//
+//                if (targetCount >= minSeats) {
+//                    solution = i;
+//                    break;
+//                }
+//            }
 
             final long endTime = System.currentTimeMillis();
 
