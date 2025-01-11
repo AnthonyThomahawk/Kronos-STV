@@ -78,6 +78,7 @@ public class ScenarioBuilder extends JPanel {
 
         spinner1.setValue(1);
         spinner2.setValue(1);
+
         init();
     }
 
@@ -689,6 +690,10 @@ public class ScenarioBuilder extends JPanel {
         targetGroupBox.removeAllItems();
         for (String s : groupNames)
             targetGroupBox.addItem(s);
+
+        methodBox.addItem("Variable step");
+        methodBox.addItem("Linear scan");
+        methodBox.setSelectedIndex(0);
 
         if (selectedExRandToInit != null) {
             for (String c : selectedExRandToInit) {
@@ -1326,86 +1331,63 @@ public class ScenarioBuilder extends JPanel {
                 generateConstituencyFile(scenarioNameTxt.getText() + "_const.csv");
             }
 
-            int step = maxLimit / 2;
-            int mid = maxLimit - step;
-            int lastmid = -1;
-
-
             Pair<Integer, Boolean> results;
-            while(true) {
-                progress++;
-                results = testScenario(mid);
 
-                boolean certaintyCheck = !results.u;
+            if (methodBox.getSelectedIndex() == 0) {
+                // VARIABLE STEP
+                int step = maxLimit / 2;
+                int mid = maxLimit - step;
+                int lastmid = -1;
 
-                if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
-                    certaintyCheck = true;
+                while(true) {
+                    progress++;
+                    results = testScenario(mid);
+
+                    boolean certaintyCheck = !results.u;
+
+                    if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
+                        certaintyCheck = true;
+                    }
+
+                    if (results.t >= minSeats && certaintyCheck) {
+                        solution = mid;
+                        step /= 2;
+                        mid -= step;
+                    } else {
+                        step /= 2;
+                        mid += step;
+                    }
+
+                    if (Math.abs(lastmid - mid) <= 1)
+                        break;
+
+                    lastmid = mid;
                 }
+            } else {
+                // LINEAR SCAN
 
-                if (results.t >= minSeats && certaintyCheck) {
-                    solution = mid;
-                    step /= 2;
-                    mid -= step;
-                } else {
-                    step /= 2;
-                    mid += step;
+                for (int i = 1; i < maxLimit; i++) {
+                    progress++;
+
+                    progressBar1.setValue(progress);
+                    int percent = (int) ((progress / (double) maxLimit) * 100);
+                    label8.setText(percent + " %");
+
+                    results = testScenario(i);
+
+                    uncertain = results.u;
+                    int targetCount = results.t;
+
+                    if (skipUncertaintyBox.isSelected() && uncertain)
+                        continue;
+
+                    if (targetCount >= minSeats) {
+                        solution = i;
+                        break;
+                    }
                 }
-
-                if (Math.abs(lastmid - mid) <= 1)
-                    break;
-
-                lastmid = mid;
             }
 
-            // BINARY SEARCH WITHOUT CERTAINTY
-
-//            int mid = maxLimit / 2;
-//            int hi = maxLimit;
-//
-//            ArrayList<Integer> validSolutions = new ArrayList<>();
-//
-//            Pair<Integer, Boolean> results = testScenario(mid);
-//            do {
-//                progress++;
-//                if (results.t >= minSeats) {
-//                    validSolutions.add(mid);
-//                    int tmp = mid;
-//                    mid -= Math.abs(hi - mid) / 2;
-//                    hi = tmp;
-//                    solution = mid;
-//                } else {
-//                    int tmp = mid;
-//                    mid += Math.abs(hi - mid) / 2;
-//                    hi = tmp;
-//                }
-//                results = testScenario(mid);
-//
-//
-//            } while (!validSolutions.isEmpty() && mid != validSolutions.get(validSolutions.size() - 1));
-
-
-            // OLD METHOD
-
-//            for (int i = 1; i < maxLimit; i++) {
-//                progress++;
-//
-//                progressBar1.setValue(progress);
-//                int percent = (int) ((progress / (double) maxLimit) * 100);
-//                label8.setText(percent + " %");
-//
-//                Pair<Integer, Boolean> results = testScenario(i);
-//
-//                uncertain = results.u;
-//                int targetCount = results.t;
-//
-//                if (skipUncertaintyBox.isSelected() && uncertain)
-//                    continue;
-//
-//                if (targetCount >= minSeats) {
-//                    solution = i;
-//                    break;
-//                }
-//            }
 
             final long endTime = System.currentTimeMillis();
 
@@ -1496,6 +1478,8 @@ public class ScenarioBuilder extends JPanel {
         label9 = new JLabel();
         cancelSolveBtn = new JButton();
         skipUncertaintyBox = new JCheckBox();
+        methodBox = new JComboBox();
+        label10 = new JLabel();
 
         //======== this ========
 
@@ -1582,6 +1566,9 @@ public class ScenarioBuilder extends JPanel {
             //---- skipUncertaintyBox ----
             skipUncertaintyBox.setText("Skip uncertain solutions");
 
+            //---- label10 ----
+            label10.setText("Method");
+
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
@@ -1612,7 +1599,12 @@ public class ScenarioBuilder extends JPanel {
                                     .addGroup(panel1Layout.createSequentialGroup()
                                         .addComponent(label7)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addComponent(label10)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(methodBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
                         .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
@@ -1635,6 +1627,10 @@ public class ScenarioBuilder extends JPanel {
                                         .addGap(28, 28, 28))))
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                    .addComponent(methodBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(label10))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(skipUncertaintyBox)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(label9)
@@ -1762,5 +1758,7 @@ public class ScenarioBuilder extends JPanel {
     private JLabel label9;
     private JButton cancelSolveBtn;
     private JCheckBox skipUncertaintyBox;
+    private JComboBox methodBox;
+    private JLabel label10;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
