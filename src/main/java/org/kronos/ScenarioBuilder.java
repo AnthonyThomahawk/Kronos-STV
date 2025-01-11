@@ -1338,8 +1338,9 @@ public class ScenarioBuilder extends JPanel {
                 int step = maxLimit / 2;
                 int mid = maxLimit - step;
                 int lastmid = -1;
+                final int lastSteps = 5; // this is to provide the best possible solution by checking a backwards number of steps, to see if the best solution is skipped
 
-                while(true) {
+                while (true) {
                     progress++;
                     results = testScenario(mid);
 
@@ -1358,8 +1359,23 @@ public class ScenarioBuilder extends JPanel {
                         mid += step;
                     }
 
-                    if (Math.abs(lastmid - mid) <= 1)
+                    if (Math.abs(lastmid - mid) <= 1) {
+                        for (int n = mid; n > mid - lastSteps; n--) {
+                            results = testScenario(n);
+
+                            certaintyCheck = !results.u;
+
+                            if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
+                                certaintyCheck = true;
+                            }
+
+                            if (results.t >= minSeats && certaintyCheck) {
+                                solution = n;
+                            }
+                        }
+
                         break;
+                    }
 
                     lastmid = mid;
                 }
