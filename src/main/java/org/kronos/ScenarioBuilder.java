@@ -1241,6 +1241,97 @@ public class ScenarioBuilder extends JPanel {
         return new Pair<>(targetCount, uncertain);
     }
 
+    private Pair<Integer, Boolean> testScenario(int i, int h) {
+        DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
+        int targetGroup = targetGroupBox.getSelectedIndex();
+
+        patterns = new ArrayList<>();
+
+        patterns.add(Integer.toString((Integer) spinner1.getValue()));
+        ArrayList<String> exRand = getExRand();
+        if (!exRand.isEmpty()) {
+            StringBuilder exRandStr = new StringBuilder("#={" + exRand.get(0));
+            for (int k = 1; k < exRand.size(); k++) {
+                exRandStr.append(",").append(exRand.get(k));
+            }
+            exRandStr.append("}");
+            patterns.add(exRandStr.toString());
+        }
+
+        for (int j = 0; j < dtm.getRowCount(); j++) {
+            String first;
+
+            if (dtm.getValueAt(j, 1).equals("EX-RANDOM"))
+                first = "#";
+            else if (dtm.getValueAt(j, 1).equals("RANDOM"))
+                first = "$";
+            else
+                first = (String) dtm.getValueAt(j, 1);
+
+            String v = (String) dtm.getValueAt(j, 0);
+            StringBuilder line;
+            if (v.equals("X") || v.equals("x")) {
+                line = new StringBuilder(i + "*" + first);
+            } else if (v.equals("Y") || v.equals("y")) {
+                line = new StringBuilder(h + "*" + first);
+            }else {
+                line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
+            }
+            for (int l = 2; l < dtm.getColumnCount(); l++) {
+                if (dtm.getValueAt(j,l) != null)
+                    if (dtm.getValueAt(j,l).equals("EX-RANDOM"))
+                        line.append("|").append("#");
+                    else if (dtm.getValueAt(j,l).equals("RANDOM"))
+                        line.append("|").append("$");
+                    else
+                        line.append("|").append(dtm.getValueAt(j,l));
+
+            }
+            patterns.add(line.toString());
+
+        }
+
+        ScenarioGenerator sg = new ScenarioGenerator(options, patterns, (Integer) spinner2.getValue());
+
+//                sg.ballotsToCSV(scenarioNameTxt.getText() + ".csv");
+//
+//                String output;
+//
+//                if (departmental)
+//                    output = generateOutput(scenarioNameTxt.getText() + ".csv", scenarioNameTxt.getText() + "_const.csv");
+//                else
+//                    output = generateOutput(scenarioNameTxt.getText() + ".csv");
+
+        String inp = sg.ballotsToCSVString();
+
+        String output;
+
+        if (departmental)
+            output = generateOutputDirect(inp, scenarioNameTxt.getText() + "_const.csv");
+        else
+            output = generateOutputDirect(inp);
+
+        STVResults electionResults = new STVResults(output, (Integer) spinner1.getValue());
+        int targetCount = 0;
+
+        for (int x = 1; x <= electionResults.lastRank; x++) {
+            String elec = electionResults.getElected(x);
+            int ind = Arrays.asList(candidates).indexOf(elec);
+            int groupCandidateIndex = groupCandidates.get(ind);
+
+            if (groupCandidateIndex == targetGroup)
+                targetCount++;
+        }
+
+        // old uncertain check
+        //boolean uncertain = electionResults.stvInput.contains("RANDOM") || electionResults.stvInput.contains("random") || electionResults.stvInput.contains("RAND") || electionResults.stvInput.contains("rand");
+
+        // check for scenarios where randomness occured from low votes, and ZEUS chose a random candidate from constituencies
+        boolean uncertain = electionResults.stvInput.contains("xSHUFFLE");
+
+        return new Pair<>(targetCount, uncertain);
+    }
+
     private void solveBtn(ActionEvent e) {
         if (permTable.isEditing())
             permTable.getCellEditor().stopCellEditing();
@@ -1256,6 +1347,7 @@ public class ScenarioBuilder extends JPanel {
 
             int restDefined = 0;
             int Xpos = -1;
+            int Ypos = -1;
             int wildCardPos = -1;
 
             for (int i = 0; i < dtm.getRowCount(); i++) {
@@ -1266,7 +1358,10 @@ public class ScenarioBuilder extends JPanel {
                     restDefined += Integer.parseInt((String) dtm.getValueAt(i, 0));
                 } else if (v.equals("x") || v.equals("X")) {
                     Xpos = i;
-                } else {
+                } else if (v.equals("y") || v.equals("Y")) {
+                    Ypos = i;
+                }
+                else {
                     JOptionPane.showMessageDialog(null, "Unknown symbol on row #" + i, "ERROR", JOptionPane.ERROR_MESSAGE);
                     solveBtn.setEnabled(true);
                     return;
@@ -1306,7 +1401,6 @@ public class ScenarioBuilder extends JPanel {
             }
 
             maxLimit = total - restDefined;
-            int solution = -1;
             int progress = 0;
             progressBar1.setMaximum(maxLimit);
             progressBar1.setValue(progress);
@@ -1322,9 +1416,6 @@ public class ScenarioBuilder extends JPanel {
 
             cancelSolveBtn.setEnabled(true);
 
-
-            final long startTime = System.currentTimeMillis();
-
             boolean uncertain = false;
 
             if (departmental) {
@@ -1333,90 +1424,185 @@ public class ScenarioBuilder extends JPanel {
 
             Pair<Integer, Boolean> results;
 
-            if (methodBox.getSelectedIndex() == 0) {
-                // VARIABLE STEP
-                int step = maxLimit / 2;
-                int mid = maxLimit - step;
-                int lastmid = -1;
-                final int lastSteps = 5; // this is to provide the best possible solution by checking a backwards number of steps, to see if the best solution is skipped
 
-                while (true) {
-                    progress++;
-                    results = testScenario(mid);
+            // 1 var
+            if (Ypos == -1) {
+                int solution = -1;
+                final long startTime = System.currentTimeMillis();
 
-                    boolean certaintyCheck = !results.u;
+                if (methodBox.getSelectedIndex() == 0) {
+                    // VARIABLE STEP
+                    int step = maxLimit / 2;
+                    int mid = maxLimit - step;
+                    int lastmid = -1;
+                    final int lastSteps = 5; // this is to provide the best possible solution by checking a backwards number of steps, to see if the best solution is skipped
 
-                    if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
-                        certaintyCheck = true;
-                    }
+                    while (true) {
+                        progress++;
+                        results = testScenario(mid);
 
-                    if (results.t >= minSeats && certaintyCheck) {
-                        solution = mid;
-                        step /= 2;
-                        mid -= step;
-                    } else {
-                        step /= 2;
-                        mid += step;
-                    }
+                        boolean certaintyCheck = !results.u;
 
-                    if (Math.abs(lastmid - mid) <= 1) {
-                        for (int n = mid; n > mid - lastSteps; n--) {
-                            results = testScenario(n);
-
-                            certaintyCheck = !results.u;
-
-                            if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
-                                certaintyCheck = true;
-                            }
-
-                            if (results.t >= minSeats && certaintyCheck) {
-                                solution = n;
-                            }
+                        if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
+                            certaintyCheck = true;
                         }
 
-                        break;
+                        if (results.t >= minSeats && certaintyCheck) {
+                            solution = mid;
+                            step /= 2;
+                            mid -= step;
+                        } else {
+                            step /= 2;
+                            mid += step;
+                        }
+
+                        if (Math.abs(lastmid - mid) <= 1) {
+                            for (int n = mid; n > mid - lastSteps; n--) {
+                                results = testScenario(n);
+
+                                certaintyCheck = !results.u;
+
+                                if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
+                                    certaintyCheck = true;
+                                }
+
+                                if (results.t >= minSeats && certaintyCheck) {
+                                    solution = n;
+                                }
+                            }
+
+                            break;
+                        }
+
+                        lastmid = mid;
                     }
+                } else {
+                    // LINEAR SCAN
 
-                    lastmid = mid;
+                    for (int i = 1; i < maxLimit; i++) {
+                        progress++;
+
+                        progressBar1.setValue(progress);
+                        int percent = (int) ((progress / (double) maxLimit) * 100);
+                        label8.setText(percent + " %");
+
+                        results = testScenario(i);
+
+                        uncertain = results.u;
+                        int targetCount = results.t;
+
+                        if (skipUncertaintyBox.isSelected() && uncertain)
+                            continue;
+
+                        if (targetCount >= minSeats) {
+                            solution = i;
+                            break;
+                        }
+                    }
                 }
-            } else {
-                // LINEAR SCAN
 
-                for (int i = 1; i < maxLimit; i++) {
+
+                final long endTime = System.currentTimeMillis();
+
+                if (solution != -1 && uncertain) {
+                    int res = JOptionPane.showConfirmDialog(null, "Solution = " + solution + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION)
+                        dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+                } else if (solution != -1) {
+                    JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
+                    dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No solution was found.\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            // 2 var
+            else {
+                methodBox.setSelectedIndex(1);
+
+                final long startTime = System.currentTimeMillis();
+
+                int solutionX = -1;
+                int solutionY = -1;
+
+                int x = 1; // assuming X is friendly ballot
+                int y = 0; // assuming Y is opposing ballot
+
+                boolean lastAdd = true; // true = x , false = y
+
+                int varLimit = maxLimit / 2;
+
+                while (x < varLimit && y < varLimit) {
                     progress++;
-
                     progressBar1.setValue(progress);
                     int percent = (int) ((progress / (double) maxLimit) * 100);
                     label8.setText(percent + " %");
 
-                    results = testScenario(i);
+                    if (lastAdd) {
+                        y++;
+                        lastAdd = false;
+                    } else {
+                        x++;
+                        lastAdd = true;
+                    }
+
+                    results = testScenario(x,y);
 
                     uncertain = results.u;
                     int targetCount = results.t;
 
                     if (skipUncertaintyBox.isSelected() && uncertain)
-                        continue;
+                            continue;
 
                     if (targetCount >= minSeats) {
-                        solution = i;
+                        solutionX = x;
+                        solutionY = y;
                         break;
                     }
+
+                }
+
+                while (y < varLimit) {
+                    progress++;
+                    progressBar1.setValue(progress);
+                    int percent = (int) ((progress / (double) maxLimit) * 100);
+                    label8.setText(percent + " %");
+
+                    y++;
+                    results = testScenario(x,y);
+
+                    uncertain = results.u;
+                    int targetCount = results.t;
+
+                    if (skipUncertaintyBox.isSelected() && uncertain) {
+                        solutionY = y - 1;
+                        uncertain = false;
+                        break;
+                    }
+
+                    if (targetCount == minSeats - 1) {
+                        solutionY = y - 1;
+                        break;
+                    }
+                }
+
+                final long endTime = System.currentTimeMillis();
+
+                if (solutionX != -1 && uncertain) {
+                    int res = JOptionPane.showConfirmDialog(null, "Solution\n X = " + solutionX + "\nY = " + solutionY + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                        dtm.setValueAt(String.valueOf(solutionX), Xpos, 0);
+                        dtm.setValueAt(String.valueOf(solutionY), Ypos, 0);
+                    }
+                } else if (solutionX != -1) {
+                    JOptionPane.showMessageDialog(null, "Solution\nX = " + solutionX + "\nY = " + solutionY + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
+                    dtm.setValueAt(String.valueOf(solutionX), Xpos, 0);
+                    dtm.setValueAt(String.valueOf(solutionY), Ypos, 0);
+                } else {
+                    JOptionPane.showMessageDialog(null, "No solution was found.\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
 
 
-            final long endTime = System.currentTimeMillis();
-
-            if (solution != -1 && uncertain) {
-                int res = JOptionPane.showConfirmDialog(null, "Solution = " + solution + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION)
-                    dtm.setValueAt(String.valueOf(solution), Xpos, 0);
-            } else if (solution != -1) {
-                JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
-                dtm.setValueAt(String.valueOf(solution), Xpos, 0);
-            } else {
-                JOptionPane.showMessageDialog(null, "No solution was found.\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
-            }
 
             progressBar1.setValue(0);
             label9.setText("Idle");
