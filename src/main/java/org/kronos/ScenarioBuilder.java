@@ -407,13 +407,14 @@ public class ScenarioBuilder extends JPanel {
         int totalCount = 0;
         boolean foundWildcard = false;
         boolean foundX = false;
+        boolean foundY = false;
         for (int i = 0; i < dtm.getRowCount(); i++) {
             boolean foundBlank = false;
             for (int j = 0; j < dtm.getColumnCount(); j++) {
                 if (j == 0) {
                     String s = (String) dtm.getValueAt(i, 0);
 
-                    if (!nameChecks.isInteger(s) && !s.equals("?") && !s.equals("x") && !s.equals("X")) {
+                    if (!nameChecks.isInteger(s) && !s.equals("?") && !s.equals("x") && !s.equals("X") && !s.equals("y") && !s.equals("Y")) {
                         statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                 "<br> <b style=\"color:RED;\">Invalid multiplier on row #" + (i+1) + ".</b>" +"</html>");
                         buildBtn.setEnabled(false);
@@ -431,7 +432,7 @@ public class ScenarioBuilder extends JPanel {
                         }
 
                         foundWildcard = true;
-                    } else {
+                    } else if (s.equals("X") || s.equals("x")) {
                         if (foundX) {
                             statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                     "<br> <b style=\"color:RED;\">Variable (X) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
@@ -440,6 +441,15 @@ public class ScenarioBuilder extends JPanel {
                         }
 
                         foundX = true;
+                    } else {
+                        if (foundY) {
+                            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                    "<br> <b style=\"color:RED;\">Variable (Y) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
+                            buildBtn.setEnabled(false);
+                            return false;
+                        }
+
+                        foundY = true;
                     }
                 } else {
                     String s = (String) dtm.getValueAt(i, j);
@@ -476,15 +486,15 @@ public class ScenarioBuilder extends JPanel {
 
         if (solveThread != null && solveThread.isAlive() && foundX) {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
-                    "<br> <b style=\"color:ORANGE;\">Solving for X, please wait...</b>" +"</html>");
+                    "<br> <b style=\"color:ORANGE;\">Solving, please wait...</b>" +"</html>");
 
             buildBtn.setEnabled(false);
             return false;
         }
 
-        if (foundX) {
+        if (foundX || foundY) {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
-                    "<br> <b style=\"color:ORANGE;\">Unsolved variable X</b>" +"</html>");
+                    "<br> <b style=\"color:ORANGE;\">Unsolved variable(s)</b>" +"</html>");
 
             buildBtn.setEnabled(false);
             return true;
@@ -691,7 +701,7 @@ public class ScenarioBuilder extends JPanel {
         for (String s : groupNames)
             targetGroupBox.addItem(s);
 
-        methodBox.addItem("Variable step");
+        methodBox.addItem("Bisection scan");
         methodBox.addItem("Linear scan");
         methodBox.setSelectedIndex(0);
 
