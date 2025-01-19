@@ -4,6 +4,7 @@
 
 package org.kronos;
 
+import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -1511,7 +1512,7 @@ public class ScenarioBuilder extends JPanel {
                 final long startTime = System.currentTimeMillis();
 
                 int[] solutions = new int[variables.size()];
-                Arrays.fill(solutions, 0);
+                Arrays.fill(solutions, 1); // scenariogenerator DOES NOT LIKE 0 as a value
 
                 int varLimit = maxLimit / variables.size();
 
@@ -1553,14 +1554,14 @@ public class ScenarioBuilder extends JPanel {
                     }
                 }
 
+                int[] prevSolutions = solutions.clone();
+
                 if (solutionFound)
                 {
                     addIndex = 0;
 
                     boolean enemyVarLimitReached = false;
                     int enemySize = Collections.frequency(isVariableFriendly, false);
-
-                    int[] prevSolutions = solutions.clone();
 
                     while (!enemyVarLimitReached) {
                         progress++;
@@ -1588,11 +1589,13 @@ public class ScenarioBuilder extends JPanel {
                         int targetCount = results.t;
 
                         if (skipUncertaintyBox.isSelected() && uncertain) {
+                            solutions = prevSolutions.clone();
                             uncertain = false;
                             break;
                         }
 
-                        if (targetCount == minSeats - 1) {
+                        if (targetCount < minSeats) {
+                            solutions = prevSolutions.clone();
                             break;
                         }
 
@@ -1614,13 +1617,15 @@ public class ScenarioBuilder extends JPanel {
                 if (solutionFound && uncertain) {
                     int res = JOptionPane.showConfirmDialog(null, "Solution\n" + msg + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
                     if (res == JOptionPane.YES_OPTION) {
-                        for (int i = 0; i < variables.size(); i++) {
+                        int originalSize = variables.size();
+                        for (int i = 0; i < originalSize; i++) {
                             dtm.setValueAt(String.valueOf(solutions[i]), pos[i], 0);
                         }
                     }
                 } else if (solutionFound) {
                     JOptionPane.showMessageDialog(null, "Solution\n" + msg + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
-                    for (int i = 0; i < variables.size(); i++) {
+                    int originalSize = variables.size();
+                    for (int i = 0; i < originalSize; i++) {
                         dtm.setValueAt(String.valueOf(solutions[i]), pos[i], 0);
                     }
                 } else {
@@ -1675,6 +1680,25 @@ public class ScenarioBuilder extends JPanel {
         updateStatus();
     }
 
+    private void manageVarsBtn(ActionEvent e) {
+        if (variables.size() < 2) {
+            JOptionPane.showMessageDialog(null, "You must have at least 2 variables to use this function.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JDialog x = new JDialog(Main.mainFrame, true);
+
+        manageVars mv = new manageVars(isVariableFriendly, variables);
+        x.setContentPane(mv);
+        x.pack();
+        x.setLocationRelativeTo(null);
+        x.setVisible(true);
+
+        mv.updateVariables();
+
+        isVariableFriendly = mv.isVariableFriendly;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
         // Generated using JFormDesigner Educational license - Anthony Thomakos (lolcc iojvnd)
@@ -1708,7 +1732,7 @@ public class ScenarioBuilder extends JPanel {
         skipUncertaintyBox = new JCheckBox();
         methodBox = new JComboBox();
         label10 = new JLabel();
-        button1 = new JButton();
+        manageVarsBtn = new JButton();
 
         //======== this ========
 
@@ -1798,8 +1822,9 @@ public class ScenarioBuilder extends JPanel {
             //---- label10 ----
             label10.setText("Method");
 
-            //---- button1 ----
-            button1.setText("Manage variables");
+            //---- manageVarsBtn ----
+            manageVarsBtn.setText("Manage variables");
+            manageVarsBtn.addActionListener(e -> manageVarsBtn(e));
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
@@ -1837,7 +1862,7 @@ public class ScenarioBuilder extends JPanel {
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(methodBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
                             .addGroup(panel1Layout.createSequentialGroup()
-                                .addComponent(button1)
+                                .addComponent(manageVarsBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(skipUncertaintyBox)))
                         .addContainerGap())
@@ -1850,7 +1875,7 @@ public class ScenarioBuilder extends JPanel {
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addComponent(label7)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(button1)
+                                .addComponent(manageVarsBtn)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
@@ -1997,6 +2022,6 @@ public class ScenarioBuilder extends JPanel {
     private JCheckBox skipUncertaintyBox;
     private JComboBox methodBox;
     private JLabel label10;
-    private JButton button1;
+    private JButton manageVarsBtn;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
