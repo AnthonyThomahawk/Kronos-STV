@@ -1555,13 +1555,21 @@ public class ScenarioBuilder extends JPanel {
                 }
 
                 int[] prevSolutions = solutions.clone();
+                int enemyCount = Collections.frequency(isVariableFriendly, false);
 
-                if (solutionFound)
+                if (solutionFound && enemyCount > 0)
                 {
                     addIndex = 0;
 
                     boolean enemyVarLimitReached = false;
-                    int enemySize = Collections.frequency(isVariableFriendly, false);
+
+                    ArrayList<Integer> enemyIndexes = new ArrayList<>();
+
+                    for (int i = 0; i < variables.size(); i++) {
+                        if (!isVariableFriendly.get(i)) {
+                            enemyIndexes.add(i);
+                        }
+                    }
 
                     while (!enemyVarLimitReached) {
                         progress++;
@@ -1569,17 +1577,9 @@ public class ScenarioBuilder extends JPanel {
                         int percent = (int) ((progress / (double) maxLimit) * 100);
                         label8.setText(percent + " %");
 
-                        if (addIndex > enemySize) addIndex = 0;
+                        if (addIndex > enemyIndexes.size() - 1) addIndex = 0;
 
-                        int ind = 0;
-                        for (int zk = 0; zk < variables.size(); zk++) {
-                            if (!isVariableFriendly.get(zk)) {
-                                if (ind == addIndex) {
-                                    solutions[ind]++;
-                                }
-                                ind++;
-                            }
-                        }
+                        solutions[enemyIndexes.get(addIndex)]++;
 
                         addIndex++;
 
