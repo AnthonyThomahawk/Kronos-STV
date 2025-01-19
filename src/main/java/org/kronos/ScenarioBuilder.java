@@ -63,6 +63,9 @@ public class ScenarioBuilder extends JPanel {
     ArrayList<String> selectedExRandToInit;
     ArrayList<ArrayList<String>> pTableDataToInit;
 
+    ArrayList<String> variables;
+    ArrayList<Boolean> isVariableFriendly;
+
     int seatsInit = -1;
     int ballotCountInit = -1;
 
@@ -365,35 +368,6 @@ public class ScenarioBuilder extends JPanel {
         return exRandList;
     }
 
-    // a better rand for the other lib (keep for later)
-//    private String getExRand(ArrayList<String> exclude) {
-//        DefaultTableModel dtm = (DefaultTableModel) exRandtable.getModel();
-//
-//        ArrayList<String> exRandList = new ArrayList<>();
-//
-//        for (int i = 0; i < dtm.getRowCount(); i++) {
-//            if ((Boolean) dtm.getValueAt(i, 1)) {
-//                exRandList.add((String) dtm.getValueAt(i, 0));
-//            }
-//        }
-//
-//        exRandList.removeAll(exclude);
-//
-//        Collections.shuffle(exRandList);
-//
-//        return exRandList.get(0);
-//    }
-//
-//    private String getRand(ArrayList<String> exclude) {
-//        ArrayList<String> rem = new ArrayList<>(options);
-//        rem.removeAll(exclude);
-//
-//        Collections.shuffle(rem);
-//        return rem.get(0);
-//    }
-
-
-
     private boolean updateStatus() {
         if (scenarioNameTxt.getText().isEmpty()) {
             statusTxt.setText("<html>" + "<b> Alert : </b>" +
@@ -402,24 +376,21 @@ public class ScenarioBuilder extends JPanel {
             return false;
         }
 
+        if (variables == null) {
+            variables = new ArrayList<>();
+        }
+
+        variables.clear();
+
         DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
         int totalCount = 0;
         boolean foundWildcard = false;
-        boolean foundX = false;
-        boolean foundY = false;
         for (int i = 0; i < dtm.getRowCount(); i++) {
             boolean foundBlank = false;
             for (int j = 0; j < dtm.getColumnCount(); j++) {
                 if (j == 0) {
                     String s = (String) dtm.getValueAt(i, 0);
-
-                    if (!nameChecks.isInteger(s) && !s.equals("?") && !s.equals("x") && !s.equals("X") && !s.equals("y") && !s.equals("Y")) {
-                        statusTxt.setText("<html>" + "<b> Alert : </b>" +
-                                "<br> <b style=\"color:RED;\">Invalid multiplier on row #" + (i+1) + ".</b>" +"</html>");
-                        buildBtn.setEnabled(false);
-                        return false;
-                    }
 
                     if (nameChecks.isInteger(s)) {
                         totalCount += Integer.parseInt(s);
@@ -432,24 +403,15 @@ public class ScenarioBuilder extends JPanel {
                         }
 
                         foundWildcard = true;
-                    } else if (s.equals("X") || s.equals("x")) {
-                        if (foundX) {
-                            statusTxt.setText("<html>" + "<b> Alert : </b>" +
-                                    "<br> <b style=\"color:RED;\">Variable (X) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
-                            buildBtn.setEnabled(false);
-                            return false;
-                        }
-
-                        foundX = true;
                     } else {
-                        if (foundY) {
+                        if (variables.contains(s)) {
                             statusTxt.setText("<html>" + "<b> Alert : </b>" +
-                                    "<br> <b style=\"color:RED;\">Variable (Y) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
+                                    "<br> <b style=\"color:RED;\">Variable (" + s + ") cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
                             buildBtn.setEnabled(false);
                             return false;
                         }
 
-                        foundY = true;
+                        variables.add(s);
                     }
                 } else {
                     String s = (String) dtm.getValueAt(i, j);
@@ -484,7 +446,7 @@ public class ScenarioBuilder extends JPanel {
             return false;
         }
 
-        if (solveThread != null && solveThread.isAlive() && foundX) {
+        if (solveThread != null && solveThread.isAlive() && !variables.isEmpty()) {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
                     "<br> <b style=\"color:ORANGE;\">Solving, please wait...</b>" +"</html>");
 
@@ -492,7 +454,7 @@ public class ScenarioBuilder extends JPanel {
             return false;
         }
 
-        if (foundX || foundY) {
+        if (!variables.isEmpty()) {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
                     "<br> <b style=\"color:ORANGE;\">Unsolved variable(s)</b>" +"</html>");
 
@@ -1191,7 +1153,7 @@ public class ScenarioBuilder extends JPanel {
 
             String v = (String) dtm.getValueAt(j, 0);
             StringBuilder line;
-            if (v.equals("X") || v.equals("x")) {
+            if (v.equals(variables.get(0))) {
                 line = new StringBuilder(i + "*" + first);
             } else {
                 line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
@@ -1251,7 +1213,7 @@ public class ScenarioBuilder extends JPanel {
         return new Pair<>(targetCount, uncertain);
     }
 
-    private Pair<Integer, Boolean> testScenario(int i, int h) {
+    private Pair<Integer, Boolean> testScenario(int[] vals) {
         DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
         int targetGroup = targetGroupBox.getSelectedIndex();
 
@@ -1280,11 +1242,9 @@ public class ScenarioBuilder extends JPanel {
 
             String v = (String) dtm.getValueAt(j, 0);
             StringBuilder line;
-            if (v.equals("X") || v.equals("x")) {
-                line = new StringBuilder(i + "*" + first);
-            } else if (v.equals("Y") || v.equals("y")) {
-                line = new StringBuilder(h + "*" + first);
-            }else {
+            if (variables.contains(v)) {
+                line = new StringBuilder(vals[variables.indexOf(v)] + "*" + first);
+            } else {
                 line = new StringBuilder(dtm.getValueAt(j, 0) + "*" + first);
             }
             for (int l = 2; l < dtm.getColumnCount(); l++) {
@@ -1356,8 +1316,9 @@ public class ScenarioBuilder extends JPanel {
             DefaultTableModel dtm = (DefaultTableModel) permTable.getModel();
 
             int restDefined = 0;
-            int Xpos = -1;
-            int Ypos = -1;
+
+            Integer[] pos = new Integer[variables.size()];
+            Arrays.fill(pos, -1);
             int wildCardPos = -1;
 
             for (int i = 0; i < dtm.getRowCount(); i++) {
@@ -1366,20 +1327,18 @@ public class ScenarioBuilder extends JPanel {
                     wildCardPos = i;
                 } else if (nameChecks.isInteger(v)) {
                     restDefined += Integer.parseInt((String) dtm.getValueAt(i, 0));
-                } else if (v.equals("x") || v.equals("X")) {
-                    Xpos = i;
-                } else if (v.equals("y") || v.equals("Y")) {
-                    Ypos = i;
-                }
-                else {
-                    JOptionPane.showMessageDialog(null, "Unknown symbol on row #" + i, "ERROR", JOptionPane.ERROR_MESSAGE);
-                    solveBtn.setEnabled(true);
-                    return;
+                } else {
+                    for (int x = 0; x < variables.size(); x++) {
+                        if (v.equals(variables.get(x))) {
+                            pos[x] = i;
+                            break;
+                        }
+                    }
                 }
             }
 
-            if (Xpos == -1) {
-                JOptionPane.showMessageDialog(null, "Variable X not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            if (Arrays.asList(pos).contains(-1)) {
+                JOptionPane.showMessageDialog(null, "A variable was not found.", "ERROR", JOptionPane.ERROR_MESSAGE);
                 solveBtn.setEnabled(true);
                 return;
             }
@@ -1436,12 +1395,12 @@ public class ScenarioBuilder extends JPanel {
 
 
             // 1 var
-            if (Ypos == -1) {
+            if (variables.size() == 1) {
                 int solution = -1;
                 final long startTime = System.currentTimeMillis();
 
                 if (methodBox.getSelectedIndex() == 0) {
-                    // VARIABLE STEP
+                    // BISECTION SCAN
                     int step = maxLimit / 2;
                     int mid = maxLimit - step;
                     int lastmid = -1;
@@ -1517,45 +1476,63 @@ public class ScenarioBuilder extends JPanel {
                 if (solution != -1 && uncertain) {
                     int res = JOptionPane.showConfirmDialog(null, "Solution = " + solution + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
                     if (res == JOptionPane.YES_OPTION)
-                        dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+                        dtm.setValueAt(String.valueOf(solution), pos[0], 0);
                 } else if (solution != -1) {
                     JOptionPane.showMessageDialog(null, "Solution = " + solution + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
-                    dtm.setValueAt(String.valueOf(solution), Xpos, 0);
+                    dtm.setValueAt(String.valueOf(solution), pos[0], 0);
                 } else {
                     JOptionPane.showMessageDialog(null, "No solution was found.\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
-            // 2 var
+            // multiple var
             else {
+                if (isVariableFriendly == null || isVariableFriendly.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "You must set the side of each variable before attempting to solve for multiple variables!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    progressBar1.setValue(0);
+                    label9.setText("Idle");
+                    label8.setText("0 %");
+
+                    updateStatus();
+
+                    permTable.setEnabled(true);
+                    exRandtable.setEnabled(true);
+                    addBtn.setEnabled(true);
+                    remBtn.setEnabled(true);
+
+                    cancelSolveBtn.setEnabled(false);
+                    solveBtn.setEnabled(true);
+
+                    return;
+                }
+
+
                 methodBox.setSelectedIndex(1);
 
                 final long startTime = System.currentTimeMillis();
 
-                int solutionX = -1;
-                int solutionY = -1;
+                int[] solutions = new int[variables.size()];
+                Arrays.fill(solutions, 0);
 
-                int x = 1; // assuming X is friendly ballot
-                int y = 0; // assuming Y is opposing ballot
+                int varLimit = maxLimit / variables.size();
 
-                boolean lastAdd = true; // true = x , false = y
+                boolean varLimitReached = false;
 
-                int varLimit = maxLimit / 2;
+                boolean solutionFound = false;
 
-                while (x < varLimit && y < varLimit) {
+                int addIndex = 0;
+
+                while (!varLimitReached) {
                     progress++;
                     progressBar1.setValue(progress);
                     int percent = (int) ((progress / (double) maxLimit) * 100);
                     label8.setText(percent + " %");
 
-                    if (lastAdd) {
-                        y++;
-                        lastAdd = false;
-                    } else {
-                        x++;
-                        lastAdd = true;
-                    }
+                    if (addIndex > variables.size()-1) addIndex = 0;
 
-                    results = testScenario(x,y);
+                    solutions[addIndex]++;
+                    addIndex++;
+
+                    results = testScenario(solutions);
 
                     uncertain = results.u;
                     int targetCount = results.t;
@@ -1564,49 +1541,88 @@ public class ScenarioBuilder extends JPanel {
                             continue;
 
                     if (targetCount >= minSeats) {
-                        solutionX = x;
-                        solutionY = y;
+                        solutionFound = true;
                         break;
                     }
 
+                    for (int s : solutions) {
+                        if (s > varLimit) {
+                            varLimitReached = true;
+                            break;
+                        }
+                    }
                 }
 
-                while (y < varLimit) {
-                    progress++;
-                    progressBar1.setValue(progress);
-                    int percent = (int) ((progress / (double) maxLimit) * 100);
-                    label8.setText(percent + " %");
+                if (solutionFound)
+                {
+                    addIndex = 0;
 
-                    y++;
-                    results = testScenario(x,y);
+                    boolean enemyVarLimitReached = false;
+                    int enemySize = Collections.frequency(isVariableFriendly, false);
 
-                    uncertain = results.u;
-                    int targetCount = results.t;
+                    int[] prevSolutions = solutions.clone();
 
-                    if (skipUncertaintyBox.isSelected() && uncertain) {
-                        solutionY = y - 1;
-                        uncertain = false;
-                        break;
-                    }
+                    while (!enemyVarLimitReached) {
+                        progress++;
+                        progressBar1.setValue(progress);
+                        int percent = (int) ((progress / (double) maxLimit) * 100);
+                        label8.setText(percent + " %");
 
-                    if (targetCount == minSeats - 1) {
-                        solutionY = y - 1;
-                        break;
+                        if (addIndex > enemySize) addIndex = 0;
+
+                        int ind = 0;
+                        for (int zk = 0; zk < variables.size(); zk++) {
+                            if (!isVariableFriendly.get(zk)) {
+                                if (ind == addIndex) {
+                                    solutions[ind]++;
+                                }
+                                ind++;
+                            }
+                        }
+
+                        addIndex++;
+
+                        results = testScenario(solutions);
+
+                        uncertain = results.u;
+                        int targetCount = results.t;
+
+                        if (skipUncertaintyBox.isSelected() && uncertain) {
+                            uncertain = false;
+                            break;
+                        }
+
+                        if (targetCount == minSeats - 1) {
+                            break;
+                        }
+
+
+                        prevSolutions = solutions.clone();
                     }
                 }
 
                 final long endTime = System.currentTimeMillis();
 
-                if (solutionX != -1 && uncertain) {
-                    int res = JOptionPane.showConfirmDialog(null, "Solution\n X = " + solutionX + "\nY = " + solutionY + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
-                    if (res == JOptionPane.YES_OPTION) {
-                        dtm.setValueAt(String.valueOf(solutionX), Xpos, 0);
-                        dtm.setValueAt(String.valueOf(solutionY), Ypos, 0);
+                StringBuilder msg = new StringBuilder();
+                if (solutionFound) {
+                    for (int i = 0; i < variables.size(); i++) {
+                        msg.append(variables.get(i)).append(" = ").append(solutions[i]);
+                        msg.append("\n");
                     }
-                } else if (solutionX != -1) {
-                    JOptionPane.showMessageDialog(null, "Solution\nX = " + solutionX + "\nY = " + solutionY + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
-                    dtm.setValueAt(String.valueOf(solutionX), Xpos, 0);
-                    dtm.setValueAt(String.valueOf(solutionY), Ypos, 0);
+                }
+
+                if (solutionFound && uncertain) {
+                    int res = JOptionPane.showConfirmDialog(null, "Solution\n" + msg + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                        for (int i = 0; i < variables.size(); i++) {
+                            dtm.setValueAt(String.valueOf(solutions[i]), pos[i], 0);
+                        }
+                    }
+                } else if (solutionFound) {
+                    JOptionPane.showMessageDialog(null, "Solution\n" + msg + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
+                    for (int i = 0; i < variables.size(); i++) {
+                        dtm.setValueAt(String.valueOf(solutions[i]), pos[i], 0);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(null, "No solution was found.\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -1692,6 +1708,7 @@ public class ScenarioBuilder extends JPanel {
         skipUncertaintyBox = new JCheckBox();
         methodBox = new JComboBox();
         label10 = new JLabel();
+        button1 = new JButton();
 
         //======== this ========
 
@@ -1755,7 +1772,7 @@ public class ScenarioBuilder extends JPanel {
             minSeatsSpinner.addChangeListener(e -> minSeatsSpinnerStateChanged(e));
 
             //---- solveBtn ----
-            solveBtn.setText("Solve for X");
+            solveBtn.setText("Solve");
             solveBtn.addActionListener(e -> solveBtn(e));
 
             //---- label7 ----
@@ -1781,6 +1798,9 @@ public class ScenarioBuilder extends JPanel {
             //---- label10 ----
             label10.setText("Method");
 
+            //---- button1 ----
+            button1.setText("Manage variables");
+
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
@@ -1799,8 +1819,7 @@ public class ScenarioBuilder extends JPanel {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(panel1Layout.createParallelGroup()
                                     .addComponent(label9, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(label8, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(skipUncertaintyBox, GroupLayout.Alignment.TRAILING)))
+                                    .addComponent(label8, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)))
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addGroup(panel1Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
@@ -1816,7 +1835,11 @@ public class ScenarioBuilder extends JPanel {
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
                                         .addComponent(label10)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(methodBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))))
+                                        .addComponent(methodBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(button1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(skipUncertaintyBox)))
                         .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
@@ -1827,6 +1850,8 @@ public class ScenarioBuilder extends JPanel {
                             .addGroup(panel1Layout.createSequentialGroup()
                                 .addComponent(label7)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(button1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panel1Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
                                         .addComponent(label4)
@@ -1894,7 +1919,7 @@ public class ScenarioBuilder extends JPanel {
                                             .addComponent(spinner2, GroupLayout.Alignment.TRAILING)
                                             .addComponent(spinner1))
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE))))
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))))
                             .addComponent(scrollPane2))
                         .addComponent(statusTxt))
                     .addGap(8, 8, 8))
@@ -1972,5 +1997,6 @@ public class ScenarioBuilder extends JPanel {
     private JCheckBox skipUncertaintyBox;
     private JComboBox methodBox;
     private JLabel label10;
+    private JButton button1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
