@@ -1303,6 +1303,44 @@ public class ScenarioBuilder extends JPanel {
         return new Pair<>(targetCount, uncertain);
     }
 
+    private void lockInput() {
+        solveBtn.setEnabled(false);
+        permTable.setEnabled(false);
+        exRandtable.setEnabled(false);
+        addBtn.setEnabled(false);
+        remBtn.setEnabled(false);
+        groupsBtn.setEnabled(false);
+        manageVarsBtn.setEnabled(false);
+        spinner1.setEnabled(false);
+        spinner2.setEnabled(false);
+        minSeatsSpinner.setEnabled(false);
+        targetGroupBox.setEnabled(false);
+        skipUncertaintyBox.setEnabled(false);
+        methodBox.setEnabled(false);
+        scenarioNameTxt.setEnabled(false);
+
+        cancelSolveBtn.setEnabled(true);
+    }
+
+    private void unlockInput() {
+        solveBtn.setEnabled(true);
+        permTable.setEnabled(true);
+        exRandtable.setEnabled(true);
+        addBtn.setEnabled(true);
+        remBtn.setEnabled(true);
+        groupsBtn.setEnabled(true);
+        manageVarsBtn.setEnabled(true);
+        spinner1.setEnabled(true);
+        spinner2.setEnabled(true);
+        minSeatsSpinner.setEnabled(true);
+        targetGroupBox.setEnabled(true);
+        skipUncertaintyBox.setEnabled(true);
+        methodBox.setEnabled(true);
+        scenarioNameTxt.setEnabled(true);
+
+        cancelSolveBtn.setEnabled(false);
+    }
+
     private void solveBtn(ActionEvent e) {
         if (permTable.isEditing())
             permTable.getCellEditor().stopCellEditing();
@@ -1379,12 +1417,7 @@ public class ScenarioBuilder extends JPanel {
 
             updateStatus();
 
-            permTable.setEnabled(false);
-            exRandtable.setEnabled(false);
-            addBtn.setEnabled(false);
-            remBtn.setEnabled(false);
-
-            cancelSolveBtn.setEnabled(true);
+            lockInput();
 
             boolean uncertain = false;
 
@@ -1495,17 +1528,16 @@ public class ScenarioBuilder extends JPanel {
 
                     updateStatus();
 
-                    permTable.setEnabled(true);
-                    exRandtable.setEnabled(true);
-                    addBtn.setEnabled(true);
-                    remBtn.setEnabled(true);
-
-                    cancelSolveBtn.setEnabled(false);
-                    solveBtn.setEnabled(true);
+                    unlockInput();
 
                     return;
                 }
 
+                int enemyCount = Collections.frequency(isVariableFriendly, false);
+
+                if (enemyCount == 0) {
+                    JOptionPane.showMessageDialog(null, "You have not set any enemy/non-friendly ballots, this may produce incorrect results!", "WARNING", JOptionPane.WARNING_MESSAGE);
+                }
 
                 methodBox.setSelectedIndex(1);
 
@@ -1555,7 +1587,6 @@ public class ScenarioBuilder extends JPanel {
                 }
 
                 int[] prevSolutions = solutions.clone();
-                int enemyCount = Collections.frequency(isVariableFriendly, false);
 
                 if (solutionFound && enemyCount > 0)
                 {
@@ -1579,7 +1610,11 @@ public class ScenarioBuilder extends JPanel {
 
                         if (addIndex > enemyIndexes.size() - 1) addIndex = 0;
 
-                        solutions[enemyIndexes.get(addIndex)]++;
+                        if (solutions[enemyIndexes.get(addIndex)] < varLimit - 1) {
+                            solutions[enemyIndexes.get(addIndex)]++;
+                        } else {
+                            enemyVarLimitReached = true;
+                        }
 
                         addIndex++;
 
@@ -1641,13 +1676,7 @@ public class ScenarioBuilder extends JPanel {
 
             updateStatus();
 
-            permTable.setEnabled(true);
-            exRandtable.setEnabled(true);
-            addBtn.setEnabled(true);
-            remBtn.setEnabled(true);
-
-            cancelSolveBtn.setEnabled(false);
-            solveBtn.setEnabled(true);
+            unlockInput();
         });
 
         solveThread.start();
@@ -1667,13 +1696,7 @@ public class ScenarioBuilder extends JPanel {
         label9.setText("Idle");
         label8.setText("0 %");
 
-        permTable.setEnabled(true);
-        exRandtable.setEnabled(true);
-        addBtn.setEnabled(true);
-        remBtn.setEnabled(true);
-
-        cancelSolveBtn.setEnabled(false);
-        solveBtn.setEnabled(true);
+        unlockInput();
 
         JOptionPane.showMessageDialog(null, "Operation aborted.", "Info", JOptionPane.INFORMATION_MESSAGE);
 
