@@ -4,7 +4,6 @@
 
 package org.kronos;
 
-import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -73,21 +72,16 @@ public class ScenarioBuilder extends JPanel {
     public Thread solveThread;
 
 
-    public ScenarioBuilder(String[] candidates, String constituencyFile) {
+    public ScenarioBuilder(String file, int fileType) {
         initComponents();
 
-        options = new ArrayList<>();
-
-        options.addAll(Arrays.asList(candidates));
+        methodBox.addItem("Bisection scan");
+        methodBox.addItem("Linear scan");
+        methodBox.setSelectedIndex(0);
 
         spinner1.setValue(1);
         spinner2.setValue(1);
-
-        init();
-    }
-
-    public ScenarioBuilder(String file, int fileType) {
-        initComponents();
+        minSeatsSpinner.setValue(1);
 
         switch (fileType) {
             case 0:
@@ -104,10 +98,6 @@ public class ScenarioBuilder extends JPanel {
         options = new ArrayList<>();
 
         options.addAll(Arrays.asList(candidates));
-
-        spinner1.setValue(1);
-        spinner2.setValue(1);
-        minSeatsSpinner.setValue(1);
 
         init();
     }
@@ -234,6 +224,25 @@ public class ScenarioBuilder extends JPanel {
 
             scenarioNameTxt.setText(electionTitle + "_scen");
 
+            skipUncertaintyBox.setSelected((boolean) buildFile.get("SkipUncertainty"));
+            Long l = (long) buildFile.get("MinSeats");
+            minSeatsSpinner.setValue(l.intValue());
+
+            targetGroupBox.removeAllItems();
+            for (String s : groupNames)
+                targetGroupBox.addItem(s);
+
+            l = (long) buildFile.get("TargetGroup");
+            targetGroupBox.setSelectedIndex(l.intValue());
+            l = (long) buildFile.get("SolveMethod");
+            methodBox.setSelectedIndex(l.intValue());
+
+            if (buildFile.containsKey("FriendlyVars")) {
+                JSONArray friendlyvars = (JSONArray) buildFile.get("FriendlyVars");
+
+                isVariableFriendly = new ArrayList<>();
+                isVariableFriendly.addAll(friendlyvars);
+            }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "This scenario file has an invalid format and cannot be loaded.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -664,10 +673,6 @@ public class ScenarioBuilder extends JPanel {
         for (String s : groupNames)
             targetGroupBox.addItem(s);
 
-        methodBox.addItem("Bisection scan");
-        methodBox.addItem("Linear scan");
-        methodBox.setSelectedIndex(0);
-
         if (selectedExRandToInit != null) {
             for (String c : selectedExRandToInit) {
                 dtm.setValueAt(Boolean.TRUE, options.indexOf(c), 1);
@@ -966,6 +971,19 @@ public class ScenarioBuilder extends JPanel {
             }
 
             buildFile.put("PermTable", ptable);
+
+            buildFile.put("SkipUncertainty", skipUncertaintyBox.isSelected());
+            buildFile.put("MinSeats", minSeatsSpinner.getValue());
+            buildFile.put("TargetGroup", targetGroupBox.getSelectedIndex());
+            buildFile.put("SolveMethod", methodBox.getSelectedIndex());
+
+            if (isVariableFriendly != null && !isVariableFriendly.isEmpty()) {
+                JSONArray friendlyvars = new JSONArray();
+                friendlyvars.addAll(isVariableFriendly);
+
+                buildFile.put("FriendlyVars", friendlyvars);
+            }
+
 
             OutputStreamWriter file = new OutputStreamWriter(Files.newOutputStream(Paths.get(filePath)), StandardCharsets.UTF_8);
             file.write(buildFile.toJSONString());
@@ -1652,14 +1670,14 @@ public class ScenarioBuilder extends JPanel {
                 if (solutionFound && uncertain) {
                     int res = JOptionPane.showConfirmDialog(null, "Solution\n" + msg + "\nSolution is uncertain, would you like to keep it anyway?\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Uncertain solution", JOptionPane.YES_NO_OPTION);
                     if (res == JOptionPane.YES_OPTION) {
-                        int originalSize = variables.size();
+                        int originalSize = variables.size(); // this is required, because updatestatus() changes variables.size() dynamically
                         for (int i = 0; i < originalSize; i++) {
                             dtm.setValueAt(String.valueOf(solutions[i]), pos[i], 0);
                         }
                     }
                 } else if (solutionFound) {
                     JOptionPane.showMessageDialog(null, "Solution\n" + msg + "\nTime taken : " + (endTime - (double)startTime) / 1000 + " seconds\nIterations : " + progress, "Info", JOptionPane.INFORMATION_MESSAGE);
-                    int originalSize = variables.size();
+                    int originalSize = variables.size(); // this is required, because updatestatus() changes variables.size() dynamically
                     for (int i = 0; i < originalSize; i++) {
                         dtm.setValueAt(String.valueOf(solutions[i]), pos[i], 0);
                     }
