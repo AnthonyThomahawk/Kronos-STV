@@ -1366,6 +1366,12 @@ public class ScenarioBuilder extends JPanel {
         solveBtn.setEnabled(false);
 
         solveThread = new Thread(() -> {
+            if (variables == null || variables.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "You must have at least 1 variable to use this function.", "ERRROR", JOptionPane.ERROR_MESSAGE);
+                solveBtn.setEnabled(true);
+                return;
+            }
+
             int minSeats = (int) minSeatsSpinner.getValue();
             int total = (int) spinner1.getValue();
             int maxLimit;
