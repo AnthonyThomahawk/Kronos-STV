@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -483,6 +484,38 @@ public class ScenarioBuilder extends JPanel {
         ArrayList<JComboBox> arr = new ArrayList<>();
         for (int i = 0; i < permTable.getColumnCount() - 1; i++) {
             JComboBox x = new JComboBox();
+            AtomicBoolean isClicked = new AtomicBoolean(false);
+            x.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (x.isPopupVisible() && !isClicked.get()) {
+                        x.hidePopup();
+                        isClicked.set(true);
+                    } else {
+                        isClicked.set(false);
+                    }
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            });
+
             for (String s : opts) {
                 x.addItem(s);
             }
@@ -1745,6 +1778,9 @@ public class ScenarioBuilder extends JPanel {
 
         isVariableFriendly = mv.isVariableFriendly;
     }
+
+
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
