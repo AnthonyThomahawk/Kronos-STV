@@ -244,6 +244,42 @@ public class createGroups extends JPanel {
             }
         });
 
+        table1.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = table1.getSelectedRow();
+                table2.clearSelection();
+
+                if (selected != -1) {
+                    for (int i = 0; i < table2.getRowCount(); i++) {
+                        if (groupBoxes.get(i).getSelectedIndex() == selected) {
+                            table2.addRowSelectionInterval(i,i);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
+
         table2.getModel().addTableModelListener(e -> updateGroupCandidates());
 
         status = true;
