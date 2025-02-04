@@ -72,6 +72,9 @@ public class ScenarioBuilder extends JPanel {
 
     public Thread solveThread;
 
+    boolean lockListenerSet = false;
+    boolean lockSel = false;
+
 
     public ScenarioBuilder(String file, int fileType) {
         initComponents();
@@ -379,6 +382,54 @@ public class ScenarioBuilder extends JPanel {
         return exRandList;
     }
 
+    private void lockTableSelection(JTable table, int index, Color c) {
+        table.setSelectionBackground(c);
+        table.setRowSelectionInterval(index,index);
+
+        if (!lockListenerSet) {
+            table.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+            });
+
+            lockListenerSet = true;
+        }
+
+        lockSel = true;
+    }
+
+    private void unlockTableSelection(JTable table) {
+        table.setSelectionBackground(null);
+        lockSel = false;
+    }
+
     private boolean updateStatus() {
         if (scenarioNameTxt.getText().isEmpty()) {
             statusTxt.setText("<html>" + "<b> Alert : </b>" +
@@ -404,6 +455,14 @@ public class ScenarioBuilder extends JPanel {
                     String s = (String) dtm.getValueAt(i, 0);
 
                     if (nameChecks.isInteger(s)) {
+                        if (Integer.parseInt(s) < 0) {
+                            statusTxt.setText("<html>" + "<b> Alert : </b>" +
+                                    "<br> <b style=\"color:RED;\">Count is negative on row #" + (i+1) + ".</b>" +"</html>");
+                            buildBtn.setEnabled(false);
+                            lockTableSelection(permTable, i, Color.red);
+                            return false;
+                        }
+
                         totalCount += Integer.parseInt(s);
                     } else if (s.equals("?")) {
                         if (foundWildcard) {
@@ -432,6 +491,7 @@ public class ScenarioBuilder extends JPanel {
                             statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                     "<br> <b style=\"color:RED;\">Row #" + (i+1) + " is skipping choices.</b>" +"</html>");
                             buildBtn.setEnabled(false);
+                            lockTableSelection(permTable, i, Color.red);
                             return false;
                         }
                     }
@@ -444,6 +504,7 @@ public class ScenarioBuilder extends JPanel {
                         statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                 "<br> <b style=\"color:RED;\">Row #" + (i+1) + " contains EX-RANDOM but no exclusive random candidates are selected.</b>" +"</html>");
                         buildBtn.setEnabled(false);
+                        lockTableSelection(permTable, i, Color.red);
                         return false;
                     }
                 }
@@ -469,6 +530,7 @@ public class ScenarioBuilder extends JPanel {
             statusTxt.setText("<html>" + "<b> Warning : </b>" +
                     "<br> <b style=\"color:ORANGE;\">Unsolved variable(s)</b>" +"</html>");
 
+            unlockTableSelection(permTable);
             buildBtn.setEnabled(false);
             return true;
         }
@@ -476,6 +538,7 @@ public class ScenarioBuilder extends JPanel {
         statusTxt.setText("<html>" + "<b> Status : </b>" +
                 "<br> <b style=\"color:GREEN;\">OK</b>" +"</html>");
 
+        unlockTableSelection(permTable);
         buildBtn.setEnabled(true);
         return true;
     }
@@ -488,6 +551,7 @@ public class ScenarioBuilder extends JPanel {
             x.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+
                 }
 
                 @Override
@@ -639,7 +703,7 @@ public class ScenarioBuilder extends JPanel {
 
         DefaultTableModel dtm2 = (DefaultTableModel) permTable.getModel();
 
-        dtm2.addColumn("Multiplier");
+        dtm2.addColumn("Count");
 
         // temp change
         for (int i = 0; i < 6; i++) {
