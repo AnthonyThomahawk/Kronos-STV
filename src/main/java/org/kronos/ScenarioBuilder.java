@@ -75,6 +75,8 @@ public class ScenarioBuilder extends JPanel {
     boolean lockListenerSet = false;
     boolean lockSel = false;
 
+    Color defaultRowColor;
+
 
     public ScenarioBuilder(String file, int fileType) {
         initComponents();
@@ -426,7 +428,7 @@ public class ScenarioBuilder extends JPanel {
     }
 
     private void unlockTableSelection(JTable table) {
-        table.setSelectionBackground(null);
+        table.setSelectionBackground(defaultRowColor);
         lockSel = false;
     }
 
@@ -655,6 +657,7 @@ public class ScenarioBuilder extends JPanel {
     }
 
     private void init() {
+        defaultRowColor = exRandtable.getSelectionBackground();
         if (groupNames == null)
             groupNames = new ArrayList<>();
         if (groupCandidates == null)
