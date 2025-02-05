@@ -59,6 +59,59 @@ public class createScenario extends JPanel {
     private int[] candidateDepartments;
     public static JDialog fe;
 
+    boolean lockListenerSet = false;
+    boolean lockSel = false;
+
+    Color defaultRowColor;
+
+    private void lockTableSelection(JTable table, int index, Color c) {
+        table.setSelectionBackground(c);
+        table.setRowSelectionInterval(index,index);
+
+        if (!lockListenerSet) {
+            table.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (lockSel)
+                        table.setRowSelectionInterval(index,index);
+                }
+            });
+
+            lockListenerSet = true;
+        }
+
+        lockSel = true;
+    }
+
+    private void unlockTableSelection(JTable table) {
+        table.setSelectionBackground(defaultRowColor);
+        lockSel = false;
+    }
+
     public createScenario(String file, boolean scenario) {
         initComponents();
         spinner1.setEnabled(false);
@@ -391,6 +444,7 @@ public class createScenario extends JPanel {
     }
 
     private void initTable() {
+        defaultRowColor = table1.getSelectionBackground();
         if (groupNames == null)
             groupNames = new ArrayList<>();
         if (groupCandidates == null)
@@ -809,6 +863,7 @@ public class createScenario extends JPanel {
                     if (dtm.getValueAt(i,j) == null) {
                         label1.setText("<html>" + "<b> Alert : </b>" +
                                 "<br> <b style=\"color:RED;\">#" + (i+1) + ": does not have a first choice.</b>" +"</html>");
+                        lockTableSelection(table1, i, Color.red);
                         viewBtn.setEnabled(false);
                         exportBtn.setEnabled(false);
                         copyBtn.setEnabled(false);
@@ -823,6 +878,7 @@ public class createScenario extends JPanel {
                 if (dtm.getValueAt(i,j) != null && endOnNull) {
                     label1.setText("<html>" + "<b> Alert : </b>" +
                             "<br> <b style=\"color:RED;\">#" + (i+1) + ": skips choices.</b>" +"</html>");
+                    lockTableSelection(table1, i, Color.red);
                     viewBtn.setEnabled(false);
                     exportBtn.setEnabled(false);
                     copyBtn.setEnabled(false);
@@ -840,6 +896,7 @@ public class createScenario extends JPanel {
             if (dtm.getValueAt(i, 0) == null) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">#" + (i+1) + ": Count is empty.</b>" +"</html>");
+                lockTableSelection(table1, i, Color.red);
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
@@ -848,6 +905,7 @@ public class createScenario extends JPanel {
             } else if ((int) dtm.getValueAt(i, 0) < 0) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">#" + (i+1) + ": Count must not be negative.</b>" +"</html>");
+                lockTableSelection(table1, i, Color.red);
                 viewBtn.setEnabled(false);
                 exportBtn.setEnabled(false);
                 copyBtn.setEnabled(false);
@@ -862,6 +920,7 @@ public class createScenario extends JPanel {
         exportBtn.setEnabled(true);
         copyBtn.setEnabled(true);
         exportFileBtn.setEnabled(true);
+        unlockTableSelection(table1);
 
         return true;
     }
