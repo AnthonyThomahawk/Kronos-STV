@@ -459,10 +459,6 @@ public class createScenario extends JPanel {
             public Class<?> getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
             }
-            @Override
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return columnIndex != 0;
-            }
         });
 
         table1.addMouseListener(new MouseAdapter() {
