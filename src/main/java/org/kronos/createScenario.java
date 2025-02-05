@@ -217,15 +217,15 @@ public class createScenario extends JPanel {
             for (Object choice : choices) {
                 List list = (List) choice;
                 ArrayList<String> c = new ArrayList<>();
-                for (Object elem : list) {
-                    if (elem instanceof String) {
-                        c.add((String) elem);
-                    } else {
-                        String[] sel = c.toArray(new String[0]);
-                        loadedPermutations.add(sel);
-                        loadedPermutationsMult.add(Math.toIntExact((long) elem));
-                    }
+
+                loadedPermutationsMult.add(Math.toIntExact((long) list.get(0)));
+
+                for (int i = 1; i < list.size(); i++) {
+                    c.add((String) list.get(i));
                 }
+
+                String[] sel = c.toArray(new String[0]);
+                loadedPermutations.add(sel);
             }
 
             int c = Math.toIntExact((Long) scenario.get("Seats"));
@@ -397,16 +397,16 @@ public class createScenario extends JPanel {
             groupCandidates = new ArrayList<>();
 
         remBtn.setEnabled(false);
-        Class<?>[] columnTypes = new Class[candidateCount+2];
+        Class<?>[] columnTypes = new Class[candidateCount+1];
         columnTypes[0] = Integer.class;
         for (int i = 1; i < columnTypes.length-1; i++) {
             columnTypes[i] = Object.class;
         }
         columnTypes[columnTypes.length-1] = Integer.class;
 
-        String[] tCol = new String[candidateCount+2];
-        tCol[0] = "#";
-        for (int i = 1; i < tCol.length - 1; i++) {
+        String[] tCol = new String[candidateCount+1];
+        tCol[0] = "Count";
+        for (int i = 1; i < tCol.length; i++) {
             if (i == 1)
                 tCol[i] = "1st Choice";
             else if (i == 2)
@@ -416,14 +416,13 @@ public class createScenario extends JPanel {
             else
                 tCol[i] = i + "th Choice";
         }
-        tCol[tCol.length-1] = "Counts";
 
-        Object[] tRow = new Object[candidateCount+2];
+        Object[] tRow = new Object[candidateCount+1];
         tRow[0] = ballotCount;
-        for (int i = 1; i < tRow.length - 1; i++) {
+        for (int i = 1; i < tRow.length; i++) {
             tRow[i] = null;
         }
-        tRow[tRow.length-1] = 1;
+        tRow[0] = 1;
 
         cbGroups = new ArrayList<>();
         cbGroups.add(createCBGroup());
@@ -431,7 +430,7 @@ public class createScenario extends JPanel {
         table1 = new JTable() {
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                if (column != 0 && column != candidateCount+1){
+                if (column != 0){
                     return new DefaultCellEditor(cbGroups.get(row)[column-1]);
                 }
                 return super.getCellEditor(row, column);
@@ -524,18 +523,16 @@ public class createScenario extends JPanel {
         ballotCount = 0;
         cbGroups = new ArrayList<>();
         for (int i = 0; i < loadedPermutations.size(); i++) {
-            ballotCount++;
-            Object[] row = new Object[candidateCount+2];
-            row[0] = ballotCount;
+            Object[] row = new Object[candidateCount+1];
             String[] sel = loadedPermutations.get(i);
-            for (int j = 1; j < row.length - 1; j++) {
+            for (int j = 1; j < row.length; j++) {
                 try {
                     row[j] = sel[j-1];
                 } catch(Exception e) {
                     row[j] = null;
                 }
             }
-            row[row.length-1] = loadedPermutationsMult.get(i);
+            row[0] = loadedPermutationsMult.get(i);
             cbGroups.add(createCBGroup());
             for (int x = 0; x < sel.length; x++) {
                 cbGroups.get(i)[x].setSelectedItem(sel[x]);
@@ -550,13 +547,11 @@ public class createScenario extends JPanel {
             table1.getCellEditor().stopCellEditing();
 
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
-        ballotCount++;
-        Object[] row = new Object[candidateCount+2];
-        row[0] = ballotCount;
+        Object[] row = new Object[candidateCount+1];
         for (int i = 1; i < row.length - 1; i++) {
             row[i] = null;
         }
-        row[row.length-1] = 1;
+        row[0] = 1;
         cbGroups.add(createCBGroup());
         model.addRow(row);
     }
@@ -565,7 +560,7 @@ public class createScenario extends JPanel {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int ballots = 0;
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            ballots += (Integer)dtm.getValueAt(i, candidateCount+1);
+            ballots += (Integer)dtm.getValueAt(i, 0);
         }
 
         return ballots;
@@ -575,7 +570,7 @@ public class createScenario extends JPanel {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         int multipliers[] = new int[dtm.getRowCount()];
         for (int i = 0; i < dtm.getRowCount(); i++) {
-            multipliers[i] = (Integer)dtm.getValueAt(i, candidateCount+1);
+            multipliers[i] = (Integer)dtm.getValueAt(i, 0);
         }
 
         try {
@@ -737,31 +732,11 @@ public class createScenario extends JPanel {
 
        JDialog j = new JDialog(Main.mainFrame, "Results", true);
 
-//        try {
-//            String evalExport = getFullCSV(",");
-//            evalExport += System.lineSeparator() + System.lineSeparator();
-//
-//            for (String s : electionResults.stvInput.split(System.lineSeparator())) {
-//                evalExport += "\"" + s + "\"" + System.lineSeparator();
-//            }
-//
-//            // not needed for now, may use it later
-//            String eEName = generateUniqueFileName(Main.getWorkDir(), scenarioTitleTxt.getText() + "_eval", ".csv");
-//            File f = new File(Main.getWorkDir(), eEName);
-//            OutputStreamWriter fStream = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8);
-//            fStream.write(evalExport);
-//            fStream.flush();
-//            fStream.close();
-//
-//        } catch (Exception x) {
-//            System.out.println(x);
-//    };
-
-    resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
-    j.setContentPane(x);
-    j.pack();
-    j.setLocationRelativeTo(null);
-    j.setVisible(true);
+       resultForm x = new resultForm(scenarioTitleTxt.getText(), electionResults, groupNames, groupCandidates, candidates);
+       j.setContentPane(x);
+       j.pack();
+       j.setLocationRelativeTo(null);
+       j.setVisible(true);
     }
 
     private void customSeats(ActionEvent e) {
@@ -866,7 +841,7 @@ public class createScenario extends JPanel {
         }
 
         for (int i = 0; i < rows; i++) {
-            if (dtm.getValueAt(i, cols-1) == null) {
+            if (dtm.getValueAt(i, 0) == null) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">#" + (i+1) + ": Count is empty.</b>" +"</html>");
                 viewBtn.setEnabled(false);
@@ -874,7 +849,7 @@ public class createScenario extends JPanel {
                 copyBtn.setEnabled(false);
                 exportFileBtn.setEnabled(false);
                 return false;
-            } else if ((int) dtm.getValueAt(i, cols-1) < 0) {
+            } else if ((int) dtm.getValueAt(i, 0) < 0) {
                 label1.setText("<html>" + "<b> Alert : </b>" +
                         "<br> <b style=\"color:RED;\">#" + (i+1) + ": Count must not be negative.</b>" +"</html>");
                 viewBtn.setEnabled(false);
@@ -928,7 +903,7 @@ public class createScenario extends JPanel {
 
             for (int i = 0; i < dtm.getRowCount(); i++) {
                 JSONArray row = new JSONArray();
-                for (int j = 1; j < dtm.getColumnCount(); j++) {
+                for (int j = 0; j < dtm.getColumnCount(); j++) {
                     Object val = dtm.getValueAt(i, j);
 
                     if (val == null) {
@@ -1019,14 +994,10 @@ public class createScenario extends JPanel {
 
         int numRows = table1.getSelectedRows().length;
         if (numRows != 0) {
-            ballotCount -= numRows;
             DefaultTableModel m = (DefaultTableModel) table1.getModel();
             for (int i = 0; i < numRows; i++) {
                 cbGroups.remove(table1.getSelectedRow());
                 m.removeRow(table1.getSelectedRow());
-            }
-            for (int i = 0; i < m.getRowCount(); i++) {
-                m.setValueAt(i+1, i, 0);
             }
             remBtn.setEnabled(false);
         }
@@ -1038,7 +1009,7 @@ public class createScenario extends JPanel {
     private String getCSVString(String delim) {
         DefaultTableModel dtm = (DefaultTableModel) table1.getModel();
         String data = "";
-        for (int i = 1; i < dtm.getColumnCount(); i++) {
+        for (int i = 0; i < dtm.getColumnCount(); i++) {
             if (i == 1) {
                 data += "1st Choice" + delim;
             } else if (i == 2) {

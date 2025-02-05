@@ -321,8 +321,8 @@ public class ScenarioBuilder extends JPanel {
             for (Object choice : choices) {
                 List list = (List) choice;
                 ArrayList<String> p = new ArrayList<>();
-                p.add(String.valueOf(Math.toIntExact((long) list.get(list.size() - 1))));
-                for (int i = 0; i < list.size() - 1; i++) {
+                p.add(String.valueOf(Math.toIntExact((long) list.get(0))));
+                for (int i = 1; i < list.size(); i++) {
                     p.add((String) list.get(i));
                 }
                 pTableDataToInit.add(p);

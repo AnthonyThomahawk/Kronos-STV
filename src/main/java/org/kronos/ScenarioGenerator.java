@@ -158,9 +158,9 @@ public class ScenarioGenerator {
         for (String[] k : consolidated.keySet()) {
             JSONArray ballot = new JSONArray();
 
-            ballot.addAll(Arrays.asList(k));
-
             ballot.add(consolidated.get(k));
+
+            ballot.addAll(Arrays.asList(k));
 
             choices.add(ballot);
         }
