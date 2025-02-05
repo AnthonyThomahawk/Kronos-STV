@@ -72,6 +72,7 @@ public class ScenarioBuilder extends JPanel {
 
     public Thread solveThread;
 
+    int lockIndex = -1;
     boolean lockListenerSet = false;
     boolean lockSel = false;
 
@@ -386,6 +387,7 @@ public class ScenarioBuilder extends JPanel {
 
     private void lockTableSelection(JTable table, int index, Color c) {
         table.setSelectionBackground(c);
+        lockIndex = index;
         table.setRowSelectionInterval(index,index);
 
         if (!lockListenerSet) {
@@ -393,31 +395,31 @@ public class ScenarioBuilder extends JPanel {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (lockSel)
-                        table.setRowSelectionInterval(index,index);
+                        table.setRowSelectionInterval(lockIndex,lockIndex);
                 }
 
                 @Override
                 public void mousePressed(MouseEvent e) {
                     if (lockSel)
-                        table.setRowSelectionInterval(index,index);
+                        table.setRowSelectionInterval(lockIndex,lockIndex);
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (lockSel)
-                        table.setRowSelectionInterval(index,index);
+                        table.setRowSelectionInterval(lockIndex,lockIndex);
                 }
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     if (lockSel)
-                        table.setRowSelectionInterval(index,index);
+                        table.setRowSelectionInterval(lockIndex,lockIndex);
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     if (lockSel)
-                        table.setRowSelectionInterval(index,index);
+                        table.setRowSelectionInterval(lockIndex,lockIndex);
                 }
             });
 
