@@ -473,6 +473,7 @@ public class ScenarioBuilder extends JPanel {
                             statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                     "<br> <b style=\"color:RED;\">Wildcard (?) cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
                             buildBtn.setEnabled(false);
+                            lockTableSelection(permTable, i, Color.red);
                             return false;
                         }
 
@@ -482,6 +483,7 @@ public class ScenarioBuilder extends JPanel {
                             statusTxt.setText("<html>" + "<b> Alert : </b>" +
                                     "<br> <b style=\"color:RED;\">Variable (" + s + ") cannot be used twice on row #" + (i+1) + ".</b>" +"</html>");
                             buildBtn.setEnabled(false);
+                            lockTableSelection(permTable, i, Color.red);
                             return false;
                         }
 
@@ -1464,6 +1466,8 @@ public class ScenarioBuilder extends JPanel {
     private void solveBtn(ActionEvent e) {
         if (permTable.isEditing())
             permTable.getCellEditor().stopCellEditing();
+
+        sortPermTable();
 
         solveBtn.setEnabled(false);
 
