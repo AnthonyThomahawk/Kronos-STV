@@ -246,7 +246,7 @@ public class Main {
         mainFrame.setContentPane(mainFormObj);
         mainFrame.pack();
         mainFrame.setVisible(true);
-        mainFrame.setTitle("Kronos Beta");
+        mainFrame.setTitle("Kronos");
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
