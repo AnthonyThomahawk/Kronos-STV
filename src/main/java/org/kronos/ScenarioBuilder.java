@@ -217,10 +217,6 @@ public class ScenarioBuilder extends JPanel {
 
             }
 
-            JSONArray allXRand = (JSONArray) buildFile.get("ExRandomAll");
-            allExRandToInit = new ArrayList<>();
-            allExRandToInit.addAll(allXRand);
-
             JSONArray selectedXRand = (JSONArray) buildFile.get("ExRandomSelected");
             selectedExRandToInit = new ArrayList<>();
             selectedExRandToInit.addAll(selectedXRand);
@@ -1052,11 +1048,6 @@ public class ScenarioBuilder extends JPanel {
                 }
             }
 
-            JSONArray XRandom = new JSONArray();
-            XRandom.addAll(getAllExRand());
-
-            buildFile.put("ExRandomAll", XRandom);
-
             JSONArray XRandomSelected = new JSONArray();
             XRandomSelected.addAll(getExRand());
 
@@ -1574,13 +1565,7 @@ public class ScenarioBuilder extends JPanel {
                         progress++;
                         results = testScenario(mid);
 
-                        boolean certaintyCheck = !results.u;
-
-                        if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
-                            certaintyCheck = true;
-                        }
-
-                        if (results.t >= minSeats && certaintyCheck) {
+                        if (results.t >= minSeats) {
                             solution = mid;
                             step /= 2;
                             mid -= step;
@@ -1590,10 +1575,10 @@ public class ScenarioBuilder extends JPanel {
                         }
 
                         if (Math.abs(lastmid - mid) <= 1) {
-                            for (int n = mid; n > mid - lastSteps; n--) {
+                            for (int n = solution; n > mid - lastSteps; n--) {
                                 results = testScenario(n);
 
-                                certaintyCheck = !results.u;
+                                boolean certaintyCheck = !results.u;
 
                                 if (!skipUncertaintyBox.isSelected()) { // if box is unchecked, override the check
                                     certaintyCheck = true;

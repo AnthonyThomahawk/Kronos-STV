@@ -116,7 +116,8 @@ public class mainForm extends JPanel {
         j.setLocationRelativeTo(null);
         j.setVisible(true);
 
-        mainForm.openCandidatesForm(el.selectedFile, "Edit election");
+        if (el.selectedFile != null)
+            mainForm.openCandidatesForm(el.selectedFile, "Edit election");
     }
 
     public static void openInstitutionForm(String title, String f2e) {
