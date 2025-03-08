@@ -4,10 +4,8 @@
 
 package org.kronos;
 
-import jdk.nashorn.internal.scripts.JD;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
-import org.omg.CORBA.Environment;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;

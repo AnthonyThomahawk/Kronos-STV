@@ -1576,6 +1576,7 @@ public class ScenarioBuilder extends JPanel {
 
                         if (Math.abs(lastmid - mid) <= 1) {
                             for (int n = solution; n > mid - lastSteps; n--) {
+                                progress++;
                                 results = testScenario(n);
 
                                 boolean certaintyCheck = !results.u;
