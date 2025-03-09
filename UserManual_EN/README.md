@@ -29,7 +29,7 @@ Upon first launch, Kronos will detect that it is running for the first time on y
 It will require you to set a work directory, where all your scenarios, templates and other Kronos related user data will be stored.
 ## Setting the work directory
 To set the work directory, follow the steps below :<br>
-![](img.png)
+![](img.png)<br>
 ![](img_1.png)
 <br> In the Directory picker, choose any directory you like; This is where your user data will be stored.
 <br> For this example, a newly created directory in "Documents" will be used :<br>

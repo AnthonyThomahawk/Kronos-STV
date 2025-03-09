@@ -21,7 +21,7 @@ No dependencies are required.<br>
 For every other platform, the user is required to have Java 8 or newer and Python 3.8 or newer installed on their system. If those requirements are met, they can use the standalone JAR file.<br>
 [Standalone JAR file download](https://github.com/AnthonyThomahawk/Kronos-STV/releases/latest/download/Kronos.jar)
 # User manual
-For the english user manual, click [here](UserManual_EN\README.md)
+For the english user manual, click [here](UserManual_EN/README.md)
 A greek manual will be added soon as well.
 # Tested environments
 The currently tested platforms are :
