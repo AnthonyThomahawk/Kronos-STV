@@ -12,6 +12,8 @@
   * [Creating a general election](#creating-a-general-election)
   * [Creating a scenario](#creating-a-scenario)
     * [Scenario table](#scenario-table)
+      * [Selecting candidates for each combination](#selecting-candidates-for-each-combination)
+      * [Changing the count for each combination](#changing-the-count-for-each-combination)
     * [Scenario screen buttons](#scenario-screen-buttons)
       * [Add button](#add-button)
       * [Remove button](#remove-button)
@@ -23,6 +25,13 @@
       * [Evaluate button](#evaluate-button)
     * [Seats](#seats)
   * [Evaluating the scenario](#evaluating-the-scenario)
+* [Example 2 : Creating an institutional election](#example-2--creating-an-institutional-election)
+  * [Creating an institution](#creating-an-institution)
+    * [Ward table](#ward-table)
+    * [Ward quota](#ward-quota)
+  * [Creating an institutional election](#creating-an-institutional-election)
+    * [Option 1](#option-1)
+    * [Option 2](#option-2)
 <!-- TOC -->
 # First launch
 Upon first launch, Kronos will detect that it is running for the first time on your system.
