@@ -50,7 +50,7 @@ A scenario is based upon an election, and contains all the ballot combination (t
 # Example 1 : Creating a general election and examining a scenario built upon it
 ## Creating a general election
 A general election, is an election that is not based upon an institution. It only contains the candidates.
-<br> To create a general election, start by selecting the "New election" option in the main screen :
+<br> To create a general election, start by selecting the "New election" option in the main screen :<br>
 ![img_4.png](img_4.png)
 <br>Select "General election" :<br>
 ![img_5.png](img_5.png)
@@ -62,9 +62,13 @@ A general election, is an election that is not based upon an institution. It onl
 In the scenario creation screen, there are many things to break down :
 ![img_7.png](img_7.png)
 ### Scenario table
+#### Selecting candidates for each combination
 The scenario table consists of columns and rows. Each column represents a choice (besides the "Count" column) and each row represents a combination.
 You can create a combination by clicking on the blank places of every row, a combo box menu will pop up showing all available candidates :<br>
 ![img_8.png](img_8.png)
+#### Changing the count for each combination
+The first column is the "Count" row that specifies how many voters had that exact combination on their ballot paper.<br>
+![img_12.png](img_12.png)
 ### Scenario screen buttons
 #### Add button
 The add button, adds a row to the scenario table.
@@ -93,3 +97,34 @@ Then, the results window will open : <br>
 The "Show analysis" button, expands the results and shows all the steps taken to generate those results :
 ![img_11.png](img_11.png)<br>
 The "Copy analysis" and "Copy results" copy the analysis text and the results table to your clipboard respectively.
+# Example 2 : Creating an institutional election
+## Creating an institution
+An institution is a set of wards, start creating one by selecting "New institution" in the main screen :<br>
+![img_13.png](img_13.png)<br>
+![img_14.png](img_14.png)
+The above screen functions similarly to the other screens presented previously.
+### Ward table
+The ward table contains 3 rows:
+- Number row
+- Ward name (name of the ward)
+- Ward size (count of the ward's faculty)
+### Ward quota
+The ward quota, is explained directly on the UI and its the maximum number of candidates allowed to be elected per ward.
+For example if the ward quota is 2, each ward is allowed to have at MOST 2 candidates elected. Any candidate above that limit will not be elected, even if they gather more votes than the election quota (not to be confused with ward quota)
+## Creating an institutional election
+To create an institutional election you either click on "New election" on the institution screen OR you choose the "institutional" option when creating a new election.
+The latter option will open the load institution screen, where you can select any saved institutions.
+### Option 1
+![img_15.png](img_15.png)
+### Option 2
+![img_4.png](img_4.png)<br>
+![img_16.png](img_16.png)<br>
+![img_17.png](img_17.png)<br>
+After loading the institution, you will be greeted with the election creation screen, but with some changes :
+![img_18.png](img_18.png)<br>
+Now the screen (compared to the original [new election screen](#creating-a-general-election)) has 3 rows instead of 2, the 3rd row is the Ward each candidate belongs to.
+Also, you can edit wards (remove,add,rename) with the "Edit wards" button.<br>
+The Ward selection for each candidate, works in a similar fashion with the [option selector in the scenario table](#scenario-table)
+![img_19.png](img_19.png)<br>
+![img_20.png](img_20.png)<br>
+After making the institutional election, the next steps are exactly the same as a non-institutional election (to examine scenarios).
