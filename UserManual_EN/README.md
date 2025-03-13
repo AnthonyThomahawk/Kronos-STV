@@ -110,8 +110,8 @@ The "Copy analysis" and "Copy results" copy the analysis text and the results ta
 ## Creating an institution
 An institution is a set of wards, start creating one by selecting "New institution" in the main screen :<br>
 ![img_13.png](img_13.png)<br>
-![img_14.png](img_14.png)
-The above screen functions similarly to the other screens presented previously.<br>
+![img_14.png](img_14.png)<br>
+The above screen functions similarly to the other screens presented previously.
 ### Ward table
 The ward table contains 3 rows:
 - Number row
