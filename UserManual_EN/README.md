@@ -137,3 +137,5 @@ The Ward selection for each candidate, works in a similar fashion with the [opti
 ![img_19.png](img_19.png)<br>
 ![img_20.png](img_20.png)<br>
 After making the institutional election, the next steps are exactly the same as a non-institutional election (to examine scenarios).
+# Scenario builder
+The scenario builder function, is used to build scenarios and find the conditions where a group of candidates will be victorious. In other words, it will assist in finding the minimum amount of votes specific combinations need in a scenario, for a group of candidates to win.
