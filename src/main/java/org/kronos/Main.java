@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 public class Main {
     public static JFrame mainFrame;
     public static mainForm mainFormObj;
+    public static Log lg;
 
     public static String getWorkDir() throws IOException {
         Properties loadProps = new Properties();
@@ -81,7 +82,7 @@ public class Main {
             try {
                 Files.copy(loader, Paths.get("loader.py"));
             } catch (Exception e) {
-                System.out.println(e);
+                lg.Fatal("Cannot write loader.py, " + e);
                 JOptionPane.showMessageDialog(null, "Cannot write loader.py, terminating.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
@@ -93,7 +94,7 @@ public class Main {
             try {
                 Files.copy(stvCore, Paths.get("stv.py"));
             } catch (Exception e) {
-                System.out.println(e);
+                lg.Fatal("Cannot write stv.py, " + e);
                 JOptionPane.showMessageDialog(null, "Cannot write stv.py, terminating.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
@@ -105,7 +106,7 @@ public class Main {
             try {
                 Files.copy(stvCore, Paths.get("stv_direct.py"));
             } catch (Exception e) {
-                System.out.println(e);
+                lg.Fatal("Cannot write stv_direct.py, " + e);
                 JOptionPane.showMessageDialog(null, "Cannot write stv_direct.py, terminating.", "Error", JOptionPane.ERROR_MESSAGE);
                 System.exit(1);
             }
@@ -148,24 +149,33 @@ public class Main {
 
     private static void checkPython() throws IOException {
         String custominterp = System.getenv("PYTHON_CUSTOM");
+        lg.Debug("Attempting to get custom python from env var PYTHON_CUSTOM");
+        lg.Debug("PYTHON_CUSTOM is " + custominterp);
         if (custominterp != null) {
+            lg.Debug("Checking python version from PYTHON_CUSTOM");
             int[] checkVer = getPythonVer(custominterp);
 
             if (checkVer == null) {
+                lg.Fatal("PYTHON_CUSTOM ver returned null, exiting");
                 JOptionPane.showMessageDialog(null, "The custom python interpreter you provided is not a valid python binary.", "Custom Python error", JOptionPane.ERROR_MESSAGE);
                 System.exit(2);
             }
 
+            lg.Debug("Version is " + checkVer[0] + "." + checkVer[1]);
+
             if (!(checkVer[0] == 3 && checkVer[1] >= 8)) {
+                lg.Fatal("PYTHON_CUSTOM ver is outdated (" + checkVer[0] + "." + checkVer[1] + ", exiting");
                 JOptionPane.showMessageDialog(null, "The custom python interpreter you provided is outdated (must be python 3.8 or newer).", "Custom Python error", JOptionPane.ERROR_MESSAGE);
                 System.exit(3);
             }
 
-            System.out.println("Using python : " + custominterp);
+            lg.Info("Using python : " + custominterp);
             CallPython.interpreterPath = custominterp;
             CallPythonDirect.interpreterPath = custominterp;
             return;
         }
+
+        lg.Debug("PYTHON_CUSTOM not given, attempting to use system python");
 
         int[] pythonVer = getPythonVer("python");
 
@@ -180,6 +190,7 @@ public class Main {
         }
 
         if (error == 0) {
+            lg.Info("System python found as \"python\"");
             CallPython.interpreterPath = "python";
             return;
         }
@@ -195,18 +206,28 @@ public class Main {
         }
 
         if (error == 2) {
+            lg.Fatal("System does not have python installed, exiting");
             JOptionPane.showMessageDialog(null, "This software requires Python 3.8 or newer to function.", "Python not found", JOptionPane.ERROR_MESSAGE);
             System.exit(2);
         } else if (error == 3) {
+            lg.Fatal("System python is outdated, exiting");
             JOptionPane.showMessageDialog(null, "Python 3.8 or newer is required." + System.lineSeparator() + "Version found : " + pythonVer[0] + "." + pythonVer[1] + System.lineSeparator() + "Required : 3.8.0 or newer", "Outdated python version", JOptionPane.ERROR_MESSAGE);
             System.exit(3);
         } else {
+            lg.Info("System python found as \"python3\"");
             CallPython.interpreterPath = "python3";
         }
 
     }
 
     public static void main(String[] args) {
+        lg = new Log(5, System.out);
+        try {
+            lg.addStream(new FileOutputStream("log.txt", true));
+        } catch (Exception ignored) {}
+
+        lg.Info("Kronos starting");
+
         if (DarkModeDetector.isDarkMode())
             FlatDarkLaf.setup();
         else
@@ -214,11 +235,17 @@ public class Main {
 
         mainFrame = new JFrame();
 
+        lg.Info("Checking python...");
+
         try{
             checkPython();
         } catch (Exception ignored){}
 
+        lg.Info("Python check complete");
+
+        lg.Info("Checking STV...");
         checkSTV();
+        lg.Info("STV check complete");
 
         while (!checkConfig()) {
             JDialog settings = new JDialog(Main.mainFrame, "", true);
@@ -250,5 +277,7 @@ public class Main {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
+
+        lg.Info("START COMPLETE");
     }
 }
